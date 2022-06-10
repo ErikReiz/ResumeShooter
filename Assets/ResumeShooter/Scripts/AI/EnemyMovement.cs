@@ -1,14 +1,22 @@
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(Enemy))]
 public class EnemyMovement : MonoBehaviour
 {
-	#region SERIALIZEFIELDS
-	[SerializeField] private float chaseRange = 5f;
+	#region SERIALIZE FIELDS
+	[SerializeField] private static float chaseRange = 5f;
+	[SerializeField] private float turnSpeed = 5f;
+	#endregion
+
+	#region PROPERTIES
+	public static float ChaseRange { get { return chaseRange; } }
 	#endregion
 
 	#region FIELDS
+	public UnityAction<GameObject> NearPlayerEvent;
+
 	private Transform target;
 	private bool isProvoked = false;
 	private float distanceToTarget = Mathf.Infinity;
@@ -37,14 +45,9 @@ public class EnemyMovement : MonoBehaviour
 			
 	}
 
-	private void OnDrawGizmosSelected()
-	{
-		Gizmos.color = new Color(1, 1, 0, 0.75F);
-		Gizmos.DrawSphere(transform.position, chaseRange);
-	}
-
 	private void EngageTarget()
 	{
+		FaceTarget();
 		if (distanceToTarget >= navMesh.stoppingDistance)
 		{
 			ChaseTarget();
@@ -52,17 +55,19 @@ public class EnemyMovement : MonoBehaviour
 
 		if (distanceToTarget <= navMesh.stoppingDistance)
 		{
-			AttackTarget();
+			NearPlayerEvent.Invoke(target.gameObject);
 		}
+	}
+
+	private void FaceTarget()
+	{
+		Vector3 direction = (target.position - transform.position).normalized;
+		Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+		transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * turnSpeed);
 	}
 
 	private void ChaseTarget()
 	{
 		navMesh.SetDestination(target.position);
-	}
-
-	private void AttackTarget()
-	{
-		Debug.Log(name + " has seeked and is destroying " + target.name);
 	}
 }

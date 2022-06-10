@@ -466,7 +466,6 @@ GameObject:
   - component: {fileID: 1798579882289397304}
   - component: {fileID: 6325334298131502953}
   - component: {fileID: 6038990673729284583}
-  - component: {fileID: 4990855675647740985}
   - component: {fileID: 7242004560553101261}
   m_Layer: 9
   m_Name: AssaultRifle
@@ -622,26 +621,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponData:
     isFullAuto: 1
-    shotDistance: 2000
-    clipSize: 30
+    timeToReload: 2
+    magazineSize: 30
+    ammoType: 0
     fireRate: 500
+    shotDistance: 2000
     damage: 20
     muzzleFlash: {fileID: 6194434486190654661}
     fireSound: {fileID: 8300000, guid: 0addcc409a57b4a43b86a3d2310ac5b4, type: 3}
     emptyFireSound: {fileID: 8300000, guid: 0c187ee2790c74c4e9985aa1ee1a12d5, type: 3}
---- !u!114 &4990855675647740985
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1798579882298740222}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c19c151de7dbf034dac13e2d0829d251, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  muzzle: {fileID: 1798579882298642894}
 --- !u!114 &7242004560553101261
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -4,7 +4,7 @@ using UnityEngine;
 using System;
 using System.Reflection;
 
-[RequireComponent(typeof(WeaponAttachmentManager), typeof(AudioSource), typeof(ImpactManager))]
+[RequireComponent(typeof(AudioSource), typeof(ImpactManager))]
 public class Weapon : MonoBehaviour
 {
     #region SERIALIZE FIELDS 
@@ -12,20 +12,25 @@ public class Weapon : MonoBehaviour
     #endregion
 
     #region FIELDS
+    private bool isHoldingFire = false;
+    private bool isReloading = false;
+
+    private int currentAmmo;
     private float fireCooldown;
     private float currentFireCooldown;
-    private float currentAmmo;
-    private bool isHoldingFire = false;
+
     private AudioSource audioSource;
     private ImpactManager impactManager;
+    private AmmoManager ammoManager;
     #endregion
 
     private void Awake()
 	{
         audioSource = GetComponent<AudioSource>();
         impactManager = GetComponent<ImpactManager>();
+        ammoManager = GetComponentInParent<AmmoManager>();
 
-        currentAmmo = weaponData.clipSize;
+        currentAmmo = weaponData.magazineSize;
 	}
 
 	private void Start()
@@ -36,33 +41,31 @@ public class Weapon : MonoBehaviour
 
     private void Update()
     {
-        ProcessFireInput();
         currentFireCooldown -= Time.deltaTime;
     }
 
-    private void ProcessFireInput()
+	#region SHOOTING
+    public void StartFire()
 	{
-        if(Input.GetButtonDown("Fire1"))
-		{
-            isHoldingFire = true;
-            OnFireButtonDown();
-
-		}
-        else if(Input.GetButtonUp("Fire1"))
-		{
-            isHoldingFire = false;
-        }
-
-        if(isHoldingFire)
-		{
-            if (weaponData.isFullAuto && currentAmmo > 0)
-                Shot();
-		}
-        
+		isHoldingFire = true;
+		FirstShot();
 	}
 
-	#region FIRE
-	private void OnFireButtonDown()
+	public void StopFire()
+    {
+        isHoldingFire = false;
+    }
+
+	public void ProcessAutomaticFire()
+	{
+		if (isHoldingFire)
+		{
+			if (weaponData.isFullAuto && currentAmmo > 0)
+				Shot();
+		}
+	}
+
+    private void FirstShot()
 	{
         if(currentAmmo > 0)
 		{
@@ -103,13 +106,8 @@ public class Weapon : MonoBehaviour
 	private void ApplyDamage(RaycastHit hitResult)
 	{
 		GameObject hitObject = hitResult.transform.gameObject;
-        IDamage damage = hitObject.GetComponent<IDamage>();
-
-        if(damage != null)
-		{
-            damage.ApplyDamage(weaponData.damage);
-		}
-	}
+        Damager.ApplyDamage(hitObject, weaponData.damage);
+    }
     
     private void SpawnFireParticles()
 	{
@@ -125,6 +123,28 @@ public class Weapon : MonoBehaviour
 	    }
 
         audioSource.PlayOneShot(weaponData.fireSound);
+	}
+	#endregion
+
+	#region RELOADING
+    public void TryReload()
+	{
+        if(currentAmmo == weaponData.magazineSize || isReloading || isHoldingFire) { return; }
+
+        if (ammoManager.HasAmmunitionOfType(weaponData.ammoType))
+		{
+            StartCoroutine(Reload());
+		}
+	}
+
+    private IEnumerator Reload()
+	{
+        isReloading = true;
+        yield return new WaitForSeconds(weaponData.timeToReload);
+
+        currentAmmo = ammoManager.UpdateAmmoCountOfType(weaponData.ammoType, weaponData.magazineSize, currentAmmo);
+
+        isReloading = false;
 	}
 	#endregion
 }

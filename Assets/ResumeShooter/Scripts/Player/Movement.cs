@@ -5,6 +5,12 @@ using UnityEngine;
 public class Movement : MonoBehaviour
 {
 	#region SERIALIZE FIELDS 
+	[Header("Fall info")]
+	[Tooltip("Min velocity by Y when player will receive damage from fall")]
+	[SerializeField] private float minFallDamageVelocity = 15f;
+	[Tooltip("Velocity at which the player will receive damage equal to 100 health units")]
+	[SerializeField] private float damageFallVelocity = 40f;
+
 	[Header("Audio Clips")]
 	[Tooltip("The audio clip that is played while walking.")]
 	[SerializeField] private AudioClip audioClipWalking;
@@ -35,7 +41,7 @@ public class Movement : MonoBehaviour
 	private readonly RaycastHit[] groundHits = new RaycastHit[8];
 	#endregion
 
-	private void Start()
+	private void Awake()
 	{
 		rigidBody = GetComponent<Rigidbody>();
 		rigidBody.constraints = RigidbodyConstraints.FreezeRotation;
@@ -44,31 +50,7 @@ public class Movement : MonoBehaviour
 
 		audioSource = GetComponent<AudioSource>();
 		audioSource.clip = audioClipWalking;
-		audioSource.loop = true;
-	}
-
-	private void OnCollisionStay()
-	{
-		Bounds bounds = capsule.bounds;
-		Vector3 extents = bounds.extents;
-		float radius = extents.x - 0.01f;
-
-		Physics.SphereCastNonAlloc(bounds.center,
-			radius,
-			Vector3.down,
-			groundHits,
-			extents.y - radius * 0.5f,
-			~0,
-			QueryTriggerInteraction.Ignore);
-
-		if (!groundHits.Any(hit => hit.collider != null && hit.collider != capsule))
-			return;
-
-		for (var i = 0; i < groundHits.Length; i++)
-			groundHits[i] = new RaycastHit();
-
-
-		grounded = true;
+		audioSource.loop = true;		
 	}
 
 	private void FixedUpdate()
@@ -131,4 +113,41 @@ public class Movement : MonoBehaviour
 			audioSource.Pause();
 	}
 
+
+	private void OnCollisionStay()
+	{
+
+		Bounds bounds = capsule.bounds;
+		Vector3 extents = bounds.extents;
+		float radius = extents.x - 0.01f;
+
+		Physics.SphereCastNonAlloc(bounds.center,
+			radius,
+			Vector3.down,
+			groundHits,
+			extents.y - radius * 0.5f,
+			~0,
+			QueryTriggerInteraction.Ignore);
+
+		if (!groundHits.Any(hit => hit.collider != null && hit.collider != capsule))
+			return;
+
+		for (var i = 0; i < groundHits.Length; i++)
+			groundHits[i] = new RaycastHit();
+
+		grounded = true;
+	}
+
+	private void OnCollisionEnter(Collision collision)
+	{
+		CalculateFallDamage();
+	}
+
+	private void CalculateFallDamage()
+	{
+		if (Mathf.Abs(yVelocity) < minFallDamageVelocity) { return; }
+		float damageMultiplier = Mathf.Abs(yVelocity) / damageFallVelocity;
+
+		Damager.ApplyDamage(gameObject, damageMultiplier * 100f);
+	}
 }
