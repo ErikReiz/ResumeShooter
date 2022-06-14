@@ -25,6 +25,11 @@ public class AmmoManager : MonoBehaviour
 			return false;
 	}
 
+	public int GetAmmoCountOfType(AmmunitionType ammunitionType)
+	{
+		return ammoCountDictionary[ammunitionType];
+	}
+
 	public int UpdateAmmoCountOfType(AmmunitionType ammunitionType, int magazineSize, int ammoInMagazine)
 	{
 		int ammoOfType = ammoCountDictionary[ammunitionType];

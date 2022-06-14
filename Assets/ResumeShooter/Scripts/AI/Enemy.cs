@@ -10,31 +10,15 @@ public class Enemy : MonoBehaviour, IDamage
 	#endregion
 
 	#region FIELDS
-	private EnemyMovement enemyMovement;
+	private Animator enemyaAnimator;
 	private float currentHealth;
 	private bool isDead = false;
 	#endregion
 
 	private void Awake()
 	{
-		enemyMovement = GetComponent<EnemyMovement>();
 		currentHealth = maxHealth;
-	}
-
-	private void OnEnable()
-	{
-		enemyMovement.NearPlayerEvent += AttackTarget;
-	}
-
-	private void OnDisable()
-	{
-		enemyMovement.NearPlayerEvent -= AttackTarget;
-	}
-
-	private void OnDrawGizmosSelected()
-	{
-		Gizmos.color = new Color(1, 1, 0, 0.75F);
-		Gizmos.DrawSphere(transform.position, EnemyMovement.ChaseRange);
+		enemyaAnimator = GetComponentInChildren<Animator>();
 	}
 
 	void IDamage.ReceiveDamage(float damage)
@@ -53,12 +37,6 @@ public class Enemy : MonoBehaviour, IDamage
 
 	private void KillEnemy()
 	{
-		enemyMovement.enabled = false;
 		Debug.Log("Enemy Killed");
-	}
-
-	private void AttackTarget(GameObject target)
-	{
-		Damager.ApplyDamage(target, damage);
 	}
 }

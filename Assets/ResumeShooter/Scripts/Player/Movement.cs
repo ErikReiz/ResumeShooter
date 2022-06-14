@@ -15,9 +15,10 @@ public class Movement : MonoBehaviour
 	[Tooltip("The audio clip that is played while walking.")]
 	[SerializeField] private AudioClip audioClipWalking;
 
-	[Header("Speeds")]
+	[Header("General settings")]
 	[SerializeField] private float walkSpeed = 5.0f;
 	[SerializeField] private float jumpHeight = 5.0f;
+	[SerializeField] private float maxWalkableAngle = 45f;
 	#endregion
 
 	#region PROPERTIES
@@ -32,12 +33,11 @@ public class Movement : MonoBehaviour
 
 	#region FIELDS
 	private bool grounded;
-
 	private Rigidbody rigidBody;
 	private CapsuleCollider capsule;
 	private AudioSource audioSource;
-	float yVelocity = 0;
-
+	private float yVelocity = 0;
+	private Vector3 surfaceNormal;
 	private readonly RaycastHit[] groundHits = new RaycastHit[8];
 	#endregion
 
@@ -85,6 +85,15 @@ public class Movement : MonoBehaviour
 		CalculateGravity();
 
 		Velocity = new Vector3(movement.x, yVelocity, movement.z);
+		Velocity = ModifyVelocityWithDirection(Velocity);
+	}
+
+	private Vector3 ModifyVelocityWithDirection(Vector3 currentMovement)
+	{
+		if(grounded)
+			return currentMovement - Vector3.Dot(currentMovement, surfaceNormal) * surfaceNormal;
+		else
+			return currentMovement;
 	}
 
 	private void CalculateGravity()
@@ -140,7 +149,18 @@ public class Movement : MonoBehaviour
 
 	private void OnCollisionEnter(Collision collision)
 	{
+		GetSurfaceNormal(collision);
 		CalculateFallDamage();
+	}
+
+	private void GetSurfaceNormal(Collision collision)
+	{
+		Vector3 normal = collision.contacts[0].normal;
+		
+		float floorAngle = Vector3.Angle(normal, Vector3.up);
+		if(floorAngle > maxWalkableAngle) { return; }
+
+		surfaceNormal = collision.contacts[0].normal;
 	}
 
 	private void CalculateFallDamage()

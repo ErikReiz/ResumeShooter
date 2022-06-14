@@ -8,7 +8,7 @@ public static class Damager
 	{
 		IDamage damageableObjectInterface = damageableObject.GetComponent<IDamage>();
 
-		if (damageableObject != null)
+		if (damageableObjectInterface != null)
 		{
 			damageableObjectInterface.ReceiveDamage(damage);
 		}

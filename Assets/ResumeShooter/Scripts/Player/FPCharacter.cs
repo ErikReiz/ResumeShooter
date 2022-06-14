@@ -9,6 +9,9 @@ public class FPCharacter : MonoBehaviour, IDamage
 	#endregion
 
 	#region PROPERTIES
+	public int WeaponCurrentAmmo { get { return currentWeapon.CurrentAmmo; } }
+	public int WeaponGeneralAmmo { get { return currentWeapon.GeneralAmmo; } }
+
 	private float GetHeatlhPercents { get { return currentHealth / maxHealth; } }
 	#endregion
 

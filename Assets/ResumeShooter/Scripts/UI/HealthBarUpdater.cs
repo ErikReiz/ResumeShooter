@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,7 +8,7 @@ public class HealthBarUpdater : MonoBehaviour
 	private FPCharacter player;
 	#endregion
 
-	private void Awake()
+	private void Start()
 	{
 		healthBarSlider = GetComponent<Slider>();
 		player = FindObjectOfType<FPCharacter>();
