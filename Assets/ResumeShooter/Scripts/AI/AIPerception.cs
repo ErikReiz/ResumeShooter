@@ -44,7 +44,8 @@ public class AIPerception : MonoBehaviour
 		{
 			Transform playerTransform = rangeChecks[0].transform;
 			Vector3 directionToPlayer = Vector3.Normalize(playerTransform.position - transform.position);
-			if(Vector3.Angle(transform.position, directionToPlayer) <= visionAngle / 2)
+
+			if (Vector3.Angle(transform.forward, directionToPlayer) <= visionAngle / 2)
 			{
 				bool isHit = ObstacleCheck(playerTransform, directionToPlayer);
 				if (!isHit)

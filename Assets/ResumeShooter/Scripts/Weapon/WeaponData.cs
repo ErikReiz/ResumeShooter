@@ -9,9 +9,12 @@ public enum AmmunitionType
 [System.Serializable]
 public class WeaponData
 {
+
 	[Header("General")]
 	public bool isFullAuto = false;
 	public float timeToReload = 2f;
+	public GameObject shellPrefab;
+	public Transform shellSocket;
 
 	[Header("Ammo")]
 	public int magazineSize = 30;

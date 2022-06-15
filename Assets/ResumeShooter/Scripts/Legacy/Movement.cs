@@ -32,12 +32,14 @@ public class Movement : MonoBehaviour
 	#endregion
 
 	#region FIELDS
-	private bool grounded;
+	private CharacterAnimationManager characterAnimationManager;
 	private Rigidbody rigidBody;
 	private CapsuleCollider capsule;
 	private AudioSource audioSource;
+	private bool grounded;
 	private float yVelocity = 0;
 	private Vector3 surfaceNormal;
+
 	private readonly RaycastHit[] groundHits = new RaycastHit[8];
 	#endregion
 
@@ -47,6 +49,7 @@ public class Movement : MonoBehaviour
 		rigidBody.constraints = RigidbodyConstraints.FreezeRotation;
 
 		capsule = GetComponent<CapsuleCollider>();
+		characterAnimationManager = GetComponent<CharacterAnimationManager>();
 
 		audioSource = GetComponent<AudioSource>();
 		audioSource.clip = audioClipWalking;
@@ -78,6 +81,8 @@ public class Movement : MonoBehaviour
 		frameInput.x = Input.GetAxis("Horizontal");
 		frameInput.y = Input.GetAxis("Vertical");
 
+		//characterAnimationManager.UpdateMovement(frameInput);
+
 		Vector3 movement = new Vector3(frameInput.x, 0.0f, frameInput.y);
 		movement *= walkSpeed * Time.deltaTime;
 		movement = transform.TransformDirection(movement);
@@ -107,7 +112,10 @@ public class Movement : MonoBehaviour
 		if(Input.GetButtonDown("Jump"))
 		{
 			if(grounded)
+			{
 				yVelocity = Mathf.Sqrt(jumpHeight * -Physics.gravity.y);
+			}
+
 		}
 	}
 

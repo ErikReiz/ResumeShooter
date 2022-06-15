@@ -29,7 +29,7 @@ AnimatorController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: AC_LPSP_WEP
+  m_Name: AssaultRifle_Animator
   serializedVersion: 5
   m_AnimatorParameters:
   - m_Name: Reloading

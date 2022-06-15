@@ -4,7 +4,11 @@ using UnityEngine;
 
 public class EnemyAttackingState : EnemyBaseState
 {
+	#region FIELDS
 	private Vector3 targetPosition;
+	private float turnSpeed = 5f;
+	#endregion
+
 
 	public EnemyAttackingState(BaseStateData stateData, Vector3 targetPosition) : base(stateData)
 	{ 
@@ -50,7 +54,7 @@ public class EnemyAttackingState : EnemyBaseState
 	{
 		Vector3 direction = (targetPosition - context.transform.position).normalized;
 		Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
-		context.transform.rotation = Quaternion.Slerp(context.transform.rotation, lookRotation, Time.deltaTime * 5f); // Использовать turn speed
+		context.transform.rotation = Quaternion.Slerp(context.transform.rotation, lookRotation, Time.deltaTime * turnSpeed);
 	}
 
 	public override void OnLostVision()

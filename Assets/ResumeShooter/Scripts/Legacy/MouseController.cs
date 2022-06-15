@@ -32,7 +32,6 @@ public class MouseController : MonoBehaviour
 
 	private void ProcessMouseInput()
 	{
-
 		float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
 		float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 

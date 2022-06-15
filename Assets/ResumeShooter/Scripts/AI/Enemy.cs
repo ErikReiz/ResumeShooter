@@ -10,7 +10,7 @@ public class Enemy : MonoBehaviour, IDamage
 	#endregion
 
 	#region FIELDS
-	private Animator enemyaAnimator;
+	private Animator enemyAnimator;
 	private float currentHealth;
 	private bool isDead = false;
 	#endregion
@@ -18,7 +18,7 @@ public class Enemy : MonoBehaviour, IDamage
 	private void Awake()
 	{
 		currentHealth = maxHealth;
-		enemyaAnimator = GetComponentInChildren<Animator>();
+		enemyAnimator = GetComponentInChildren<Animator>();
 	}
 
 	void IDamage.ReceiveDamage(float damage)

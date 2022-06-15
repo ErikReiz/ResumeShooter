@@ -5,10 +5,6 @@ using UnityEngine.AI;
 
 public class EnemyStateMachine : MonoBehaviour
 {
-    #region SERIALIZE FIELDS
-    [SerializeField] private float turnSpeed = 5f;
-	#endregion
-
 	#region PROPERTIES
 	public int IsMovingHash { get { return isMovingHash; } }
 	public int IsAttackingHash { get { return isAttackingHash; } }
@@ -45,7 +41,6 @@ public class EnemyStateMachine : MonoBehaviour
 
 		aiPerception = GetComponent<AIPerception>();
         navMesh = GetComponent<NavMeshAgent>();
-
         states = new EnemyStateFactory(this, aiPerception);
         currentState = states.Idle();
         currentState.EnterState();

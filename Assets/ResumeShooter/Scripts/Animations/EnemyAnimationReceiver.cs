@@ -6,6 +6,6 @@ public class EnemyAnimationReceiver : MonoBehaviour
 {
 	public void OnAttackEnded()
 	{
-		GetComponentInParent<EnemyMovement>().IsAttacking = false;
+		
 	}
 }

@@ -25,6 +25,8 @@ public class Weapon : MonoBehaviour
 	private AudioSource audioSource;
 	private ImpactManager impactManager;
 	private AmmoManager ammoManager;
+	private CharacterAnimationManager characterAnimationManager;
+	private Animator weaponAnimator;
 	#endregion
 
 	private void Awake()
@@ -32,6 +34,8 @@ public class Weapon : MonoBehaviour
 		audioSource = GetComponent<AudioSource>();
 		impactManager = GetComponent<ImpactManager>();
 		ammoManager = GetComponentInParent<AmmoManager>();
+		characterAnimationManager = GetComponentInParent<CharacterAnimationManager>();
+		weaponAnimator = GetComponent<Animator>();
 
 		currentAmmo = weaponData.magazineSize;
 	}
@@ -78,13 +82,20 @@ public class Weapon : MonoBehaviour
 			Shot();
 		}
 		else
+		{
+			characterAnimationManager.FireAnimation(true);
 			audioSource.PlayOneShot(weaponData.emptyFireSound);
+		}
+
 	}
 
 	private void Shot()
 	{
-		if (currentFireCooldown <= 0)
+		if (currentFireCooldown <= 0 && !isReloading)
 		{
+			characterAnimationManager.FireAnimation(false);
+			weaponAnimator.Play("Fire", 0, 0.0f);
+
 			currentAmmo--;
 			currentFireCooldown = fireCooldown;
 
@@ -136,17 +147,39 @@ public class Weapon : MonoBehaviour
 
 		if (ammoManager.HasAmmunitionOfType(weaponData.ammoType))
 		{
-			StartCoroutine(Reload());
+			Reload();
 		}
 	}
 
-	private IEnumerator Reload()
+	private void Reload()
 	{
 		isReloading = true;
-		yield return new WaitForSeconds(weaponData.timeToReload);
 
+		if (currentAmmo > 0)
+		{
+			characterAnimationManager.ReloadAnimation(false);
+			weaponAnimator.Play("Reload", 0, 0.0f);
+		}
+		else
+		{
+			characterAnimationManager.ReloadAnimation(true);
+			weaponAnimator.Play("Reload Empty", 0, 0.0f);
+		}
+	}
+
+	public void OnAmmunitionFill()
+	{
 		currentAmmo = ammoManager.UpdateAmmoCountOfType(weaponData.ammoType, weaponData.magazineSize, currentAmmo);
+	}
+
+	public void OnReloadAnimationEnded()
+	{
 		isReloading = false;
 	}
+	public void OnEjectCasing()
+	{
+		Instantiate(weaponData.shellPrefab, weaponData.shellSocket.position, weaponData.shellSocket.rotation);
+	}
+
 	#endregion
 }

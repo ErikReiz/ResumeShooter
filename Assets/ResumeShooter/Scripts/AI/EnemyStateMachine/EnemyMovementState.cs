@@ -1,10 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class EnemyMovementState : EnemyBaseState
 {
+	#region FIELDS
 	private Vector3 targetPosition;
+	private float distanceToTarget;
+	#endregion
 
 	public EnemyMovementState(BaseStateData stateData) : base(stateData)
 	{ }
@@ -37,13 +41,14 @@ public class EnemyMovementState : EnemyBaseState
 
 	public override void OnLostVision()
 	{
-		SwitchState(stateFactory.Idle());
+		if (context.NavMesh.velocity.sqrMagnitude <= 0.5) // TODO заменить
+			SwitchState(stateFactory.Idle());
 	}
 
 	private void EngageTarget()
 	{
-		
-		float distanceToTarget = Vector3.Distance(context.transform.position, targetPosition);
+
+		distanceToTarget = Vector3.Distance(context.transform.position, targetPosition);
 
 		if (distanceToTarget >= context.NavMesh.stoppingDistance)
 		{

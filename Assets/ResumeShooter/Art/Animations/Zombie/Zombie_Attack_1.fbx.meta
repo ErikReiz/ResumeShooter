@@ -5,7 +5,7 @@ ModelImporter:
   internalIDToNameTable:
   - first:
       74: -203655887218126122
-    second: f
+    second: Zombie_Attack_ReadOnly_1
   externalObjects: {}
   materials:
     materialImportMode: 2
@@ -36,7 +36,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: f
+      name: Zombie_Attack_ReadOnly_1
       takeName: mixamo.com
       internalID: 0
       firstFrame: 0
