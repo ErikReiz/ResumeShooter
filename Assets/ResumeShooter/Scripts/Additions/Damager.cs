@@ -6,11 +6,12 @@ public static class Damager
 {
 	public static void ApplyDamage(GameObject damageableObject, float damage)
 	{
-		IDamage damageableObjectInterface = damageableObject.GetComponent<IDamage>();
+		IDamage[] damageableObjectsInterface = damageableObject.GetComponents<IDamage>();
 
-		if (damageableObjectInterface != null)
+		foreach(IDamage damaged in damageableObjectsInterface)
+		if (damaged != null)
 		{
-			damageableObjectInterface.ReceiveDamage(damage);
+			damaged.ReceiveDamage(damage);
 		}
 	}
 }

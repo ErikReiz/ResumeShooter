@@ -32,7 +32,7 @@ public class PlayerController : MonoBehaviour
 
 	#region FIELDS
 	private Rigidbody playerRigidbody;
-	private CharacterAnimationManager characterAnimationManager;
+	private FPCharacter player;
 
 	private Vector3 originalScale;
 
@@ -47,7 +47,7 @@ public class PlayerController : MonoBehaviour
 
 	private void Awake()
 	{
-		characterAnimationManager = GetComponent<CharacterAnimationManager>();
+		player = GetComponent<FPCharacter>();
 		playerRigidbody = GetComponent<Rigidbody>();
 		originalScale = transform.localScale;
 	}
@@ -158,7 +158,7 @@ public class PlayerController : MonoBehaviour
 	private void ProcessMovement()
 	{
 		Vector3 inputVelocity = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-		characterAnimationManager.UpdateMovement(inputVelocity.x, inputVelocity.z);
+		player.PlayMovementAnimation(inputVelocity.x, inputVelocity.z);
 
 		inputVelocity = Vector3.Normalize(inputVelocity);
 		inputVelocity = transform.TransformDirection(inputVelocity) * walkSpeed * Time.deltaTime;
@@ -181,4 +181,4 @@ public class PlayerController : MonoBehaviour
 		yVelocity = 0f;
 	}
 
-}
+}	

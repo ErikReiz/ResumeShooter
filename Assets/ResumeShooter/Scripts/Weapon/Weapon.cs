@@ -7,9 +7,13 @@ public class Weapon : MonoBehaviour
 {
 	#region SERIALIZE FIELDS 
 	[SerializeField] private WeaponData weaponData;
+	[SerializeField] private GameObject muzzleFlash; //TODO убрать
 	#endregion
 
 	#region PROPERTIES
+	public RuntimeAnimatorController AnimatorController { get { return weaponData.animatorController; } }
+	public WeaponType WeaponType { get { return weaponData.weaponType; } }
+
 	public int CurrentAmmo { get { return currentAmmo; } }
 	public int GeneralAmmo { get { return ammoManager.GetAmmoCountOfType(weaponData.ammoType); } }
 	#endregion
@@ -25,8 +29,9 @@ public class Weapon : MonoBehaviour
 	private AudioSource audioSource;
 	private ImpactManager impactManager;
 	private AmmoManager ammoManager;
-	private CharacterAnimationManager characterAnimationManager;
+	private PlayerAnimationEventsReceiver characterEventsReceiver;
 	private Animator weaponAnimator;
+	private FPCharacter player;
 	#endregion
 
 	private void Awake()
@@ -34,14 +39,14 @@ public class Weapon : MonoBehaviour
 		audioSource = GetComponent<AudioSource>();
 		impactManager = GetComponent<ImpactManager>();
 		ammoManager = GetComponentInParent<AmmoManager>();
-		characterAnimationManager = GetComponentInParent<CharacterAnimationManager>();
 		weaponAnimator = GetComponent<Animator>();
-
-		currentAmmo = weaponData.magazineSize;
+		characterEventsReceiver = GetComponentInParent<PlayerAnimationEventsReceiver>();
+		player = GetComponentInParent<FPCharacter>();
 	}
 
 	private void Start()
 	{
+		currentAmmo = weaponData.magazineSize;
 		fireCooldown = 60f / weaponData.fireRate;
 		currentFireCooldown = fireCooldown;
 	}
@@ -49,6 +54,21 @@ public class Weapon : MonoBehaviour
 	private void Update()
 	{
 		currentFireCooldown -= Time.deltaTime;
+		ProcessAutomaticFire();
+	}
+
+	private void OnEnable()
+	{
+		characterEventsReceiver.OnEndedReload += OnReloadEnded;
+		characterEventsReceiver.OnEjectCasing += OnEjectCasing;
+		characterEventsReceiver.OnAmmunitionFill += OnAmmunitionFill;
+	}
+
+	private void OnDisable()
+	{
+		characterEventsReceiver.OnEndedReload -= OnReloadEnded;
+		characterEventsReceiver.OnEjectCasing -= OnEjectCasing;
+		characterEventsReceiver.OnAmmunitionFill -= OnAmmunitionFill;
 	}
 
 	#region SHOOTING
@@ -83,7 +103,7 @@ public class Weapon : MonoBehaviour
 		}
 		else
 		{
-			characterAnimationManager.FireAnimation(true);
+			player.FireAnimation(true);
 			audioSource.PlayOneShot(weaponData.emptyFireSound);
 		}
 
@@ -93,7 +113,7 @@ public class Weapon : MonoBehaviour
 	{
 		if (currentFireCooldown <= 0 && !isReloading)
 		{
-			characterAnimationManager.FireAnimation(false);
+			player.FireAnimation(false);
 			weaponAnimator.Play("Fire", 0, 0.0f);
 
 			currentAmmo--;
@@ -107,9 +127,8 @@ public class Weapon : MonoBehaviour
 
 	private void ProcessRaycast()
 	{
-
 		RaycastHit hitResult;
-		bool isHit = Physics.Raycast(transform.parent.position, transform.forward, out hitResult, weaponData.shotDistance);
+		bool isHit = Physics.Raycast(muzzleFlash.transform.position, transform.parent.forward, out hitResult, weaponData.shotDistance);
 		if (isHit)
 		{
 			impactManager.SpawnImpactParticle(hitResult);
@@ -157,28 +176,34 @@ public class Weapon : MonoBehaviour
 
 		if (currentAmmo > 0)
 		{
-			characterAnimationManager.ReloadAnimation(false);
+			player.ReloadAnimation(false);
 			weaponAnimator.Play("Reload", 0, 0.0f);
 		}
 		else
 		{
-			characterAnimationManager.ReloadAnimation(true);
+			player.ReloadAnimation(true);
 			weaponAnimator.Play("Reload Empty", 0, 0.0f);
 		}
 	}
 
-	public void OnAmmunitionFill()
+	private void OnAmmunitionFill()
 	{
 		currentAmmo = ammoManager.UpdateAmmoCountOfType(weaponData.ammoType, weaponData.magazineSize, currentAmmo);
 	}
 
-	public void OnReloadAnimationEnded()
+	private void OnReloadEnded()
 	{
 		isReloading = false;
 	}
-	public void OnEjectCasing()
+
+	private void OnEjectCasing()
 	{
 		Instantiate(weaponData.shellPrefab, weaponData.shellSocket.position, weaponData.shellSocket.rotation);
+	}
+
+	public bool CanChangeWeapon()
+	{
+		return !isReloading && !isHoldingFire;
 	}
 
 	#endregion

@@ -21,9 +21,9 @@ public class EnemyStateFactory
 		return new EnemyIdleState(stateData);
 	}
 
-	public EnemyBaseState Moving()
+	public EnemyBaseState Moving(Vector3 targetPosition)
 	{
-		return new EnemyMovementState(stateData);
+		return new EnemyMovementState(stateData, targetPosition);
 	}
 
 	public EnemyBaseState Attacking(Vector3 targetPosition)

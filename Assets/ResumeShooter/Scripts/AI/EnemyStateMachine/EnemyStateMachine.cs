@@ -8,8 +8,8 @@ public class EnemyStateMachine : MonoBehaviour
 	#region PROPERTIES
 	public int IsMovingHash { get { return isMovingHash; } }
 	public int IsAttackingHash { get { return isAttackingHash; } }
+	public Vector3 Position { get { return transform.parent.position; } }
 	public Animator EnemyAnimator { get { return enemyAnimator; } }
-
 	public EnemyBaseState CurrentState { set { currentState = value; } }
     public NavMeshAgent NavMesh { get { return navMesh; } }
 	#endregion
@@ -34,13 +34,13 @@ public class EnemyStateMachine : MonoBehaviour
 
 	private void Awake()
 	{
-		enemyAnimator = GetComponentInChildren<Animator>();
+		enemyAnimator = GetComponent<Animator>();
 		isMovingHash = Animator.StringToHash("isMoving");
 		isAttackingHash = Animator.StringToHash("isAttacking");
 
+		aiPerception = GetComponentInParent<AIPerception>();
+        navMesh = GetComponentInParent<NavMeshAgent>();
 
-		aiPerception = GetComponent<AIPerception>();
-        navMesh = GetComponent<NavMeshAgent>();
         states = new EnemyStateFactory(this, aiPerception);
         currentState = states.Idle();
         currentState.EnterState();

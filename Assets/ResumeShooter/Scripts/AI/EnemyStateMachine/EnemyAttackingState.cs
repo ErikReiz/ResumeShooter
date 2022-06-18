@@ -18,7 +18,6 @@ public class EnemyAttackingState : EnemyBaseState
 	public override void EnterState()
 	{
 		context.EnemyAnimator.SetBool(context.IsAttackingHash, true);
-		context.EnemyAnimator.SetBool(context.IsMovingHash, false);
 
 		aiPerception.OnPlayerSeen += OnPlayerSeen;
 		aiPerception.OnLostVision += OnLostVision;
@@ -31,6 +30,8 @@ public class EnemyAttackingState : EnemyBaseState
 
 	public override void ExitState()
 	{
+		context.EnemyAnimator.SetBool(context.IsAttackingHash, false);
+
 		aiPerception.OnPlayerSeen -= OnPlayerSeen;
 		aiPerception.OnLostVision -= OnLostVision;
 	}
@@ -43,10 +44,10 @@ public class EnemyAttackingState : EnemyBaseState
 
 	private void CheckSwitchState()
 	{
-		float distanceToTarget = Vector3.Distance(context.transform.position, targetPosition);
+		float distanceToTarget = Vector3.Distance(context.Position, targetPosition);
 		if (distanceToTarget >= context.NavMesh.stoppingDistance)
 		{
-			SwitchState(stateFactory.Moving());
+			SwitchState(stateFactory.Moving(targetPosition));
 		}
 	}
 

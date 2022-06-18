@@ -7,7 +7,8 @@ public class AIPerception : MonoBehaviour
 {
 	#region SERIALIZE FIELDS
 	[Header("General")]
-	[SerializeField] private bool hasVision = true;
+	[SerializeField] private bool hasVisionTrigger = true;
+	[SerializeField] private bool hasDamageTrigger = true;
 
 	[Header("AI vision")]
 	[SerializeField] private float visionRadius = 20f;
@@ -16,6 +17,10 @@ public class AIPerception : MonoBehaviour
 	[SerializeField] private float visionCheckDelay = 0.2f;
 	[SerializeField] private LayerMask playerLayerMask;
 	[SerializeField] private LayerMask worldLayerMask;
+
+	[Header("On damaged")]
+	[Tooltip("Radius in which enemy detects player when receiving damage")]
+	[SerializeField] private float damageDetectionRadius = 100f;
 	#endregion
 
 	#region FIELDS
@@ -28,9 +33,19 @@ public class AIPerception : MonoBehaviour
 		StartCoroutine(VisionCoroutine());
 	}
 
+	private void OnEnable()
+	{
+		GetComponentInChildren<Enemy>().OnDamaged += ReceiveDamage;
+	}
+
+	private void OnDisable()
+	{
+		GetComponentInChildren<Enemy>().OnDamaged -= ReceiveDamage;
+	}
+
 	private IEnumerator VisionCoroutine()
 	{
-		while(hasVision)
+		while(hasVisionTrigger)
 		{
 			yield return new WaitForSeconds(visionCheckDelay);
 			VisionCheck();
@@ -40,11 +55,11 @@ public class AIPerception : MonoBehaviour
 	private void VisionCheck()
 	{
 		Collider[] rangeChecks = Physics.OverlapSphere(transform.position, visionRadius, playerLayerMask);
+		Vector3 directionToPlayer = new Vector3();
 		if (rangeChecks.Length > 0)
 		{
 			Transform playerTransform = rangeChecks[0].transform;
-			Vector3 directionToPlayer = Vector3.Normalize(playerTransform.position - transform.position);
-
+			directionToPlayer = Vector3.Normalize(playerTransform.position - transform.position);
 			if (Vector3.Angle(transform.forward, directionToPlayer) <= visionAngle / 2)
 			{
 				bool isHit = ObstacleCheck(playerTransform, directionToPlayer);
@@ -61,7 +76,21 @@ public class AIPerception : MonoBehaviour
 
 	private bool ObstacleCheck(Transform playerTransform, Vector3 directionToPlayer)
 	{
-		bool isHit =  Physics.Raycast(transform.position, directionToPlayer, Vector3.Distance(transform.position, playerTransform.position), worldLayerMask);
+		RaycastHit hit;
+		bool isHit =  Physics.Raycast(transform.position, directionToPlayer, out hit, Vector3.Distance(transform.position, playerTransform.position), worldLayerMask);
+
 		return isHit;
+	}
+
+	void ReceiveDamage()
+	{
+		if(!hasDamageTrigger) { return; }
+
+		Collider[] rangeChecks = Physics.OverlapSphere(transform.position, damageDetectionRadius, playerLayerMask);
+		if (rangeChecks.Length > 0)
+		{
+			Transform playerTransform = rangeChecks[0].transform;
+			OnPlayerSeen?.Invoke(playerTransform.position);
+		}
 	}
 }

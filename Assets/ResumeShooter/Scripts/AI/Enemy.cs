@@ -1,15 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Enemy : MonoBehaviour, IDamage
 {
 	#region SERIALIZE FIELDS 
 	[SerializeField] private float maxHealth = 100f;
-	[SerializeField] private float damage = 10f;
+	[Header("Damage")]
+	[SerializeField] private float attackDamage = 10f;
+	[Tooltip("Sphere radius around zombie hand, when attacking")]
+	[SerializeField] private float attackRadius = 10f;
+	[Tooltip("Hand around which the sphere will be created")]
+	[SerializeField] private Transform armSocket;
+	[SerializeField] private LayerMask playerLayerMask;
+	#endregion
+
+	#region PROPERTIES
+	public bool IsDead { get { return isDead; } }
 	#endregion
 
 	#region FIELDS
+	public UnityAction OnDamaged;
+
 	private Animator enemyAnimator;
 	private float currentHealth;
 	private bool isDead = false;
@@ -25,10 +38,10 @@ public class Enemy : MonoBehaviour, IDamage
 	{
 		if (isDead) { return; }
 
-		damage = Mathf.Clamp(damage, 0, maxHealth);
+		OnDamaged?.Invoke();
 		currentHealth -= damage;
 
-		if (currentHealth == 0)
+		if (currentHealth <= 0)
 		{
 			isDead = true;
 			KillEnemy();
@@ -37,6 +50,14 @@ public class Enemy : MonoBehaviour, IDamage
 
 	private void KillEnemy()
 	{
-		Debug.Log("Enemy Killed");
+		FindObjectOfType<FPSGameMode>().CharacterKilled(this);
 	}
+
+	public void OnApplyDamage()
+	{
+		Collider[] overlappingObjects = Physics.OverlapSphere(armSocket.position, attackRadius, playerLayerMask);
+
+		if (overlappingObjects[0])
+			Damager.ApplyDamage(overlappingObjects[0].gameObject, attackDamage);
+	}	
 }

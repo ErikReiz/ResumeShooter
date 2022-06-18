@@ -26,7 +26,7 @@ public class EnemyIdleState : EnemyBaseState
 
 	public override void OnPlayerSeen(Vector3 targetPosition)
 	{
-		SwitchState(stateFactory.Moving());
+		SwitchState(stateFactory.Moving(targetPosition));
 	}
 
 	public override void OnLostVision()

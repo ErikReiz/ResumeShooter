@@ -29,7 +29,7 @@ AnimatorController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: AssaultRifle_Animator
+  m_Name: Weapon_Animator
   serializedVersion: 5
   m_AnimatorParameters:
   - m_Name: Reloading
@@ -333,21 +333,21 @@ AnimatorStateMachine:
     m_Position: {x: 300, y: 108, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 1102674333097317804}
-    m_Position: {x: 300, y: 40, z: 0}
+    m_Position: {x: 590, y: 110, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 1102961050136933334}
-    m_Position: {x: 550, y: 110, z: 0}
+    m_Position: {x: 140, y: 210, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 1102248369876176540}
-    m_Position: {x: 790, y: 110, z: 0}
+    m_Position: {x: 450, y: 210, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
   m_StateMachineTransitions: {}
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: 50, y: 20, z: 0}
-  m_EntryPosition: {x: 90, y: 110, z: 0}
-  m_ExitPosition: {x: 828, y: 48, z: 0}
+  m_EntryPosition: {x: 320, y: 10, z: 0}
+  m_ExitPosition: {x: 50, y: 70, z: 0}
   m_ParentStateMachinePosition: {x: 408, y: -60, z: 0}
   m_DefaultState: {fileID: 1102005719177023416}
 --- !u!1101 &8906922430584547401

@@ -1,26 +1,33 @@
 using UnityEngine;
 
-public enum AmmunitionType
+public enum AmmunitionType : byte
 {
 	RifleAmmo,
 	PistolAmmo
 }
 
+public enum WeaponType : byte
+{
+	Primary,
+	Secondary
+}
+
 [System.Serializable]
 public class WeaponData
 {
-
 	[Header("General")]
-	public bool isFullAuto = false;
-	public float timeToReload = 2f;
+	public WeaponType weaponType;
 	public GameObject shellPrefab;
 	public Transform shellSocket;
+	[Tooltip("Character animator override controller")]
+	public RuntimeAnimatorController animatorController;
 
 	[Header("Ammo")]
 	public int magazineSize = 30;
 	public AmmunitionType ammoType;
 
 	[Header("Fire information")]
+	public bool isFullAuto = false;
 	[Tooltip("shots per second")]
 	[Range(1f, 1000f)] public float fireRate = 400f;
 	public float shotDistance = 2000f;

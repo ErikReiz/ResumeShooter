@@ -7,10 +7,12 @@ public class CharacterAnimationManager : MonoBehaviour
 	#region SERIALIZE FIELDS
 	[Tooltip("Sets locomotion smoothness")]
 	[SerializeField] private float dampTimeLocomotion = 0.15f;
+	[SerializeField] public Camera cam; //TODO убрать
 	#endregion
 
 	#region FIELDS
 	private Animator characterAnimator;
+	private FPCharacter character;
 
 	private int reloadingLayer;
 	private int firingLayer;
@@ -21,9 +23,26 @@ public class CharacterAnimationManager : MonoBehaviour
 	private void Awake()
 	{
 		characterAnimator = GetComponentInChildren<Animator>();
+		character = GetComponent<FPCharacter>();
+
 		firingLayer = characterAnimator.GetLayerIndex("Firing Layer");
 		reloadingLayer = characterAnimator.GetLayerIndex("Reloading Layer");
 		hashMovement = Animator.StringToHash("Movement");
+	}
+
+	private void OnEnable()
+	{
+		character.OnWeaponChanged += OnWeaponChanged;
+	}
+
+	private void OnDisable()
+	{
+		character.OnWeaponChanged -= OnWeaponChanged;
+	}
+
+	private void OnWeaponChanged(Weapon currentWeapon)
+	{
+		characterAnimator.runtimeAnimatorController = currentWeapon.AnimatorController;
 	}
 
 	public void UpdateMovement(float horizontal, float vertical)

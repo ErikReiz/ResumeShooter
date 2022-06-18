@@ -26,7 +26,7 @@ public class SerializableDictionary<TK, TV> : ISerializationCallbackReceiver
 
 		for(int i = 0; i < minLength; i++)
 		{
-			if (keys[i].Equals(null) || values[i].Equals(null))
+			if (keys[i] == null || values[i] == null)
 				continue;
 
 		dictionary.Add(keys[i], values[i]);

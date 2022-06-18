@@ -1,7 +1,7 @@
 fileFormatVersion: 2
 guid: ad53682c39777e44583e3b5d6a3a37c3
 ModelImporter:
-  serializedVersion: 20200
+  serializedVersion: 21202
   internalIDToNameTable:
   - first:
       1: 100000
@@ -455,6 +455,7 @@ ModelImporter:
     bakeSimulation: 0
     resampleCurves: 0
     optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
     motionNodeName: 
     rigImportErrors: 
     rigImportWarnings: 
@@ -549,22 +550,15 @@ ModelImporter:
           postInfinity: 3
           rotationOrder: 4
       events:
-      - time: 0.70621467
+      - time: 0.42180094
+        functionName: OnAnimationAmmunitionFill
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.70616114
         functionName: OnAnimationEndedReload
-        data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 0.42990655
-        functionName: OnAmmunitionFill
-        data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 0.58691764
-        functionName: OnSlideBack
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
@@ -586,6 +580,7 @@ ModelImporter:
     importBlendShapes: 1
     importCameras: 1
     importLights: 1
+    nodeNameCollisionStrategy: 0
     fileIdsGeneration: 1
     swapUVChannels: 0
     generateSecondaryUV: 0
@@ -597,6 +592,7 @@ ModelImporter:
     skinWeightsMode: 0
     maxBonesPerVertex: 4
     minBoneWeight: 0.001
+    optimizeBones: 1
     meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8

@@ -10,16 +10,18 @@ public class EnemyMovementState : EnemyBaseState
 	private float distanceToTarget;
 	#endregion
 
-	public EnemyMovementState(BaseStateData stateData) : base(stateData)
-	{ }
+	public EnemyMovementState(BaseStateData stateData, Vector3 targetPosition) : base(stateData)
+	{
+		this.targetPosition = targetPosition;
+	}
 
 	public override void EnterState()
 	{
-		context.EnemyAnimator.SetBool(context.IsAttackingHash, false);
 		context.EnemyAnimator.SetBool(context.IsMovingHash, true);
 
 		aiPerception.OnPlayerSeen += OnPlayerSeen;
 		aiPerception.OnLostVision += OnLostVision;
+		EngageTarget();
 	}
 
 	public override void Tick()
@@ -29,6 +31,7 @@ public class EnemyMovementState : EnemyBaseState
 
 	public override void ExitState()
 	{
+		context.EnemyAnimator.SetBool(context.IsMovingHash, false);
 		aiPerception.OnPlayerSeen -= OnPlayerSeen;
 		aiPerception.OnLostVision -= OnLostVision;
 	}
@@ -47,8 +50,7 @@ public class EnemyMovementState : EnemyBaseState
 
 	private void EngageTarget()
 	{
-
-		distanceToTarget = Vector3.Distance(context.transform.position, targetPosition);
+		distanceToTarget = Vector3.Distance(context.Position, targetPosition);
 
 		if (distanceToTarget >= context.NavMesh.stoppingDistance)
 		{

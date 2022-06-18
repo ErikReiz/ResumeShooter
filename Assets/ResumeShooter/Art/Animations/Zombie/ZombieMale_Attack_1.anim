@@ -52065,7 +52065,7 @@ AnimationClip:
     m_LoopBlend: 1
     m_LoopBlendOrientation: 1
     m_LoopBlendPositionY: 1
-    m_LoopBlendPositionXZ: 0
+    m_LoopBlendPositionXZ: 1
     m_KeepOriginalOrientation: 0
     m_KeepOriginalPositionY: 1
     m_KeepOriginalPositionXZ: 0
@@ -103191,10 +103191,10 @@ AnimationClip:
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
   m_Events:
-  - time: 0.73333335
-    functionName: OnAttackEnded
+  - time: 1.5
+    functionName: OnApplyDamage
     data: 
-    objectReferenceParameter: {fileID: 11500000, guid: da01e9fe6a5c65e488f5495f2e693ac4,
+    objectReferenceParameter: {fileID: 485516240927748455, guid: 2894f9e3aa5bd8d439da34d49782e3da,
       type: 3}
     floatParameter: 0
     intParameter: 0
