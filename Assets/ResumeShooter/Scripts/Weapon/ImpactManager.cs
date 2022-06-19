@@ -14,7 +14,7 @@ public class ImpactManager : MonoBehaviour
 		GameObject hitObject = hitResult.transform.gameObject;
 		SurfaceManager hitObjectSurfaceManager = hitObject.GetComponent<SurfaceManager>();
 		GameObject impactParticle = defaultImpactParticle;
-		Dictionary<Surface, GameObject> particleDictionary = impactEffects.GetDictionary;
+		Dictionary<Surface, GameObject> particleDictionary = impactEffects.Dictionary;
 
 		if (hitObjectSurfaceManager)
 		{

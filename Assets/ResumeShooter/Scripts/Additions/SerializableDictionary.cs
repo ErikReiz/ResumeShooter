@@ -7,10 +7,9 @@ public class SerializableDictionary<TK, TV> : ISerializationCallbackReceiver
 	[SerializeField] public List<TK> keys;
 	[SerializeField] private List<TV> values;
 
-	public ref Dictionary<TK, TV> GetDictionary { get { return ref dictionary; } }
+	public Dictionary<TK, TV> Dictionary { get { return dictionary; } }
 
 	private Dictionary<TK, TV> dictionary = new Dictionary<TK, TV>();
-
 
 	public void OnBeforeSerialize()
 	{

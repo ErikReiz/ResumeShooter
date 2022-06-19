@@ -2,29 +2,34 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [RequireComponent(typeof(PlayerController))]
-public class FPCharacter : MonoBehaviour, IDamage
+public class FPCharacter : MonoBehaviour, IDamageable
 {
 	#region SERIALIZE FIELDS
+	[Tooltip("Range at which character will be able to interact with objects")]
+	[SerializeField] private float interactionRange = 30f;
 	[SerializeField] private float maxHealth = 100f;
+	[Tooltip("Player object for weapon")]
 	[SerializeField] private WeaponCarrier weaponCarrier;
 	[Tooltip("Sets locomotion smoothness")]
 	[SerializeField] private float dampTimeLocomotion = 0.15f;
 	#endregion
 
 	#region PROPERTIES
+	public AmmoManager AmmoManager { get { return ammoManager; } }
+	public Vector3 CameraForwardVector { get { return playerCamera.transform.forward; } }
 	public int WeaponCurrentAmmo { get { return currentWeapon.CurrentAmmo; } }
 	public int WeaponGeneralAmmo { get { return currentWeapon.GeneralAmmo; } }
-	private float GetHeatlhPercents { get { return currentHealth / maxHealth; } }
 	#endregion
 
 	#region FIELDS
 	public UnityAction<float> OnPlayerDamaged;
 	public UnityAction<Weapon> OnWeaponChanged;
 
+	private Camera playerCamera;
 	private Weapon currentWeapon;
+	private AmmoManager ammoManager;
 	private float currentHealth;
 	private bool isDead = false;
-
 	private bool holstered = true;
 
 	#region ANIMATIONS
@@ -41,9 +46,11 @@ public class FPCharacter : MonoBehaviour, IDamage
 
 	private void Awake()
 	{
-		currentHealth = maxHealth;
 		SetupAnimator();
+		currentHealth = maxHealth;
 
+		playerCamera = GetComponentInChildren<Camera>();
+		ammoManager = GetComponent<AmmoManager>();
 	}
 
 	private void Start()
@@ -56,6 +63,7 @@ public class FPCharacter : MonoBehaviour, IDamage
 		ProcessFireInput();
 		ProcessReloadInput();
 		ProcessSwitchWeaponInput();
+		ProcessInteract();
 	}
 
 	private void SetupAnimator()
@@ -69,7 +77,6 @@ public class FPCharacter : MonoBehaviour, IDamage
 
 		eventsReceiver = GetComponentInChildren<PlayerAnimationEventsReceiver>();
 		eventsReceiver.OnEndedHolster += OnEndedHolster;
-		eventsReceiver.OnHolsterStateSwitched += OnHolsterStateSwitched;
 	}
 
 	#region INPUT
@@ -110,6 +117,21 @@ public class FPCharacter : MonoBehaviour, IDamage
 		
 		}
 	}
+
+	private void ProcessInteract()
+	{
+		if(Input.GetButtonDown("Interact"))
+		{
+			RaycastHit hitResult;
+			Vector3 cameraPosition = playerCamera.transform.position;
+			bool isHit = Physics.Raycast(cameraPosition, CameraForwardVector, out hitResult, interactionRange);
+
+			if(isHit)
+			{
+				Interact(ref hitResult);
+			}
+		}
+	}
 	#endregion
 
 	#region ANIMATIONS
@@ -135,16 +157,12 @@ public class FPCharacter : MonoBehaviour, IDamage
 
 	private void OnEndedHolster()
 	{
+		holstered = !holstered;
 		if (holstered)
 		{
 			weaponCarrier.SwitchWeapon(true);
 			SetCurrentWeapon();
 		}
-	}
-
-	private void OnHolsterStateSwitched()
-	{
-		holstered = !holstered;
 	}
 	#endregion
 
@@ -158,14 +176,15 @@ public class FPCharacter : MonoBehaviour, IDamage
 		}
 	}
 
-	void IDamage.ReceiveDamage(float damage)
+	void IDamageable.ReceiveDamage(float damage)
 	{
 		if (isDead) { return; }
 
 		damage = Mathf.Clamp(damage, 0, maxHealth);
 		currentHealth -= damage;
-
-		OnPlayerDamaged.Invoke(GetHeatlhPercents);
+		Debug.Log(currentHealth);
+		float healthPercents = currentHealth / maxHealth;
+		OnPlayerDamaged.Invoke(healthPercents);
 
 		if (currentHealth == 0)
 		{
@@ -174,8 +193,26 @@ public class FPCharacter : MonoBehaviour, IDamage
 		}
 	}
 
+	private void Interact(ref RaycastHit hitResult)
+	{
+		GameObject hitObject = hitResult.transform.gameObject;
+		IInteractable[] interactedObjects = hitObject.GetComponents<IInteractable>();
+
+		foreach(IInteractable interactedObject in interactedObjects)
+		{
+			Debug.Log("interacted");
+			interactedObject.Interact(this);
+		}
+	}
+
 	private void KillPlayer()
 	{
 		FindObjectOfType<FPSGameMode>().CharacterKilled(this);
+	}
+
+	public void IncreaseHealth(float healthToRestore)
+	{
+		currentHealth += Mathf.Clamp(healthToRestore, 0, maxHealth - currentHealth);
+		Debug.Log(currentHealth);
 	}
 }

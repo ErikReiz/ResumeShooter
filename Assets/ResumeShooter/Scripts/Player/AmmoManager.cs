@@ -14,7 +14,7 @@ public class AmmoManager : MonoBehaviour
 
 	private void Awake()
 	{
-		ammoCountDictionary = ammoCount.GetDictionary;
+		ammoCountDictionary = ammoCount.Dictionary;
 	}
 
 	public bool HasAmmunitionOfType(AmmunitionType ammunitionType)
@@ -51,6 +51,17 @@ public class AmmoManager : MonoBehaviour
 		{
 			ammoCountDictionary[ammunitionType] -= ammoCountToFullMagazine;
 			return magazineSize;
+		}
+	}
+
+	public void IncreaseAmmunition(Dictionary<AmmunitionType, int> storedAmmo)
+	{
+		foreach(var currentStoredAmmo in storedAmmo)
+		{
+			if(ammoCountDictionary.ContainsKey(currentStoredAmmo.Key))
+			{
+				ammoCountDictionary[currentStoredAmmo.Key] += currentStoredAmmo.Value;
+			}
 		}
 	}
 }

@@ -11,14 +11,14 @@ public class EnemyStateMachine : MonoBehaviour
 	public Vector3 Position { get { return transform.parent.position; } }
 	public Animator EnemyAnimator { get { return enemyAnimator; } }
 	public EnemyBaseState CurrentState { set { currentState = value; } }
-    public NavMeshAgent NavMesh { get { return navMesh; } }
+	public NavMeshAgent NavMesh { get { return navMesh; } }
 	#endregion
 
 	#region FIELDS
 
 	#region STATES
 	private EnemyBaseState currentState;
-    private EnemyStateFactory states;
+    private EnemyStateFactory stateFactory;
 	#endregion
 	#region PERCEPTIONS
     private AIPerception aiPerception;
@@ -41,8 +41,8 @@ public class EnemyStateMachine : MonoBehaviour
 		aiPerception = GetComponentInParent<AIPerception>();
         navMesh = GetComponentInParent<NavMeshAgent>();
 
-        states = new EnemyStateFactory(this, aiPerception);
-        currentState = states.Idle();
+        stateFactory = new EnemyStateFactory(this, aiPerception);
+        currentState = stateFactory.Idle();
         currentState.EnterState();
 	}
 

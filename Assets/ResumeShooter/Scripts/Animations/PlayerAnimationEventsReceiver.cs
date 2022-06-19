@@ -6,7 +6,6 @@ using UnityEngine.Events;
 public class PlayerAnimationEventsReceiver : MonoBehaviour
 {
 	#region FIELDS
-	public UnityAction OnHolsterStateSwitched;
 	public UnityAction OnEndedHolster;
 	public UnityAction OnEndedReload;
 	public UnityAction OnEjectCasing;
@@ -14,12 +13,7 @@ public class PlayerAnimationEventsReceiver : MonoBehaviour
 	#endregion
 
 	#region CHARACTER EVENTS
-	private void OnAnimationChangedHolster()
-	{
-		OnHolsterStateSwitched?.Invoke();
-	}
-
-	private void OnAnimationHolster()
+	private void OnAnimationEndedHolster()
 	{
 		OnEndedHolster?.Invoke();
 	}

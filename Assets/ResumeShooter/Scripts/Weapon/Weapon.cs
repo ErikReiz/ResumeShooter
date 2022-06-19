@@ -1,6 +1,4 @@
-using System.Collections;
 using UnityEngine;
-using UnityEngine.Events;
 
 [RequireComponent(typeof(AudioSource), typeof(ImpactManager))]
 public class Weapon : MonoBehaviour
@@ -29,7 +27,7 @@ public class Weapon : MonoBehaviour
 	private AudioSource audioSource;
 	private ImpactManager impactManager;
 	private AmmoManager ammoManager;
-	private PlayerAnimationEventsReceiver characterEventsReceiver;
+	private PlayerAnimationEventsReceiver playerAnimationReceiver;
 	private Animator weaponAnimator;
 	private FPCharacter player;
 	#endregion
@@ -40,13 +38,14 @@ public class Weapon : MonoBehaviour
 		impactManager = GetComponent<ImpactManager>();
 		ammoManager = GetComponentInParent<AmmoManager>();
 		weaponAnimator = GetComponent<Animator>();
-		characterEventsReceiver = GetComponentInParent<PlayerAnimationEventsReceiver>();
+		playerAnimationReceiver = GetComponentInParent<PlayerAnimationEventsReceiver>();
 		player = GetComponentInParent<FPCharacter>();
 	}
 
 	private void Start()
 	{
 		currentAmmo = weaponData.magazineSize;
+
 		fireCooldown = 60f / weaponData.fireRate;
 		currentFireCooldown = fireCooldown;
 	}
@@ -59,16 +58,16 @@ public class Weapon : MonoBehaviour
 
 	private void OnEnable()
 	{
-		characterEventsReceiver.OnEndedReload += OnReloadEnded;
-		characterEventsReceiver.OnEjectCasing += OnEjectCasing;
-		characterEventsReceiver.OnAmmunitionFill += OnAmmunitionFill;
+		playerAnimationReceiver.OnEndedReload += OnReloadEnded;
+		playerAnimationReceiver.OnEjectCasing += OnEjectCasing;
+		playerAnimationReceiver.OnAmmunitionFill += OnAmmunitionFill;
 	}
 
 	private void OnDisable()
 	{
-		characterEventsReceiver.OnEndedReload -= OnReloadEnded;
-		characterEventsReceiver.OnEjectCasing -= OnEjectCasing;
-		characterEventsReceiver.OnAmmunitionFill -= OnAmmunitionFill;
+		playerAnimationReceiver.OnEndedReload -= OnReloadEnded;
+		playerAnimationReceiver.OnEjectCasing -= OnEjectCasing;
+		playerAnimationReceiver.OnAmmunitionFill -= OnAmmunitionFill;
 	}
 
 	#region SHOOTING
@@ -128,7 +127,8 @@ public class Weapon : MonoBehaviour
 	private void ProcessRaycast()
 	{
 		RaycastHit hitResult;
-		bool isHit = Physics.Raycast(muzzleFlash.transform.position, transform.parent.forward, out hitResult, weaponData.shotDistance);
+
+		bool isHit = Physics.Raycast(muzzleFlash.transform.position, player.CameraForwardVector, out hitResult, weaponData.shotDistance);
 		if (isHit)
 		{
 			impactManager.SpawnImpactParticle(hitResult);

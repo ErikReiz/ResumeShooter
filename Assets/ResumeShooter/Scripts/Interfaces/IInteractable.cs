@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IDamage
+public interface IInteractable
 {
-	void ReceiveDamage(float damage);
+	void Interact(FPCharacter interactedPlayer);
 }

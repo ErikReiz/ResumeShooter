@@ -10,9 +10,9 @@ public class KillAllEnemiesGameMode : FPSGameMode
 		{
 			EndGame(false);
 		}
-		else if(characterKilled is Enemy)
+		else if(characterKilled is ZombieAI)
 		{
-			foreach (var enemy in FindObjectsOfType<Enemy>())
+			foreach (var enemy in FindObjectsOfType<ZombieAI>())
 			{
 				if(!enemy.IsDead)
 				{

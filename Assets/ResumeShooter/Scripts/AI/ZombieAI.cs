@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Enemy : MonoBehaviour, IDamage
+public class ZombieAI : MonoBehaviour, IDamageable
 {
 	#region SERIALIZE FIELDS 
 	[SerializeField] private float maxHealth = 100f;
@@ -23,7 +23,6 @@ public class Enemy : MonoBehaviour, IDamage
 	#region FIELDS
 	public UnityAction OnDamaged;
 
-	private Animator enemyAnimator;
 	private float currentHealth;
 	private bool isDead = false;
 	#endregion
@@ -31,10 +30,9 @@ public class Enemy : MonoBehaviour, IDamage
 	private void Awake()
 	{
 		currentHealth = maxHealth;
-		enemyAnimator = GetComponentInChildren<Animator>();
 	}
 
-	void IDamage.ReceiveDamage(float damage)
+	void IDamageable.ReceiveDamage(float damage)
 	{
 		if (isDead) { return; }
 

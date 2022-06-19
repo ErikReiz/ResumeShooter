@@ -498,8 +498,8 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.568117
-        functionName: OnAnimationChangedHolster
+      - time: 0.43546396
+        functionName: OnAnimationEndedHolster
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0

@@ -35,12 +35,12 @@ public class AIPerception : MonoBehaviour
 
 	private void OnEnable()
 	{
-		GetComponentInChildren<Enemy>().OnDamaged += ReceiveDamage;
+		GetComponentInChildren<ZombieAI>().OnDamaged += ReceiveDamage;
 	}
 
 	private void OnDisable()
 	{
-		GetComponentInChildren<Enemy>().OnDamaged -= ReceiveDamage;
+		GetComponentInChildren<ZombieAI>().OnDamaged -= ReceiveDamage;
 	}
 
 	private IEnumerator VisionCoroutine()
