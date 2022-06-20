@@ -8,20 +8,11 @@ public class AmmoManager : MonoBehaviour
 	[SerializeField] private SerializableDictionary<AmmunitionType, int> ammoCount;
 	#endregion
 
-	#region FIELDS
-	private Dictionary<AmmunitionType, int> ammoCountDictionary;
-	#endregion
-
-	private void Awake()
-	{
-		ammoCountDictionary = ammoCount.Dictionary;
-	}
-
 	public bool HasAmmunitionOfType(AmmunitionType ammunitionType)
 	{
-		if (!ammoCountDictionary.ContainsKey(ammunitionType)) { return false; }
+		if (!ammoCount.ContainsKey(ammunitionType)) { return false; }
 
-		if (ammoCountDictionary[ammunitionType] > 0)
+		if (ammoCount[ammunitionType] > 0)
 			return true;
 		else
 			return false;
@@ -29,27 +20,27 @@ public class AmmoManager : MonoBehaviour
 
 	public int GetAmmoCountOfType(AmmunitionType ammunitionType)
 	{
-		if(ammoCountDictionary.ContainsKey(ammunitionType))
-			return ammoCountDictionary[ammunitionType];
+		if(ammoCount.ContainsKey(ammunitionType))
+			return ammoCount[ammunitionType];
 		else
 			return 0;
 	}
 
 	public int UpdateAmmoCountOfType(AmmunitionType ammunitionType, int magazineSize, int ammoInMagazine)
 	{
-		if (!ammoCountDictionary.ContainsKey(ammunitionType)) { return 0; }
+		if (!ammoCount.ContainsKey(ammunitionType)) { return 0; }
 
-		int ammoOfType = ammoCountDictionary[ammunitionType];
+		int ammoOfType = ammoCount[ammunitionType];
 		int ammoCountToFullMagazine = magazineSize - ammoInMagazine;
 
 		if (ammoCountToFullMagazine > ammoOfType)
 		{
-			ammoCountDictionary[ammunitionType] = 0;
+			ammoCount[ammunitionType] = 0;
 			return ammoOfType;
 		}
 		else
 		{
-			ammoCountDictionary[ammunitionType] -= ammoCountToFullMagazine;
+			ammoCount[ammunitionType] -= ammoCountToFullMagazine;
 			return magazineSize;
 		}
 	}
@@ -58,9 +49,9 @@ public class AmmoManager : MonoBehaviour
 	{
 		foreach(var currentStoredAmmo in storedAmmo)
 		{
-			if(ammoCountDictionary.ContainsKey(currentStoredAmmo.Key))
+			if(ammoCount.ContainsKey(currentStoredAmmo.Key))
 			{
-				ammoCountDictionary[currentStoredAmmo.Key] += currentStoredAmmo.Value;
+				ammoCount[currentStoredAmmo.Key] += currentStoredAmmo.Value;
 			}
 		}
 	}

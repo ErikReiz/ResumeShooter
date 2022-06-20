@@ -12,11 +12,15 @@ public class HealthBarUpdater : MonoBehaviour
 	{
 		healthBarSlider = GetComponent<Slider>();
 		player = FindObjectOfType<FPCharacter>();
-		player.OnPlayerDamaged += UpdateHealthBar;
 	}
 
-	private void UpdateHealthBar(float heatlhPercents)
+	private void Update()
 	{
-		healthBarSlider.value = heatlhPercents;
+		UpdateHealthBar();
+	}
+
+	private void UpdateHealthBar()
+	{
+		healthBarSlider.value = player.HealthPercents;
 	}
 }

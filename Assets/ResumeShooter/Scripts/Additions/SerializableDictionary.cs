@@ -2,25 +2,34 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class SerializableDictionary<TK, TV> : ISerializationCallbackReceiver
+public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver
 {
-	[SerializeField] public List<TK> keys;
-	[SerializeField] private List<TV> values;
+	#region SERIALIZE FIELDS
+	[SerializeField] public TKey[] keys;
+	[SerializeField] private TValue[] values;
+	#endregion
 
-	public Dictionary<TK, TV> Dictionary { get { return dictionary; } }
+	#region PROPERTIES
+	public Dictionary<TKey, TValue> Dictionary { get { return dictionary; } }
 
-	private Dictionary<TK, TV> dictionary = new Dictionary<TK, TV>();
+	public int Count { get { return dictionary.Count; } }
+	public TValue this[TKey key] { get { return dictionary[key]; } set { dictionary[key] = value; } }
+	#endregion
+
+	#region FIELDS
+	private Dictionary<TKey, TValue> dictionary = new Dictionary<TKey, TValue>();
+	#endregion
 
 	public void OnBeforeSerialize()
 	{
-		
+
 	}
 
 	public void OnAfterDeserialize()
 	{
-		if (keys.Count == 0 || values.Count == 0) { return; }
+		if (keys.Length == 0 || values.Length == 0) { return; }
 
-		int minLength = Mathf.Min(keys.Count, values.Count);
+		int minLength = Mathf.Min(keys.Length, values.Length);
 		dictionary.Clear();
 
 		for(int i = 0; i < minLength; i++)
@@ -30,5 +39,30 @@ public class SerializableDictionary<TK, TV> : ISerializationCallbackReceiver
 
 		dictionary.Add(keys[i], values[i]);
 		}
+	}
+
+	public void Add(TKey key, TValue value)
+	{
+		dictionary.Add(key, value);
+	}
+
+	public bool ContainsKey(TKey key)
+	{
+		return dictionary.ContainsKey(key);
+	}
+
+	public bool Remove(TKey key)
+	{
+		return dictionary.Remove(key);
+	}
+
+	public bool TryGetValue(TKey key, out TValue value)
+	{
+		return dictionary.TryGetValue(key, out value);
+	}
+	
+	public void Clear()
+	{
+		dictionary.Clear();
 	}
 }

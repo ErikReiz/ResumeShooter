@@ -19,10 +19,10 @@ public class FPCharacter : MonoBehaviour, IDamageable
 	public Vector3 CameraForwardVector { get { return playerCamera.transform.forward; } }
 	public int WeaponCurrentAmmo { get { return currentWeapon.CurrentAmmo; } }
 	public int WeaponGeneralAmmo { get { return currentWeapon.GeneralAmmo; } }
+	public float HealthPercents { get { return currentHealth / maxHealth; } }
 	#endregion
 
 	#region FIELDS
-	public UnityAction<float> OnPlayerDamaged;
 	public UnityAction<Weapon> OnWeaponChanged;
 
 	private Camera playerCamera;
@@ -182,9 +182,6 @@ public class FPCharacter : MonoBehaviour, IDamageable
 
 		damage = Mathf.Clamp(damage, 0, maxHealth);
 		currentHealth -= damage;
-		Debug.Log(currentHealth);
-		float healthPercents = currentHealth / maxHealth;
-		OnPlayerDamaged.Invoke(healthPercents);
 
 		if (currentHealth == 0)
 		{
@@ -200,7 +197,6 @@ public class FPCharacter : MonoBehaviour, IDamageable
 
 		foreach(IInteractable interactedObject in interactedObjects)
 		{
-			Debug.Log("interacted");
 			interactedObject.Interact(this);
 		}
 	}
@@ -213,6 +209,5 @@ public class FPCharacter : MonoBehaviour, IDamageable
 	public void IncreaseHealth(float healthToRestore)
 	{
 		currentHealth += Mathf.Clamp(healthToRestore, 0, maxHealth - currentHealth);
-		Debug.Log(currentHealth);
 	}
 }

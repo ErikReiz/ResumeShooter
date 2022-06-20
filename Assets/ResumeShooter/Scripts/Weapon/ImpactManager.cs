@@ -14,12 +14,11 @@ public class ImpactManager : MonoBehaviour
 		GameObject hitObject = hitResult.transform.gameObject;
 		SurfaceManager hitObjectSurfaceManager = hitObject.GetComponent<SurfaceManager>();
 		GameObject impactParticle = defaultImpactParticle;
-		Dictionary<Surface, GameObject> particleDictionary = impactEffects.Dictionary;
 
 		if (hitObjectSurfaceManager)
 		{
-			if (particleDictionary.ContainsKey(hitObjectSurfaceManager.SurfaceType))
-				impactParticle = particleDictionary[hitObjectSurfaceManager.SurfaceType];
+			if (impactEffects.ContainsKey(hitObjectSurfaceManager.SurfaceType))
+				impactParticle = impactEffects[hitObjectSurfaceManager.SurfaceType];
 		}
 
 		Vector3 impactPosition = hitResult.point;
