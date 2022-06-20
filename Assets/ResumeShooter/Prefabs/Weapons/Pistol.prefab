@@ -175,7 +175,7 @@ MonoBehaviour:
     magazineSize: 12
     ammoType: 1
     isFullAuto: 0
-    fireRate: 400
+    fireRate: 500
     shotDistance: 500
     damage: 15
     muzzleFlash: {fileID: 6570458308436106157}

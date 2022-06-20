@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 [RequireComponent(typeof(AudioSource), typeof(ImpactManager))]
 public class Weapon : MonoBehaviour
@@ -19,10 +20,10 @@ public class Weapon : MonoBehaviour
 	#region FIELDS
 	private bool isHoldingFire = false;
 	private bool isReloading = false;
+	private bool ableToFire = true;
 
 	private int currentAmmo;
 	private float fireCooldown;
-	private float currentFireCooldown;
 
 	private AudioSource audioSource;
 	private ImpactManager impactManager;
@@ -47,13 +48,6 @@ public class Weapon : MonoBehaviour
 		currentAmmo = weaponData.magazineSize;
 
 		fireCooldown = 60f / weaponData.fireRate;
-		currentFireCooldown = fireCooldown;
-	}
-
-	private void Update()
-	{
-		currentFireCooldown -= Time.deltaTime;
-		ProcessAutomaticFire();
 	}
 
 	private void OnEnable()
@@ -73,8 +67,10 @@ public class Weapon : MonoBehaviour
 	#region SHOOTING
 	public void StartFire()
 	{
+		if(!ableToFire) { return; }
+
 		isHoldingFire = true;
-		FirstShot();
+		StartCoroutine(Shoot());
 	}
 
 	public void StopFire()
@@ -82,41 +78,48 @@ public class Weapon : MonoBehaviour
 		isHoldingFire = false;
 	}
 
-	public void ProcessAutomaticFire()
+	private IEnumerator Shoot()
 	{
-		if (isHoldingFire)
+		ableToFire = false;
+		if(currentAmmo > 0)
 		{
-			if (weaponData.isFullAuto && currentAmmo > 0)
+			do
+			{
 				Shot();
+				yield return new WaitForSeconds(fireCooldown);
+				ableToFire = true;
+			} while (CanShoot());
 		}
-	}
-
-	private void FirstShot()
-	{
-		if (currentAmmo > 0)
-		{
-			if (weaponData.isFullAuto)
-				return;
-
-			Shot();
-		}
-		else
+		
+		if(currentAmmo <= 0)
 		{
 			player.FireAnimation(true);
 			audioSource.PlayOneShot(weaponData.emptyFireSound);
+			ableToFire = true;
 		}
 
+	}
+
+	private bool CanShoot()
+	{
+		if (currentAmmo <= 0)
+			return false;
+		if (!weaponData.isFullAuto)
+			return false;
+		if (!isHoldingFire)
+			return false;
+
+		return true;
 	}
 
 	private void Shot()
 	{
-		if (currentFireCooldown <= 0 && !isReloading)
+		if (!isReloading)
 		{
 			player.FireAnimation(false);
 			weaponAnimator.Play("Fire", 0, 0.0f);
 
 			currentAmmo--;
-			currentFireCooldown = fireCooldown;
 
 			ProcessRaycast();
 			SpawnFireParticles();
