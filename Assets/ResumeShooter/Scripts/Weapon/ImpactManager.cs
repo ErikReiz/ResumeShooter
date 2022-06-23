@@ -24,6 +24,6 @@ public class ImpactManager : MonoBehaviour
 		Vector3 impactPosition = hitResult.point;
 		Quaternion impactRotation = Quaternion.LookRotation(hitResult.normal);
 
-		Instantiate(impactParticle, impactPosition, impactRotation);
+		Instantiate(impactParticle, impactPosition, impactRotation, hitObject.transform);
 	}
 }

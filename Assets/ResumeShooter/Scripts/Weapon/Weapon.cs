@@ -1,5 +1,5 @@
-using UnityEngine;
 using System.Collections;
+using UnityEngine;
 
 [RequireComponent(typeof(AudioSource), typeof(ImpactManager))]
 public class Weapon : MonoBehaviour
@@ -7,6 +7,7 @@ public class Weapon : MonoBehaviour
 	#region SERIALIZE FIELDS 
 	[SerializeField] private WeaponData weaponData;
 	[SerializeField] private GameObject muzzleFlash; //TODO убрать
+	[SerializeField] private GameObject camera; // TODO убрать
 	#endregion
 
 	#region PROPERTIES
@@ -28,19 +29,17 @@ public class Weapon : MonoBehaviour
 	private AudioSource audioSource;
 	private ImpactManager impactManager;
 	private AmmoManager ammoManager;
-	private PlayerAnimationEventsReceiver playerAnimationReceiver;
+	private PlayerAnimationManager playerAnimation;
 	private Animator weaponAnimator;
-	private FPCharacter player;
 	#endregion
 
 	private void Awake()
 	{
 		audioSource = GetComponent<AudioSource>();
 		impactManager = GetComponent<ImpactManager>();
-		ammoManager = GetComponentInParent<AmmoManager>();
 		weaponAnimator = GetComponent<Animator>();
-		playerAnimationReceiver = GetComponentInParent<PlayerAnimationEventsReceiver>();
-		player = GetComponentInParent<FPCharacter>();
+		ammoManager = GetComponentInParent<AmmoManager>();
+		playerAnimation = GetComponentInParent<PlayerAnimationManager>();
 	}
 
 	private void Start()
@@ -52,22 +51,22 @@ public class Weapon : MonoBehaviour
 
 	private void OnEnable()
 	{
-		playerAnimationReceiver.OnEndedReload += OnReloadEnded;
-		playerAnimationReceiver.OnEjectCasing += OnEjectCasing;
-		playerAnimationReceiver.OnAmmunitionFill += OnAmmunitionFill;
+		playerAnimation.OnEndedReload += OnReloadEnded;
+		playerAnimation.OnEjectCasing += OnEjectCasing;
+		playerAnimation.OnAmmunitionFill += OnAmmunitionFill;
 	}
 
 	private void OnDisable()
 	{
-		playerAnimationReceiver.OnEndedReload -= OnReloadEnded;
-		playerAnimationReceiver.OnEjectCasing -= OnEjectCasing;
-		playerAnimationReceiver.OnAmmunitionFill -= OnAmmunitionFill;
+		playerAnimation.OnEndedReload -= OnReloadEnded;
+		playerAnimation.OnEjectCasing -= OnEjectCasing;
+		playerAnimation.OnAmmunitionFill -= OnAmmunitionFill;
 	}
 
 	#region SHOOTING
 	public void StartFire()
 	{
-		if(!ableToFire) { return; }
+		if (!ableToFire || isReloading) { return; }
 
 		isHoldingFire = true;
 		StartCoroutine(Shoot());
@@ -81,7 +80,7 @@ public class Weapon : MonoBehaviour
 	private IEnumerator Shoot()
 	{
 		ableToFire = false;
-		if(currentAmmo > 0)
+		if (currentAmmo > 0)
 		{
 			do
 			{
@@ -90,10 +89,10 @@ public class Weapon : MonoBehaviour
 				ableToFire = true;
 			} while (CanShoot());
 		}
-		
-		if(currentAmmo <= 0)
+
+		if (currentAmmo <= 0)
 		{
-			player.FireAnimation(true);
+			playerAnimation.FireAnimation(true);
 			audioSource.PlayOneShot(weaponData.emptyFireSound);
 			ableToFire = true;
 		}
@@ -114,24 +113,21 @@ public class Weapon : MonoBehaviour
 
 	private void Shot()
 	{
-		if (!isReloading)
-		{
-			player.FireAnimation(false);
-			weaponAnimator.Play("Fire", 0, 0.0f);
+		playerAnimation.FireAnimation(false);
+		weaponAnimator.Play("Fire", 0, 0.0f);
 
-			currentAmmo--;
+		currentAmmo--;
 
-			ProcessRaycast();
-			SpawnFireParticles();
-			PlayFireSounds();
-		}
+		ProcessRaycast();
+		SpawnFireParticles();
+		PlayFireSounds();
 	}
 
 	private void ProcessRaycast()
 	{
 		RaycastHit hitResult;
 
-		bool isHit = Physics.Raycast(muzzleFlash.transform.position, player.CameraForwardVector, out hitResult, weaponData.shotDistance);
+		bool isHit = Physics.Raycast(muzzleFlash.transform.position, camera.transform.forward, out hitResult, weaponData.shotDistance);
 		if (isHit)
 		{
 			impactManager.SpawnImpactParticle(hitResult);
@@ -163,7 +159,7 @@ public class Weapon : MonoBehaviour
 	#endregion
 
 	#region RELOADING
-	public void TryReload()
+	public void StartReloading()
 	{
 		if (currentAmmo == weaponData.magazineSize || isReloading || isHoldingFire) { return; }
 
@@ -179,12 +175,12 @@ public class Weapon : MonoBehaviour
 
 		if (currentAmmo > 0)
 		{
-			player.ReloadAnimation(false);
+			playerAnimation.ReloadAnimation(false);
 			weaponAnimator.Play("Reload", 0, 0.0f);
 		}
 		else
 		{
-			player.ReloadAnimation(true);
+			playerAnimation.ReloadAnimation(true);
 			weaponAnimator.Play("Reload Empty", 0, 0.0f);
 		}
 	}
@@ -208,6 +204,5 @@ public class Weapon : MonoBehaviour
 	{
 		return !isReloading && !isHoldingFire;
 	}
-
 	#endregion
 }

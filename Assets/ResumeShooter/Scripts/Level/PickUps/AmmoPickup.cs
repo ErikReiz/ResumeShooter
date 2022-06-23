@@ -6,13 +6,6 @@ public class AmmoPickup : MonoBehaviour, IInteractable
 	[SerializeField] private SerializableDictionary<AmmunitionType, int> storedAmmo;
 	#endregion
 
-	private void Start()
-	{
-		Debug.Log(storedAmmo.Count);
-		storedAmmo.Clear();
-		Debug.Log(storedAmmo.Count);
-	}
-
 	void IInteractable.Interact(FPCharacter interactedPlayer)
 	{
 		interactedPlayer.AmmoManager.IncreaseAmmunition(storedAmmo);

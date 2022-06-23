@@ -18,6 +18,8 @@ public class PlayerController : MonoBehaviour
 	[SerializeField] private float crouchHeight = 0.75f;
 	[Tooltip("Percents of original speed")]
 	[SerializeField] private float speedReduction = 0.5f;
+	[Tooltip("The larger the angle of the surface, the more force is applied")]
+	[SerializeField] private float angleMultiplier = 100f;
 
 	[Header("Fall info")]
 	[Tooltip("Min velocity by Y when player will receive damage from fall")]
@@ -35,6 +37,7 @@ public class PlayerController : MonoBehaviour
 	private FPCharacter player;
 
 	private Vector3 originalScale;
+	private RaycastHit groundHitResult;
 
 	private bool isGrounded = false;
 	private bool isCrouched = false;
@@ -43,6 +46,7 @@ public class PlayerController : MonoBehaviour
 	private float cameraYaw = 0f;
 	private float cameraPitch = 0f;
 	private float yVelocity = 0f;
+	private Vector3 slidingForce = new Vector3();
 	#endregion
 
 	private void Awake()
@@ -61,7 +65,7 @@ public class PlayerController : MonoBehaviour
     {
 		ProcessCameraInput();
 		ProcessJump();
-		//ProcessCrouch();
+		ProcessCrouch();
 
 		if (!isGrounded)
 			yVelocity = playerRigidbody.velocity.y;
@@ -70,6 +74,7 @@ public class PlayerController : MonoBehaviour
 	private void FixedUpdate()
 	{
 		ProcessMovement();
+		CalculateSlidingForce();
 	}
 
 	private void OnCollisionEnter(Collision collision)
@@ -125,40 +130,21 @@ public class PlayerController : MonoBehaviour
 	{
 		if (isCrouched)
 		{
-			transform.localScale = new Vector3(originalScale.x, originalScale.y, originalScale.z);
 			walkSpeed /= speedReduction;
 
 			isCrouched = false;
 		}
 		else
 		{
-			transform.localScale = new Vector3(originalScale.x, crouchHeight, originalScale.z);
 			walkSpeed *= speedReduction;
 
 			isCrouched = true;
 		}
 	}
 
-	private void CheckGround()
-	{
-		Vector3 origin = new Vector3(transform.position.x, transform.position.y - (transform.localScale.y * .5f), transform.position.z);
-		Vector3 direction = transform.TransformDirection(Vector3.down);
-		float distance = .75f;
-
-		if (Physics.Raycast(origin, direction, out RaycastHit hit, distance))
-		{		
-			isGrounded = true;
-		}
-		else
-		{
-			isGrounded = false;
-		}
-	}
-
 	private void ProcessMovement()
 	{
 		Vector3 inputVelocity = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-		player.PlayMovementAnimation(inputVelocity.x, inputVelocity.z);
 
 		inputVelocity = Vector3.Normalize(inputVelocity);
 		inputVelocity = transform.TransformDirection(inputVelocity) * walkSpeed * Time.deltaTime;
@@ -169,7 +155,43 @@ public class PlayerController : MonoBehaviour
 		velocityChange.z = Mathf.Clamp(velocityChange.z, -maxVelocityChange, maxVelocityChange);
 		velocityChange.y = 0;
 
-		playerRigidbody.AddForce(velocityChange, ForceMode.VelocityChange);
+		velocityChange = ModifyVelocityWithFloorAngle(velocityChange);
+
+		playerRigidbody.AddForce(velocityChange + slidingForce, ForceMode.VelocityChange);
+	}
+
+	private Vector3 ModifyVelocityWithFloorAngle(Vector3 velocity)
+	{
+		if (isGrounded)
+			return velocity - Vector3.Dot(groundHitResult.normal, velocity) * groundHitResult.normal;
+		else
+			return velocity;
+	}
+
+	private void CalculateSlidingForce()
+	{
+		if (!isCrouched) { return; }
+		if (!isGrounded) { return; }
+
+		Vector3 movementDirection = Vector3.Cross(Vector3.Cross(transform.up, groundHitResult.normal), groundHitResult.normal);
+		float angleForce = -Vector3.Dot(movementDirection, transform.up) * angleMultiplier;
+		slidingForce = angleForce * movementDirection;
+	}
+
+	private void CheckGround()
+	{
+		Vector3 origin = new Vector3(transform.position.x, transform.position.y - (transform.localScale.y * .5f), transform.position.z);
+		Vector3 direction = transform.TransformDirection(Vector3.down);
+		float distance = .75f;
+
+		if (Physics.Raycast(origin, direction, out groundHitResult, distance))
+		{		
+			isGrounded = true;
+		}
+		else
+		{
+			isGrounded = false;
+		}
 	}
 
 	private void CalculateFallDamage()

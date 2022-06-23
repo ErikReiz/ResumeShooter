@@ -37,7 +37,7 @@ public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IS
 			if (keys[i] == null || values[i] == null)
 				continue;
 
-		dictionary.Add(keys[i], values[i]);
+		dictionary.TryAdd(keys[i], values[i]);
 		}
 	}
 

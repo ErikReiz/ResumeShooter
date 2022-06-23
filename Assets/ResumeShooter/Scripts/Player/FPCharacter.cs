@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(PlayerController))]
 public class FPCharacter : MonoBehaviour, IDamageable
 {
 	#region SERIALIZE FIELDS
@@ -10,8 +10,6 @@ public class FPCharacter : MonoBehaviour, IDamageable
 	[SerializeField] private float maxHealth = 100f;
 	[Tooltip("Player object for weapon")]
 	[SerializeField] private WeaponCarrier weaponCarrier;
-	[Tooltip("Sets locomotion smoothness")]
-	[SerializeField] private float dampTimeLocomotion = 0.15f;
 	#endregion
 
 	#region PROPERTIES
@@ -28,139 +26,131 @@ public class FPCharacter : MonoBehaviour, IDamageable
 	private Camera playerCamera;
 	private Weapon currentWeapon;
 	private AmmoManager ammoManager;
+	private MovementComponent playerMovement;
+	private PlayerInput input;
 	private float currentHealth;
 	private bool isDead = false;
 	private bool holstered = true;
-
-	#region ANIMATIONS
-	private Animator characterAnimator;
-	private PlayerAnimationEventsReceiver eventsReceiver;
-
-	private int reloadingLayer;
-	private int firingLayer;
-	private int holsterLayer;
-	private int hashMovement;
+	private bool isMouseScrollUp = false;
+	#region ANIMATION FIELDS
+	private PlayerAnimationManager playerAnimation;
 	#endregion
 
 	#endregion
 
 	private void Awake()
 	{
-		SetupAnimator();
+		SetupInput();
+
 		currentHealth = maxHealth;
 
 		playerCamera = GetComponentInChildren<Camera>();
 		ammoManager = GetComponent<AmmoManager>();
+		playerMovement = GetComponent<MovementComponent>();
+		playerAnimation = GetComponentInChildren<PlayerAnimationManager>();
+		playerAnimation.OnEndedHolster += OnEndedHolster;
 	}
 
 	private void Start()
 	{
 		SetCurrentWeapon();
+		Cursor.lockState = CursorLockMode.Locked;
 	}
 
-	private void Update()
+	private void OnEnable()
 	{
-		ProcessFireInput();
-		ProcessReloadInput();
-		ProcessSwitchWeaponInput();
-		ProcessInteract();
+		input.Player.Enable();
 	}
 
-	private void SetupAnimator()
+	private void OnDisable()
 	{
-		characterAnimator = GetComponentInChildren<Animator>();
+		input.Player.Disable();
+	}
 
-		firingLayer = characterAnimator.GetLayerIndex("Firing Layer");
-		reloadingLayer = characterAnimator.GetLayerIndex("Reloading Layer");
-		holsterLayer = characterAnimator.GetLayerIndex("Layer Holster");
-		hashMovement = Animator.StringToHash("Movement");
+	private void SetupInput()
+	{
+		input = new PlayerInput();
 
-		eventsReceiver = GetComponentInChildren<PlayerAnimationEventsReceiver>();
-		eventsReceiver.OnEndedHolster += OnEndedHolster;
+		input.Player.Movement.started += OnMovementInput;
+		input.Player.Movement.performed += OnMovementInput;
+		input.Player.Movement.canceled += OnMovementInput;
+
+		input.Player.Look.started += OnMouseInput;
+		input.Player.Look.performed += OnMouseInput;
+		input.Player.Look.canceled += OnMouseInput;
+
+		input.Player.Fire.started += OnFireInput;
+		input.Player.Fire.canceled += OnFireInput;
+
+		input.Player.Reload.started += OnReloadInput;
+		input.Player.SwitchWeapon.started += OnSwitchWeaponInput;
+		input.Player.Interact.started += OnInteractInput;
 	}
 
 	#region INPUT
-	private void ProcessFireInput()
+	private void OnMovementInput(InputAction.CallbackContext context)
 	{
-		if (Input.GetButtonDown("Fire1"))
-		{
-			if (!currentWeapon || holstered) { return; }
+		Vector2 movementInput = context.ReadValue<Vector2>();
+		playerMovement.ReceiveMovementInput(movementInput);
+		playerAnimation.ReceiveMovementInput(movementInput);
+	}
 
-			currentWeapon.StartFire();
-		}
-		else if (Input.GetButtonUp("Fire1"))
-		{
-			if (!currentWeapon || holstered) { return; }
+	private void OnMouseInput(InputAction.CallbackContext context)
+	{
+		playerMovement.ReceiveMouseInput(context.ReadValue<Vector2>());
+	}
 
-			currentWeapon.StopFire();
+	private void OnFireInput(InputAction.CallbackContext context)
+	{
+		if (!currentWeapon || holstered) { return; }
+
+		switch (context.phase)
+		{
+			case InputActionPhase.Started:
+				currentWeapon.StartFire();
+				break;
+			case InputActionPhase.Canceled:
+				currentWeapon.StopFire();
+				break;
 		}
 	}
 
-	private void ProcessReloadInput()
+	private void OnReloadInput(InputAction.CallbackContext context)
 	{
-		if (Input.GetButtonDown("Reload"))
-		{
-			if (!currentWeapon) { return; }
+		if (!currentWeapon || holstered) { return; }
 
-			currentWeapon.TryReload();
+		currentWeapon.StartReloading();
+	}
+
+	private void OnSwitchWeaponInput(InputAction.CallbackContext context)
+	{
+		if (currentWeapon?.CanChangeWeapon() ?? true && !holstered)
+		{
+			isMouseScrollUp = Input.GetAxis("SwitchWeapon") > 0 ? true : false;
+			playerAnimation.PlayerHolsterAnimation(holstered);
 		}
 	}
 
-	private void ProcessSwitchWeaponInput()
+	private void OnInteractInput(InputAction.CallbackContext context)
 	{
-		if(Input.GetButtonDown("SwitchWeapon"))
-		{
-			if (currentWeapon?.CanChangeWeapon() ?? true && !holstered)
-			{
-				PlayerHolsterAnimation();	
-			}
-		
-		}
-	}
+		RaycastHit hitResult;
+		Vector3 cameraPosition = playerCamera.transform.position;
+		bool isHit = Physics.Raycast(cameraPosition, CameraForwardVector, out hitResult, interactionRange);
 
-	private void ProcessInteract()
-	{
-		if(Input.GetButtonDown("Interact"))
+		if (isHit)
 		{
-			RaycastHit hitResult;
-			Vector3 cameraPosition = playerCamera.transform.position;
-			bool isHit = Physics.Raycast(cameraPosition, CameraForwardVector, out hitResult, interactionRange);
-
-			if(isHit)
-			{
-				Interact(ref hitResult);
-			}
+			Interact(ref hitResult);
 		}
 	}
 	#endregion
 
 	#region ANIMATIONS
-	public void PlayMovementAnimation(float horizontal, float vertical)
-	{
-		characterAnimator.SetFloat(hashMovement, Mathf.Clamp01(Mathf.Abs(horizontal) + Mathf.Abs(vertical)), dampTimeLocomotion, Time.deltaTime);
-	}
-
-	public void FireAnimation(bool isEmpty)
-	{
-		characterAnimator.CrossFade(isEmpty ? "Fire Empty" : "Fire", 0f, firingLayer, 0);
-	}
-
-	public void ReloadAnimation(bool isEmpty)
-	{
-		characterAnimator.CrossFade(isEmpty ? "Reload Empty" : "Reload", 0f, reloadingLayer, 0);
-	}
-
-	private void PlayerHolsterAnimation()
-	{
-		characterAnimator.CrossFade(holstered ? "Unholster" : "Holster", 0f, holsterLayer, 0);
-	}
-
 	private void OnEndedHolster()
 	{
 		holstered = !holstered;
 		if (holstered)
 		{
-			weaponCarrier.SwitchWeapon(true);
+			weaponCarrier.SwitchWeapon(isMouseScrollUp);
 			SetCurrentWeapon();
 		}
 	}
@@ -171,8 +161,8 @@ public class FPCharacter : MonoBehaviour, IDamageable
 		currentWeapon = weaponCarrier.GetCurrentWeapon;
 		if(currentWeapon)
 		{
-			characterAnimator.runtimeAnimatorController = currentWeapon.AnimatorController;
-			PlayerHolsterAnimation();
+			playerAnimation.ChangeAnimatorController(currentWeapon.AnimatorController);
+			playerAnimation.PlayerHolsterAnimation(holstered);
 		}
 	}
 

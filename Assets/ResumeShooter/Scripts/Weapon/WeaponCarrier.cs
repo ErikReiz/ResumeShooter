@@ -54,7 +54,6 @@ public class WeaponCarrier : MonoBehaviour
 		if(weaponArray.Length <= 1) { return; }
 
 		int index = isMouseScrollUp ? currentIndex + 1 : currentIndex - 1;
-
 		SwitchWeapon(index);
 	}
 
