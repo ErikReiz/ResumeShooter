@@ -667,7 +667,7 @@ MonoBehaviour:
     muzzleFlash: {fileID: 6194434486190654661}
     fireSound: {fileID: 8300000, guid: 0addcc409a57b4a43b86a3d2310ac5b4, type: 3}
     emptyFireSound: {fileID: 8300000, guid: 0c187ee2790c74c4e9985aa1ee1a12d5, type: 3}
-  muzzleFlash: {fileID: 1798579882298740206}
+  muzzle: {fileID: 1798579882298740206}
 --- !u!114 &7242004560553101261
 MonoBehaviour:
   m_ObjectHideFlags: 0

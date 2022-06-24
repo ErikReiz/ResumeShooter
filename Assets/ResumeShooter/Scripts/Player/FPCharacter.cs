@@ -23,18 +23,17 @@ public class FPCharacter : MonoBehaviour, IDamageable
 	#region FIELDS
 	public UnityAction<Weapon> OnWeaponChanged;
 
+	private PlayerAnimationManager playerAnimation;
 	private Camera playerCamera;
 	private Weapon currentWeapon;
 	private AmmoManager ammoManager;
-	private MovementComponent playerMovement;
+	private PlayerController playerMovement;
 	private PlayerInput input;
 	private float currentHealth;
 	private bool isDead = false;
 	private bool holstered = true;
 	private bool isMouseScrollUp = false;
-	#region ANIMATION FIELDS
-	private PlayerAnimationManager playerAnimation;
-	#endregion
+	private bool isSprinting = false;
 
 	#endregion
 
@@ -46,7 +45,7 @@ public class FPCharacter : MonoBehaviour, IDamageable
 
 		playerCamera = GetComponentInChildren<Camera>();
 		ammoManager = GetComponent<AmmoManager>();
-		playerMovement = GetComponent<MovementComponent>();
+		playerMovement = GetComponent<PlayerController>();
 		playerAnimation = GetComponentInChildren<PlayerAnimationManager>();
 		playerAnimation.OnEndedHolster += OnEndedHolster;
 	}
@@ -75,6 +74,9 @@ public class FPCharacter : MonoBehaviour, IDamageable
 		input.Player.Movement.performed += OnMovementInput;
 		input.Player.Movement.canceled += OnMovementInput;
 
+		input.Player.Run.started += OnSprintInput;
+		input.Player.Run.canceled += OnSprintInput;
+
 		input.Player.Look.started += OnMouseInput;
 		input.Player.Look.performed += OnMouseInput;
 		input.Player.Look.canceled += OnMouseInput;
@@ -95,6 +97,13 @@ public class FPCharacter : MonoBehaviour, IDamageable
 		playerAnimation.ReceiveMovementInput(movementInput);
 	}
 
+	private void OnSprintInput(InputAction.CallbackContext context)
+	{
+		isSprinting = context.phase == InputActionPhase.Started ? true : false;
+		playerMovement.ReceiveSprintingInput(isSprinting);
+		playerAnimation.ToogleSprint(isSprinting);
+	}
+
 	private void OnMouseInput(InputAction.CallbackContext context)
 	{
 		playerMovement.ReceiveMouseInput(context.ReadValue<Vector2>());
@@ -102,7 +111,7 @@ public class FPCharacter : MonoBehaviour, IDamageable
 
 	private void OnFireInput(InputAction.CallbackContext context)
 	{
-		if (!currentWeapon || holstered) { return; }
+		if (IsWeaponActionBlocked()) { return; }
 
 		switch (context.phase)
 		{
@@ -117,14 +126,16 @@ public class FPCharacter : MonoBehaviour, IDamageable
 
 	private void OnReloadInput(InputAction.CallbackContext context)
 	{
-		if (!currentWeapon || holstered) { return; }
+		if (IsWeaponActionBlocked()) { return; }
 
 		currentWeapon.StartReloading();
 	}
 
 	private void OnSwitchWeaponInput(InputAction.CallbackContext context)
 	{
-		if (currentWeapon?.CanChangeWeapon() ?? true && !holstered)
+		if (IsWeaponActionBlocked()) { return; }
+
+		if (currentWeapon?.CanChangeWeapon() ?? true)
 		{
 			isMouseScrollUp = Input.GetAxis("SwitchWeapon") > 0 ? true : false;
 			playerAnimation.PlayerHolsterAnimation(holstered);
@@ -164,6 +175,18 @@ public class FPCharacter : MonoBehaviour, IDamageable
 			playerAnimation.ChangeAnimatorController(currentWeapon.AnimatorController);
 			playerAnimation.PlayerHolsterAnimation(holstered);
 		}
+	}
+
+	private bool IsWeaponActionBlocked()
+	{
+		if (!currentWeapon)
+			return true;
+		if (holstered)
+			return true;
+		if (isSprinting)
+			return true;
+
+		return false;
 	}
 
 	void IDamageable.ReceiveDamage(float damage)

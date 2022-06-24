@@ -10,26 +10,10 @@ public class EnemyIdleState : EnemyBaseState
 	{
 		context.EnemyAnimator.SetBool(context.IsAttackingHash, false);
 		context.EnemyAnimator.SetBool(context.IsMovingHash, false);
-		aiPerception.OnPlayerSeen += OnPlayerSeen;
 	}
 
-	public override void Tick()
-	{
-
-	}
-
-	public override void ExitState()
-	{
-		aiPerception.OnPlayerSeen -= OnPlayerSeen;
-	}
-
-	public override void OnPlayerSeen(Vector3 targetPosition)
+	public override void OnPlayerSpotted(Vector3 targetPosition)
 	{
 		SwitchState(stateFactory.Moving(targetPosition));
-	}
-
-	public override void OnLostVision()
-	{
-
 	}
 }

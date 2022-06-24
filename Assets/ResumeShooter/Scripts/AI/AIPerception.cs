@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class AIPerception : MonoBehaviour
+public class AIPerception : MonoBehaviour, IHearing
 {
 	#region SERIALIZE FIELDS
 	[Header("General")]
 	[SerializeField] private bool hasVisionTrigger = true;
+	[SerializeField] private bool hasHearingTrigger = true;
 	[SerializeField] private bool hasDamageTrigger = true;
 
 	[Header("AI vision")]
@@ -18,7 +19,11 @@ public class AIPerception : MonoBehaviour
 	[SerializeField] private LayerMask playerLayerMask;
 	[SerializeField] private LayerMask worldLayerMask;
 
-	[Header("On damaged")]
+	[Header("AI hearing")]
+	[Tooltip("Method will create trigger with this radius")]
+	[SerializeField] private float hearingRadius = 10f;
+
+	[Header("When damaged")]
 	[Tooltip("Radius in which enemy detects player when receiving damage")]
 	[SerializeField] private float damageDetectionRadius = 100f;
 	#endregion
@@ -26,21 +31,33 @@ public class AIPerception : MonoBehaviour
 	#region FIELDS
 	public UnityAction<Vector3> OnPlayerSeen;
 	public UnityAction OnLostVision;
+	public UnityAction<Vector3> OnHearedSomething;
 	#endregion
 
 	private void Start()
 	{
+		CreateHearingCollider();
 		StartCoroutine(VisionCoroutine());
 	}
 
 	private void OnEnable()
 	{
-		GetComponentInChildren<ZombieAI>().OnDamaged += ReceiveDamage;
+		//TODO добавить включение и выключение зрения, слуха
 	}
 
 	private void OnDisable()
 	{
-		GetComponentInChildren<ZombieAI>().OnDamaged -= ReceiveDamage;
+
+	}
+
+	private void CreateHearingCollider()
+	{
+		if (hasHearingTrigger)
+		{
+			SphereCollider hearingCollider = gameObject.AddComponent<SphereCollider>();
+			hearingCollider.radius = hearingRadius;
+			hearingCollider.isTrigger = true;
+		}
 	}
 
 	private IEnumerator VisionCoroutine()
@@ -82,15 +99,9 @@ public class AIPerception : MonoBehaviour
 		return isHit;
 	}
 
-	void ReceiveDamage()
+	void IHearing.OnHeardSomething(Vector3 noisePosition)
 	{
-		if(!hasDamageTrigger) { return; }
-
-		Collider[] rangeChecks = Physics.OverlapSphere(transform.position, damageDetectionRadius, playerLayerMask);
-		if (rangeChecks.Length > 0)
-		{
-			Transform playerTransform = rangeChecks[0].transform;
-			OnPlayerSeen?.Invoke(playerTransform.position);
-		}
+		if(hasHearingTrigger)
+			OnHearedSomething?.Invoke(noisePosition);
 	}
 }

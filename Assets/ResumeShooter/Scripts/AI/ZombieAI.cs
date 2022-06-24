@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class ZombieAI : MonoBehaviour, IDamageable
 {
@@ -10,7 +7,7 @@ public class ZombieAI : MonoBehaviour, IDamageable
 	[Header("Damage")]
 	[SerializeField] private float attackDamage = 10f;
 	[Tooltip("Sphere radius around zombie hand, when attacking")]
-	[SerializeField] private float attackRadius = 10f;
+	[SerializeField] private float attackRadius = 2f;
 	[Tooltip("Hand around which the sphere will be created")]
 	[SerializeField] private Transform armSocket;
 	[SerializeField] private LayerMask playerLayerMask;
@@ -21,8 +18,6 @@ public class ZombieAI : MonoBehaviour, IDamageable
 	#endregion
 
 	#region FIELDS
-	public UnityAction OnDamaged;
-
 	private float currentHealth;
 	private bool isDead = false;
 	#endregion
@@ -36,7 +31,6 @@ public class ZombieAI : MonoBehaviour, IDamageable
 	{
 		if (isDead) { return; }
 
-		OnDamaged?.Invoke();
 		currentHealth -= damage;
 
 		if (currentHealth <= 0)
@@ -57,5 +51,5 @@ public class ZombieAI : MonoBehaviour, IDamageable
 
 		if (overlappingObjects[0])
 			Damager.ApplyDamage(overlappingObjects[0].gameObject, attackDamage);
-	}	
+	}
 }

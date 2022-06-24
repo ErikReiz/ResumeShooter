@@ -9,7 +9,6 @@ public class EnemyAttackingState : EnemyBaseState
 	private float turnSpeed = 5f;
 	#endregion
 
-
 	public EnemyAttackingState(BaseStateData stateData, Vector3 targetPosition) : base(stateData)
 	{ 
 		 this.targetPosition = targetPosition;
@@ -18,9 +17,6 @@ public class EnemyAttackingState : EnemyBaseState
 	public override void EnterState()
 	{
 		context.EnemyAnimator.SetBool(context.IsAttackingHash, true);
-
-		aiPerception.OnPlayerSeen += OnPlayerSeen;
-		aiPerception.OnLostVision += OnLostVision;
 	}
 
 	public override void Tick()
@@ -31,15 +27,17 @@ public class EnemyAttackingState : EnemyBaseState
 	public override void ExitState()
 	{
 		context.EnemyAnimator.SetBool(context.IsAttackingHash, false);
-
-		aiPerception.OnPlayerSeen -= OnPlayerSeen;
-		aiPerception.OnLostVision -= OnLostVision;
 	}
 
-	public override void OnPlayerSeen(Vector3 targetPosition)
+	public override void OnPlayerSpotted(Vector3 targetPosition)
 	{
 		this.targetPosition = targetPosition;
 		CheckSwitchState();
+	}
+
+	public override void OnLostVision()
+	{
+		SwitchState(stateFactory.Idle());
 	}
 
 	private void CheckSwitchState()
@@ -55,11 +53,6 @@ public class EnemyAttackingState : EnemyBaseState
 	{
 		Vector3 direction = (targetPosition - context.transform.position).normalized;
 		Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
-		context.transform.rotation = Quaternion.Slerp(context.transform.rotation, lookRotation, Time.deltaTime * turnSpeed);
-	}
-
-	public override void OnLostVision()
-	{
-		SwitchState(stateFactory.Idle());
+		context.transform.parent.rotation = Quaternion.Slerp(context.transform.rotation, lookRotation, Time.deltaTime * turnSpeed);
 	}
 }

@@ -6,29 +6,41 @@ public struct BaseStateData
 {
 	public EnemyStateMachine context;
 	public EnemyStateFactory stateFactory;
-	public AIPerception aiPerception;
 }
 
 public abstract class EnemyBaseState
 {
 	protected EnemyStateMachine context;
 	protected EnemyStateFactory stateFactory;
-	protected AIPerception aiPerception;
 
 	public EnemyBaseState(BaseStateData stateData)
 	{
 		context = stateData.context;
 		stateFactory = stateData.stateFactory;
-		aiPerception = stateData.aiPerception;
 	}
 
 	public abstract void EnterState();
-	public abstract void Tick();
-	public abstract void ExitState();
-	public abstract void OnPlayerSeen(Vector3 targetPosition);
-	public abstract void OnLostVision();
 
-	protected void UpdateStates() { }
+	public virtual void Tick()
+	{
+
+	}
+
+	public virtual void ExitState()
+	{
+
+	}
+
+	public virtual void OnPlayerSpotted(Vector3 targetPosition)
+	{
+
+	}
+
+	public virtual void OnLostVision()
+	{
+
+	}
+
 	protected void SwitchState(EnemyBaseState newState) 
 	{
 		ExitState();
@@ -36,5 +48,4 @@ public abstract class EnemyBaseState
 		newState.EnterState();
 		context.CurrentState = newState;
 	}
-	protected void SetState() { }
 }

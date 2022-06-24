@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 public class EnemyStateMachine : MonoBehaviour
-{
+{ 
 	#region PROPERTIES
 	public int IsMovingHash { get { return isMovingHash; } }
 	public int IsAttackingHash { get { return isAttackingHash; } }
@@ -34,16 +34,50 @@ public class EnemyStateMachine : MonoBehaviour
 
 	private void Awake()
 	{
+		SetupAnimator();
+
+		aiPerception = GetComponentInParent<AIPerception>();
+		navMesh = GetComponentInParent<NavMeshAgent>();
+
+        stateFactory = new EnemyStateFactory(this);
+        currentState = stateFactory.Idle();
+        currentState.EnterState();
+	}
+
+	private void OnEnable()
+	{
+		aiPerception.OnPlayerSeen += OnPlayerSeen;
+		aiPerception.OnLostVision += OnLostVision;
+		aiPerception.OnHearedSomething += OnHearedSomething;
+	}
+
+	private void OnDisable()
+	{
+		aiPerception.OnPlayerSeen -= OnPlayerSeen;
+		aiPerception.OnLostVision -= OnLostVision;
+		aiPerception.OnHearedSomething -= OnHearedSomething;
+	}
+
+	private void SetupAnimator()
+	{
 		enemyAnimator = GetComponent<Animator>();
 		isMovingHash = Animator.StringToHash("isMoving");
 		isAttackingHash = Animator.StringToHash("isAttacking");
+	}
 
-		aiPerception = GetComponentInParent<AIPerception>();
-        navMesh = GetComponentInParent<NavMeshAgent>();
+	private void OnPlayerSeen(Vector3 targetPosition)
+	{
+		currentState.OnPlayerSpotted(targetPosition);
+	}
 
-        stateFactory = new EnemyStateFactory(this, aiPerception);
-        currentState = stateFactory.Idle();
-        currentState.EnterState();
+	private void OnLostVision()
+	{
+		currentState.OnLostVision();
+	}
+
+	private void OnHearedSomething(Vector3 targetPosition)
+	{
+		currentState.OnPlayerSpotted(targetPosition);
 	}
 
 	private void FixedUpdate()

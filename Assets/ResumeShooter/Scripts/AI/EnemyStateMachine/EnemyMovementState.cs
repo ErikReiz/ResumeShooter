@@ -18,25 +18,15 @@ public class EnemyMovementState : EnemyBaseState
 	public override void EnterState()
 	{
 		context.EnemyAnimator.SetBool(context.IsMovingHash, true);
-
-		aiPerception.OnPlayerSeen += OnPlayerSeen;
-		aiPerception.OnLostVision += OnLostVision;
 		EngageTarget();
-	}
-
-	public override void Tick()
-	{
-
 	}
 
 	public override void ExitState()
 	{
 		context.EnemyAnimator.SetBool(context.IsMovingHash, false);
-		aiPerception.OnPlayerSeen -= OnPlayerSeen;
-		aiPerception.OnLostVision -= OnLostVision;
 	}
 
-	public override void OnPlayerSeen(Vector3 targetPosition)
+	public override void OnPlayerSpotted(Vector3 targetPosition)
 	{
 		this.targetPosition = targetPosition;
 		EngageTarget();

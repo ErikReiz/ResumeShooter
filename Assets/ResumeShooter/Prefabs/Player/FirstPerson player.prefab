@@ -2550,6 +2550,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6a9a075bec37b74f84639f20fb622bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dampTimeLocomotion: 0.15
 --- !u!1 &8452322421872477970
 GameObject:
   m_ObjectHideFlags: 0
@@ -2574,7 +2575,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8452322421872477970}
-  m_LocalRotation: {x: 0.70710677, y: 0.000000016065314, z: -0.000000014901161, w: 0.7071069}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2858,12 +2859,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8973969374003791640}
-  - component: {fileID: 8973969374003791644}
-  - component: {fileID: 8973969374003791647}
   - component: {fileID: 8973969374003791645}
   - component: {fileID: 5749449465977461325}
-  - component: {fileID: 5781378532990833502}
   - component: {fileID: 6792610066623090436}
+  - component: {fileID: 1686303083}
+  - component: {fileID: 1686303084}
   m_Layer: 10
   m_Name: FirstPerson player
   m_TagString: Untagged
@@ -2887,36 +2887,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!54 &8973969374003791644
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8973969374003791642}
-  serializedVersion: 2
-  m_Mass: 5
-  m_Drag: 0.1
-  m_AngularDrag: 0
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 112
-  m_CollisionDetection: 0
---- !u!136 &8973969374003791647
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8973969374003791642}
-  m_Material: {fileID: 13400000, guid: a399d3152b46b534cab28dca6afa92b5, type: 2}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!82 &8973969374003791645
 AudioSource:
   m_ObjectHideFlags: 0
@@ -2938,7 +2908,7 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 1
+  MinDistance: 1.8013562
   MaxDistance: 500
   Pan2D: 0
   rolloffMode: 0
@@ -3026,30 +2996,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3c131f274e063c4cae8f3995a102ee0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  interactionRange: 30
   maxHealth: 100
   weaponCarrier: {fileID: 1591212420459941886}
-  dampTimeLocomotion: 0.15
---- !u!114 &5781378532990833502
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8973969374003791642}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 95af5adcfcd314f45be44340c117bc75, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerCamera: {fileID: 3565836390425918885}
-  mouseSensitivity: 120
-  cameraRotationLimits: {x: -80, y: 80}
-  walkSpeed: 200
-  jumpPower: 15
-  crouchHeight: 0.75
-  speedReduction: 0.5
-  minFallDamageVelocity: 15
-  damageFallVelocity: 40
 --- !u!114 &6792610066623090436
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3065,6 +3014,43 @@ MonoBehaviour:
   ammoCount:
     keys: 0001
     values: 2c01000028000000
+--- !u!143 &1686303083
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8973969374003791642}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Height: 2
+  m_Radius: 0.4
+  m_SlopeLimit: 45
+  m_StepOffset: 0.4
+  m_SkinWidth: 0.05
+  m_MinMoveDistance: 0
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1686303084
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8973969374003791642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3800e84694b5246498be92f6861a267d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  walkSpeed: 3
+  sprintSpeed: 7
+  groundedGravity: -1
+  airGravity: -2.5
+  playerArms: {fileID: 3565836390425918885}
+  mouseSensitivity: 40
+  cameraRotationLimits: {x: -90, y: 90}
 --- !u!1 &9007468605716184871
 GameObject:
   m_ObjectHideFlags: 0

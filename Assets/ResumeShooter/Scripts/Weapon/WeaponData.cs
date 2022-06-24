@@ -32,6 +32,8 @@ public class WeaponData
 	[Range(1f, 1000f)] public float fireRate = 400f;
 	public float shotDistance = 2000f;
 	[Range(0.1f, 1000f)] public float damage = 20f;
+	[Tooltip("Distance at which npc will hear your shot")]
+	[Range(0f, 1000f)] public float shotSoundRange = 50f;
 
 	[Header("Particles")]
 	public ParticleSystem muzzleFlash;

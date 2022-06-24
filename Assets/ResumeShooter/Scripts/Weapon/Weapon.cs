@@ -6,8 +6,6 @@ public class Weapon : MonoBehaviour
 {
 	#region SERIALIZE FIELDS 
 	[SerializeField] private WeaponData weaponData;
-	[SerializeField] private GameObject muzzleFlash; //TODO убрать
-	[SerializeField] private GameObject camera; // TODO убрать
 	#endregion
 
 	#region PROPERTIES
@@ -31,10 +29,12 @@ public class Weapon : MonoBehaviour
 	private AmmoManager ammoManager;
 	private PlayerAnimationManager playerAnimation;
 	private Animator weaponAnimator;
+	private Camera playerCamera;
 	#endregion
 
 	private void Awake()
 	{
+		playerCamera = transform.root.gameObject.GetComponentInChildren<Camera>();
 		audioSource = GetComponent<AudioSource>();
 		impactManager = GetComponent<ImpactManager>();
 		weaponAnimator = GetComponent<Animator>();
@@ -45,7 +45,6 @@ public class Weapon : MonoBehaviour
 	private void Start()
 	{
 		currentAmmo = weaponData.magazineSize;
-
 		fireCooldown = 60f / weaponData.fireRate;
 	}
 
@@ -116,6 +115,8 @@ public class Weapon : MonoBehaviour
 		playerAnimation.FireAnimation(false);
 		weaponAnimator.Play("Fire", 0, 0.0f);
 
+		NoiseMaker.MakeNoise(transform.position, weaponData.shotSoundRange);
+
 		currentAmmo--;
 
 		ProcessRaycast();
@@ -126,8 +127,7 @@ public class Weapon : MonoBehaviour
 	private void ProcessRaycast()
 	{
 		RaycastHit hitResult;
-
-		bool isHit = Physics.Raycast(muzzleFlash.transform.position, camera.transform.forward, out hitResult, weaponData.shotDistance);
+		bool isHit = Physics.Raycast(transform.position, playerCamera.transform.forward, out hitResult, weaponData.shotDistance);
 		if (isHit)
 		{
 			impactManager.SpawnImpactParticle(hitResult);

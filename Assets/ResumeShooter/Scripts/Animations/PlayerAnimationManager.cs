@@ -23,6 +23,7 @@ public class PlayerAnimationManager : MonoBehaviour
 	private int firingLayer;
 	private int holsterLayer;
 	private int hashMovement;
+	private readonly string sprintingBoolName = "isSprinting";
 	#endregion
 
 	private void Awake()
@@ -53,12 +54,12 @@ public class PlayerAnimationManager : MonoBehaviour
 
 	public void FireAnimation(bool isEmpty)
 	{
-		characterAnimator.CrossFade(isEmpty ? "Fire Empty" : "Fire", 0f, firingLayer, 0);
+		characterAnimator.Play(isEmpty ? "Fire Empty" : "Fire", firingLayer, 0f);
 	}
 
 	public void ReloadAnimation(bool isEmpty)
 	{
-		characterAnimator.CrossFade(isEmpty ? "Reload Empty" : "Reload", 0f, reloadingLayer, 0);
+		characterAnimator.Play(isEmpty ? "Reload Empty" : "Reload", reloadingLayer, 0f);
 	}
 
 	public void PlayerHolsterAnimation(bool isHolstered)
@@ -69,6 +70,11 @@ public class PlayerAnimationManager : MonoBehaviour
 	public void ChangeAnimatorController(RuntimeAnimatorController newController)
 	{
 		characterAnimator.runtimeAnimatorController = newController;
+	}
+
+	public void ToogleSprint(bool toogle)
+	{
+		characterAnimator.SetBool(sprintingBoolName, toogle);
 	}
 	#endregion
 

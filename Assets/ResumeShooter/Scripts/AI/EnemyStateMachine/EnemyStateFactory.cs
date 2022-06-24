@@ -9,11 +9,10 @@ public class EnemyStateFactory
 	#endregion
 
 
-	public EnemyStateFactory(EnemyStateMachine context, AIPerception aiPerception)
+	public EnemyStateFactory(EnemyStateMachine context)
 	{
 		stateData.context = context;
 		stateData.stateFactory = this;
-		stateData.aiPerception = aiPerception;
 	}
 
 	public EnemyBaseState Idle()
