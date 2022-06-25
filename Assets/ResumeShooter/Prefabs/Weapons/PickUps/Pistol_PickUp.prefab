@@ -9,12 +9,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 189091626146063571}
-  - component: {fileID: 189091626155051829}
-  - component: {fileID: -204720421772640278}
-  - component: {fileID: 8765745302504445355}
-  - component: {fileID: -6281342237486633921}
-  m_Layer: 9
-  m_Name: Pistol
+  - component: {fileID: 104932316990535581}
+  - component: {fileID: 104893596768849319}
+  - component: {fileID: 7017447355807359502}
+  m_Layer: 0
+  m_Name: Pistol_PickUp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -37,123 +36,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &189091626155051829
-Animator:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 189091626145577203}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 40cb849895dd45645ac3fadcc88190af, type: 3}
-  m_Controller: {fileID: 22100000, guid: d0f061f165597314d870681ebaff4ca9, type: 2}
-  m_CullingMode: 1
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 1
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
---- !u!82 &-204720421772640278
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 189091626145577203}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
---- !u!114 &8765745302504445355
+--- !u!114 &104932316990535581
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -162,49 +45,41 @@ MonoBehaviour:
   m_GameObject: {fileID: 189091626145577203}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af0486acd45c3a3429131d7800716295, type: 3}
+  m_Script: {fileID: 11500000, guid: f8adf5c001975b94e883a795dd856a5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponData:
-    weaponType: 1
-    shellPrefab: {fileID: 1492315059354262, guid: b1995a53a949fac4db5722fc1df9efe4,
-      type: 3}
-    shellSocket: {fileID: 4419723567681200437}
-    animatorController: {fileID: 22100000, guid: dbae460c24a64114c88a7dc6ea61c162,
-      type: 2}
-    weaponPickUp: {fileID: 0}
-    magazineSize: 12
-    currentAmmo: 12
-    ammoType: 1
-    isFullAuto: 0
-    fireRate: 500
-    shotDistance: 500
-    damage: 15
-    shotSoundRange: 50
-    muzzleFlash: {fileID: 6570458308436106157}
-    fireSound: {fileID: 8300000, guid: 9e9480b4d07646942b555fd43f2a0f71, type: 3}
-    emptyFireSound: {fileID: 8300000, guid: 0c187ee2790c74c4e9985aa1ee1a12d5, type: 3}
---- !u!114 &-6281342237486633921
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 189091626145577203}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e8eb102051fca642b1663a5bb6ccea6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  impactEffects:
-    keys:
-    - {fileID: 11400000, guid: b8ca2b9a8de1ad64481afb15ffe38f14, type: 2}
-    - {fileID: 11400000, guid: 548eeff7e93b8744db1a579c33651e28, type: 2}
-    values:
-    - {fileID: 1067471869909948, guid: 5e02303289b3c494e8e185be0fbbd405, type: 3}
-    - {fileID: 1000013355911406, guid: d32aa916f50cac94db11e6f19821a58f, type: 3}
-  defaultImpactParticle: {fileID: 1067471869909948, guid: 5e02303289b3c494e8e185be0fbbd405,
+  magazineAmmo: 15
+  equipment: {fileID: 189091626145577203, guid: 23e5fad613af76c439edf6c728c31484,
     type: 3}
+--- !u!65 &104893596768849319
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 189091626145577203}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.03, y: 0.18, z: 0.26}
+  m_Center: {x: 0, y: -0.01, z: 0.01}
+--- !u!54 &7017447355807359502
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 189091626145577203}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &2480727008041417461
 GameObject:
   m_ObjectHideFlags: 0
@@ -214,7 +89,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2341362728168022686}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: SOCKET_Default
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -246,7 +121,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8479960646203171795}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: hammer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -277,7 +152,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4419723567681200437}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: SOCKET_Eject_C
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -308,7 +183,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5846705959730171120}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: SOCKET_Grip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -340,7 +215,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3096324689520865588}
   - component: {fileID: 1809990191309560703}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: SM_Handgun_03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -439,7 +314,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9085936682259476271}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: SOCKET_Laser
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -470,7 +345,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3333915836771314634}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: SOCKET_Scope
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -501,7 +376,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2755229761263451782}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: magazine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -534,7 +409,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6904026142542336016}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: SOCKET_Eject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -566,7 +441,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3868722571998742277}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: SOCKET_Muzzle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -598,7 +473,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2938772341281745010}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: SKEL_Handgun_03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -630,7 +505,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3859091320368278112}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: root
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -668,7 +543,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1390537257902647228}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: slide
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -701,7 +576,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3999555416438985170}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: SOCKET_Magazine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -750,7 +625,7 @@ PrefabInstance:
     - target: {fileID: 4834526503407549940, guid: 2735bebe54c1f5a4096f5134a96f7e77,
         type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4836458910855560858, guid: 2735bebe54c1f5a4096f5134a96f7e77,
         type: 3}
@@ -825,12 +700,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1945203312185945537}
   m_PrefabAsset: {fileID: 0}
---- !u!198 &6570458308436106157 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 4742348811577898604, guid: 2735bebe54c1f5a4096f5134a96f7e77,
-    type: 3}
-  m_PrefabInstance: {fileID: 1945203312185945537}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2426452682215194221
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -901,7 +770,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 446803998811ff04ea871c8f2a4be03c,
         type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 446803998811ff04ea871c8f2a4be03c, type: 3}
@@ -1000,7 +869,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 8931d8712849cae45b5d761cd9ec7838,
         type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8931d8712849cae45b5d761cd9ec7838, type: 3}

@@ -11,8 +11,17 @@ public class Weapon : MonoBehaviour
 	#region PROPERTIES
 	public RuntimeAnimatorController AnimatorController { get { return weaponData.animatorController; } }
 	public WeaponType WeaponType { get { return weaponData.weaponType; } }
+	public GameObject WeaponPickUp { get { return weaponData.weaponPickUp; } }
 
-	public int CurrentAmmo { get { return currentAmmo; } }
+	public int CurrentAmmo 
+	{
+		get { return weaponData.currentAmmo; }
+		set
+		{
+			if (value >= 0)
+				weaponData.currentAmmo = value;
+		}
+	}
 	public int GeneralAmmo { get { return ammoManager.GetAmmoCountOfType(weaponData.ammoType); } }
 	#endregion
 
@@ -21,7 +30,7 @@ public class Weapon : MonoBehaviour
 	private bool isReloading = false;
 	private bool ableToFire = true;
 
-	private int currentAmmo;
+	//private int currentAmmo;
 	private float fireCooldown;
 
 	private AudioSource audioSource;
@@ -44,7 +53,6 @@ public class Weapon : MonoBehaviour
 
 	private void Start()
 	{
-		currentAmmo = weaponData.magazineSize;
 		fireCooldown = 60f / weaponData.fireRate;
 	}
 
@@ -79,7 +87,7 @@ public class Weapon : MonoBehaviour
 	private IEnumerator Shoot()
 	{
 		ableToFire = false;
-		if (currentAmmo > 0)
+		if (weaponData.currentAmmo > 0)
 		{
 			do
 			{
@@ -89,7 +97,7 @@ public class Weapon : MonoBehaviour
 			} while (CanShoot());
 		}
 
-		if (currentAmmo <= 0)
+		if (weaponData.currentAmmo <= 0)
 		{
 			playerAnimation.FireAnimation(true);
 			audioSource.PlayOneShot(weaponData.emptyFireSound);
@@ -100,7 +108,7 @@ public class Weapon : MonoBehaviour
 
 	private bool CanShoot()
 	{
-		if (currentAmmo <= 0)
+		if (weaponData.currentAmmo <= 0)
 			return false;
 		if (!weaponData.isFullAuto)
 			return false;
@@ -117,7 +125,7 @@ public class Weapon : MonoBehaviour
 
 		NoiseMaker.MakeNoise(transform.position, weaponData.shotSoundRange);
 
-		currentAmmo--;
+		weaponData.currentAmmo--;
 
 		ProcessRaycast();
 		SpawnFireParticles();
@@ -161,7 +169,7 @@ public class Weapon : MonoBehaviour
 	#region RELOADING
 	public void StartReloading()
 	{
-		if (currentAmmo == weaponData.magazineSize || isReloading || isHoldingFire) { return; }
+		if (weaponData.currentAmmo == weaponData.magazineSize || isReloading || isHoldingFire) { return; }
 
 		if (ammoManager.HasAmmunitionOfType(weaponData.ammoType))
 		{
@@ -173,7 +181,7 @@ public class Weapon : MonoBehaviour
 	{
 		isReloading = true;
 
-		if (currentAmmo > 0)
+		if (weaponData.currentAmmo > 0)
 		{
 			playerAnimation.ReloadAnimation(false);
 			weaponAnimator.Play("Reload", 0, 0.0f);
@@ -187,7 +195,7 @@ public class Weapon : MonoBehaviour
 
 	private void OnAmmunitionFill()
 	{
-		currentAmmo = ammoManager.UpdateAmmoCountOfType(weaponData.ammoType, weaponData.magazineSize, currentAmmo);
+		weaponData.currentAmmo = ammoManager.UpdateAmmoCountOfType(weaponData.ammoType, weaponData.magazineSize, weaponData.currentAmmo);
 	}
 
 	private void OnReloadEnded()

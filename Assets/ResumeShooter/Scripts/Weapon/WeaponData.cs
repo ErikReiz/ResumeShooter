@@ -21,9 +21,12 @@ public class WeaponData
 	public Transform shellSocket;
 	[Tooltip("Character animator override controller")]
 	public RuntimeAnimatorController animatorController;
+	[Tooltip("Weapon pick up prefab")]
+	public GameObject weaponPickUp;
 
 	[Header("Ammo")]
 	public int magazineSize = 30;
+	public int currentAmmo;
 	public AmmunitionType ammoType;
 
 	[Header("Fire information")]

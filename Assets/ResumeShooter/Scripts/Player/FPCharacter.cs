@@ -21,11 +21,12 @@ public class FPCharacter : MonoBehaviour, IDamageable
 	#endregion
 
 	#region FIELDS
-	public UnityAction<Weapon> OnWeaponChanged;
+	private UnityAction unholsterAction;
 
 	private PlayerAnimationManager playerAnimation;
 	private Camera playerCamera;
 	private Weapon currentWeapon;
+	private WeaponPickUp pickedUpEquipment;
 	private AmmoManager ammoManager;
 	private PlayerController playerMovement;
 	private PlayerInput input;
@@ -133,11 +134,13 @@ public class FPCharacter : MonoBehaviour, IDamageable
 
 	private void OnSwitchWeaponInput(InputAction.CallbackContext context)
 	{
-		if (IsWeaponActionBlocked()) { return; }
+		if(holstered) { return; }
+		if (!weaponCarrier.CanChangeWeapon()) { return; }
 
 		if (currentWeapon?.CanChangeWeapon() ?? true)
 		{
 			isMouseScrollUp = Input.GetAxis("SwitchWeapon") > 0 ? true : false;
+			unholsterAction = new UnityAction(SwitchWeapon);
 			playerAnimation.PlayerHolsterAnimation(holstered);
 		}
 	}
@@ -160,16 +163,19 @@ public class FPCharacter : MonoBehaviour, IDamageable
 	{
 		holstered = !holstered;
 		if (holstered)
-		{
-			weaponCarrier.SwitchWeapon(isMouseScrollUp);
-			SetCurrentWeapon();
-		}
+			unholsterAction.Invoke();
 	}
 	#endregion
 
+	private void SwitchWeapon()
+	{
+		weaponCarrier.SwitchWeapon(isMouseScrollUp);
+		SetCurrentWeapon();
+	}
+
 	private void SetCurrentWeapon()
 	{
-		currentWeapon = weaponCarrier.GetCurrentWeapon;
+		currentWeapon = weaponCarrier.CurrentWeapon;
 		if(currentWeapon)
 		{
 			playerAnimation.ChangeAnimatorController(currentWeapon.AnimatorController);
@@ -222,5 +228,18 @@ public class FPCharacter : MonoBehaviour, IDamageable
 	public void IncreaseHealth(float healthToRestore)
 	{
 		currentHealth += Mathf.Clamp(healthToRestore, 0, maxHealth - currentHealth);
+	}
+
+	public void InteractedWithEquipment(WeaponPickUp equipmentPickUp)
+	{
+		pickedUpEquipment = equipmentPickUp;
+		unholsterAction = new UnityAction(PickUpEquipment);
+		playerAnimation.PlayerHolsterAnimation(holstered);
+	}
+
+	private void PickUpEquipment()
+	{
+		weaponCarrier.PickUpEquipment(pickedUpEquipment);
+		SetCurrentWeapon();
 	}
 }
