@@ -9,7 +9,6 @@ public class AIPerception : MonoBehaviour, IHearing
 	[Header("General")]
 	[SerializeField] private bool hasVisionTrigger = true;
 	[SerializeField] private bool hasHearingTrigger = true;
-	[SerializeField] private bool hasDamageTrigger = true;
 
 	[Header("AI vision")]
 	[SerializeField] private float visionRadius = 20f;
@@ -23,41 +22,69 @@ public class AIPerception : MonoBehaviour, IHearing
 	[Tooltip("Method will create trigger with this radius")]
 	[SerializeField] private float hearingRadius = 10f;
 
-	[Header("When damaged")]
-	[Tooltip("Radius in which enemy detects player when receiving damage")]
-	[SerializeField] private float damageDetectionRadius = 100f;
+	[Header("Wave Game Mode")]
+	[Tooltip("Will enable alternative logic for enemy, they will follow player at start")]
+	[SerializeField] private bool useAlternativeLogic = true;
+	[Tooltip("Player to follow")]
 	#endregion
 
 	#region FIELDS
 	public UnityAction<Vector3> OnPlayerSeen;
 	public UnityAction OnLostVision;
 	public UnityAction<Vector3> OnHearedSomething;
+
+	private SphereCollider hearingCollider;
+	private bool isWaveGameMode = false;
+	private FPCharacter player;
 	#endregion
 
-	private void Start()
+	private void Awake()
 	{
-		CreateHearingCollider();
-		StartCoroutine(VisionCoroutine());
+		EnableAlternativBehaviour();
+	}
+
+	private void EnableAlternativBehaviour()
+	{
+		if (!useAlternativeLogic) { return; }
+
+		FPSGameMode gameMode = FindObjectOfType<WaveGameMode>();
+		if (gameMode)
+		{
+			isWaveGameMode = true;
+			player = gameMode.GetPlayer();
+		}
+
 	}
 
 	private void OnEnable()
 	{
-		//TODO добавить включение и выключение зрения, слуха
+		if(hasVisionTrigger)
+			StartCoroutine(VisionCoroutine());
+		if(hasHearingTrigger)
+			CreateHearingCollider();
 	}
 
 	private void OnDisable()
 	{
-
+		StopAllCoroutines();
+		DestroyHearingCollider();
 	}
 
 	private void CreateHearingCollider()
 	{
 		if (hasHearingTrigger)
 		{
-			SphereCollider hearingCollider = gameObject.AddComponent<SphereCollider>();
+			hearingCollider = gameObject.AddComponent<SphereCollider>();
 			hearingCollider.radius = hearingRadius;
 			hearingCollider.isTrigger = true;
 		}
+	}
+
+	private void DestroyHearingCollider()
+	{
+		if (!hearingCollider) { return; }
+
+		Destroy(hearingCollider);
 	}
 
 	private IEnumerator VisionCoroutine()
@@ -65,7 +92,10 @@ public class AIPerception : MonoBehaviour, IHearing
 		while(hasVisionTrigger)
 		{
 			yield return new WaitForSeconds(visionCheckDelay);
-			VisionCheck();
+			if (isWaveGameMode && player)
+				OnPlayerSeen?.Invoke(player.transform.position);
+			else
+				VisionCheck();
 		}
 	}
 

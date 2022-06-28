@@ -43,11 +43,13 @@ public class ZombieAI : MonoBehaviour, IDamageable
 	private void KillEnemy()
 	{
 		FindObjectOfType<FPSGameMode>().CharacterKilled(this);
+		Destroy(gameObject);
 	}
 
 	public void OnApplyDamage()
 	{
 		Collider[] overlappingObjects = Physics.OverlapSphere(armSocket.position, attackRadius, playerLayerMask);
+		if(overlappingObjects.Length == 0) { return; }
 
 		if (overlappingObjects[0])
 			Damager.ApplyDamage(overlappingObjects[0].gameObject, attackDamage);

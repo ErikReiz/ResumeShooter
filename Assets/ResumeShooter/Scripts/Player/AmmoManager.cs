@@ -26,26 +26,26 @@ public class AmmoManager : MonoBehaviour
 			return 0;
 	}
 
-	public int UpdateAmmoCountOfType(AmmunitionType ammunitionType, int magazineSize, int ammoInMagazine)
+	public void UpdateAmmoCountOfType(Weapon weapon)
 	{
-		if (!ammoCount.ContainsKey(ammunitionType)) { return 0; }
+		if (!ammoCount.ContainsKey(weapon.AmmoType)) { return; }
 
-		int ammoOfType = ammoCount[ammunitionType];
-		int ammoCountToFullMagazine = magazineSize - ammoInMagazine;
+		int ammoOfType = ammoCount[weapon.AmmoType];
+		int ammoCountToFullMagazine = weapon.MagazineSize - weapon.CurrentAmmo;
 
 		if (ammoCountToFullMagazine > ammoOfType)
 		{
-			ammoCount[ammunitionType] = 0;
-			return ammoOfType;
+			ammoCount[weapon.AmmoType] = 0;
+			weapon.CurrentAmmo = ammoOfType;
 		}
 		else
 		{
-			ammoCount[ammunitionType] -= ammoCountToFullMagazine;
-			return magazineSize;
+			ammoCount[weapon.AmmoType] -= ammoCountToFullMagazine;
+			weapon.CurrentAmmo = weapon.MagazineSize;
 		}
 	}
 
-	public void IncreaseAmmunition(Dictionary<AmmunitionType, int> storedAmmo)
+	public void IncreaseAmmunition(SerializableDictionary<AmmunitionType, int> storedAmmo)
 	{
 		foreach(var currentStoredAmmo in storedAmmo)
 		{

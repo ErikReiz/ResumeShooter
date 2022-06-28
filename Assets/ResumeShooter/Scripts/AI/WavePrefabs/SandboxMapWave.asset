@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3dceaae60a0b38845abb7222d4becec9, type: 3}
+  m_Name: SandboxMapWave
+  m_EditorClassIdentifier: 
+  enemyList:
+    keys:
+    - {fileID: 485516240927748455, guid: 2894f9e3aa5bd8d439da34d49782e3da, type: 3}
+    values: 64000000
+  alwaysGenerateEnemy: 1

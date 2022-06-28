@@ -15,6 +15,7 @@ public enum WeaponType : byte
 [System.Serializable]
 public class WeaponData
 {
+	#region FIELDS
 	[Header("General")]
 	public WeaponType weaponType;
 	public GameObject shellPrefab;
@@ -44,4 +45,5 @@ public class WeaponData
 	[Header("Audio")]
 	public AudioClip fireSound;
 	public AudioClip emptyFireSound;
+	#endregion
 }

@@ -10,8 +10,10 @@ public class Weapon : MonoBehaviour
 
 	#region PROPERTIES
 	public RuntimeAnimatorController AnimatorController { get { return weaponData.animatorController; } }
-	public WeaponType WeaponType { get { return weaponData.weaponType; } }
+	public AmmunitionType AmmoType { get { return weaponData.ammoType; } }
 	public GameObject WeaponPickUp { get { return weaponData.weaponPickUp; } }
+	public int GeneralAmmo { get { return ammoManager.GetAmmoCountOfType(weaponData.ammoType); } }
+	public int MagazineSize { get { return weaponData.magazineSize; } }
 
 	public int CurrentAmmo 
 	{
@@ -22,7 +24,6 @@ public class Weapon : MonoBehaviour
 				weaponData.currentAmmo = value;
 		}
 	}
-	public int GeneralAmmo { get { return ammoManager.GetAmmoCountOfType(weaponData.ammoType); } }
 	#endregion
 
 	#region FIELDS
@@ -195,7 +196,7 @@ public class Weapon : MonoBehaviour
 
 	private void OnAmmunitionFill()
 	{
-		weaponData.currentAmmo = ammoManager.UpdateAmmoCountOfType(weaponData.ammoType, weaponData.magazineSize, weaponData.currentAmmo);
+		ammoManager.UpdateAmmoCountOfType(this);
 	}
 
 	private void OnReloadEnded()

@@ -70,7 +70,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hasVisionTrigger: 1
   hasHearingTrigger: 1
-  hasDamageTrigger: 1
   visionRadius: 15
   visionAngle: 70
   visionCheckDelay: 0.2
@@ -81,7 +80,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   hearingRadius: 200
-  damageDetectionRadius: 100
+  useAlternativeLogic: 1
 --- !u!1 &8848233768908722603
 GameObject:
   m_ObjectHideFlags: 0

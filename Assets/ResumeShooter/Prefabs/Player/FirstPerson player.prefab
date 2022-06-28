@@ -2595,9 +2595,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ec9de42945e86d408ce2e0cd49c6916, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponArray:
+  weaponObjects:
   - {fileID: 1798579882298740222, guid: ce289fa2853e90d4db733e09a7729324, type: 3}
-  - {fileID: 189091626145577203, guid: 23e5fad613af76c439edf6c728c31484, type: 3}
+  - {fileID: 1798579882298740222, guid: ce289fa2853e90d4db733e09a7729324, type: 3}
+  - {fileID: 1798579882298740222, guid: ce289fa2853e90d4db733e09a7729324, type: 3}
+  - {fileID: 1798579882298740222, guid: ce289fa2853e90d4db733e09a7729324, type: 3}
 --- !u!1 &8476233455299199557
 GameObject:
   m_ObjectHideFlags: 0

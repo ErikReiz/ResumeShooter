@@ -11,14 +11,15 @@ public class FPSGameMode : MonoBehaviour
 
 	#region FIELDS
 	private static FPSGameMode instance;
+	private FPCharacter player = null;
 	#endregion
 
-	private void Awake()
+	protected virtual void Awake()
 	{
 		CheckIsSingleton();
 	}
 
-	private void Start()
+	protected virtual void Start()
 	{
 		gameHUD.SetActive(true);
 		deathHUD.SetActive(false);
@@ -32,7 +33,13 @@ public class FPSGameMode : MonoBehaviour
 			Destroy(gameObject);
 	}
 
-	public virtual void CharacterKilled(Object characterKilled) { }
+	public virtual void CharacterKilled(Object characterKilled)
+	{
+		if (characterKilled is FPCharacter)
+		{
+			EndGame(false);
+		}
+	}
 
 	protected void EndGame(bool isPlayerWinner)
 	{
@@ -47,6 +54,13 @@ public class FPSGameMode : MonoBehaviour
 		{
 			deathHUD.SetActive(true);
 		}
+	}
 
+	public FPCharacter GetPlayer()
+	{
+		if (!player)
+			player = FindObjectOfType<FPCharacter>();
+
+		return player;
 	}
 }

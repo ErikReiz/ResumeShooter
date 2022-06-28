@@ -18,7 +18,10 @@ public class ImpactManager : MonoBehaviour
 		if (hitObjectSurfaceManager)
 		{
 			if (impactEffects.ContainsKey(hitObjectSurfaceManager.SurfaceType))
+			{
 				impactParticle = impactEffects[hitObjectSurfaceManager.SurfaceType];
+			}
+
 		}
 
 		Vector3 impactPosition = hitResult.point;

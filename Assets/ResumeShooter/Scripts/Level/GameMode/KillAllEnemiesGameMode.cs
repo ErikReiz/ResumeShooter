@@ -6,11 +6,9 @@ public class KillAllEnemiesGameMode : FPSGameMode
 {
 	public override void CharacterKilled(Object characterKilled)
 	{
-		if (characterKilled is FPCharacter)
-		{
-			EndGame(false);
-		}
-		else if(characterKilled is ZombieAI)
+		base.CharacterKilled(characterKilled);
+
+		if(characterKilled is ZombieAI)
 		{
 			foreach (var enemy in FindObjectsOfType<ZombieAI>())
 			{
