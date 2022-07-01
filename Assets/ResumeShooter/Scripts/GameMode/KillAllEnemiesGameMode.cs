@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class KillAllEnemiesGameMode : FPSGameMode
+public class KillAllEnemiesGameMode : GameModeBase
 {
 	public override void CharacterKilled(Object characterKilled)
 	{

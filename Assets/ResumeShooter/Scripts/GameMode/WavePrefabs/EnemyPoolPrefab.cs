@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "WavePrefab", menuName = "Enemy Waves")]
-public class WavePrefab : ScriptableObject
+[CreateAssetMenu(fileName = "Enemy Pool Prefab")]
+public class EnemyPoolPrefab : ScriptableObject
 {
 	#region SERIALIZE FIELDS
 	[Tooltip("Sets chance and enemy to spawn")]
@@ -23,7 +23,7 @@ public class WavePrefab : ScriptableObject
 
 		uint chance = (uint)Random.Range(0, 100);
 
-		if(alwaysGenerateEnemy)
+		if (alwaysGenerateEnemy)
 		{
 			if (chance > maxChanceEnemy.Value)
 				return maxChanceEnemy.Key;

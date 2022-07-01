@@ -9,11 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3dceaae60a0b38845abb7222d4becec9, type: 3}
-  m_Name: SandboxMapWave
+  m_Script: {fileID: 11500000, guid: 38b53b8f8c0db924f84672493e4fd061, type: 3}
+  m_Name: SanboxEnemies
   m_EditorClassIdentifier: 
   enemyList:
     keys:
     - {fileID: 485516240927748455, guid: 2894f9e3aa5bd8d439da34d49782e3da, type: 3}
-    values: 64000000
+    values: 0a000000
   alwaysGenerateEnemy: 1

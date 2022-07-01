@@ -38,7 +38,7 @@ public class AIPerception : MonoBehaviour, IHearing
 	private FPCharacter player;
 	#endregion
 
-	private void Awake()
+	private void Start()
 	{
 		EnableAlternativBehaviour();
 	}
@@ -47,11 +47,11 @@ public class AIPerception : MonoBehaviour, IHearing
 	{
 		if (!useAlternativeLogic) { return; }
 
-		FPSGameMode gameMode = FindObjectOfType<WaveGameMode>();
-		if (gameMode)
+		GameModeBase gameMode = ServiceManager.GetGameMode();
+		if (gameMode is WaveGameMode)
 		{
 			isWaveGameMode = true;
-			player = gameMode.GetPlayer();
+			player = ServiceManager.GetPlayer();
 		}
 
 	}

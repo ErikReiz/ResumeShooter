@@ -42,7 +42,8 @@ public class ZombieAI : MonoBehaviour, IDamageable
 
 	private void KillEnemy()
 	{
-		FindObjectOfType<FPSGameMode>().CharacterKilled(this);
+		GameModeBase gameMode = ServiceManager.GetGameMode();
+		gameMode.CharacterKilled(this);
 		Destroy(gameObject);
 	}
 

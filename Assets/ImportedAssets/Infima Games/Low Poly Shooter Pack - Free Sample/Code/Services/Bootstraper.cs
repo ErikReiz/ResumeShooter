@@ -17,7 +17,6 @@ namespace InfimaGames.LowPolyShooterPack
 		{
 			//Initialize default service locator.
 			ServiceLocator.Initialize();
-
 			//Game Mode Service.
 			ServiceLocator.Current.Register<IGameModeService>(new GameModeService());
 

@@ -8,7 +8,6 @@ namespace InfimaGames.LowPolyShooterPack
 	public class GameModeService : IGameModeService
 	{
 		#region FIELDS
-
 		/// <summary>
 		/// The Player Character.
 		/// </summary>
@@ -20,6 +19,7 @@ namespace InfimaGames.LowPolyShooterPack
 
 		public CharacterBehaviour GetPlayerCharacter()
 		{
+			UnityEngine.Debug.Log("ds");
 			//Make sure we have a player character that is good to go!
 			if (playerCharacter == null)
 				playerCharacter = UnityEngine.Object.FindObjectOfType<CharacterBehaviour>();

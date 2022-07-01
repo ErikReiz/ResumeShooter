@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class DeathMenu : MonoBehaviour
+public class EndGameMenu : MonoBehaviour
 {
 	private void OnEnable()
 	{

@@ -10,10 +10,11 @@ GameObject:
   m_Component:
   - component: {fileID: 8945473949139064943}
   - component: {fileID: 8945473949139064944}
+  - component: {fileID: 1991066817}
   m_Layer: 0
   m_Name: WaveGameMode
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: -1412012063857583412, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -25,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8945473949139064941}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.3998055, y: 2.1002846, z: -3.7344766}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -44,13 +45,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed2dd1402ad1f72479583dd1d79becd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameHUD: {fileID: 0}
-  deathHUD: {fileID: 0}
-  enemyCountToSpawn: 5
-  waveSize: 10
-  enemyPool: {fileID: 11400000, guid: 0c9d62ec6da91754fb7279f56d66930b, type: 2}
-  spawnPoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  spawnDelay: 0.2
+  player: {fileID: 5749449465977461325, guid: a7f37fc243a676547a234f968d0b8a11, type: 3}
+  waveSetup: {fileID: 11400000, guid: 563b8f6e8e24eac4f8f5d8267ca6a67d, type: 2}
+--- !u!114 &1991066817
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8945473949139064941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1dd09a65178ab8d46b6acf11463af78b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  showHUD: 1
+  playerHUD: {fileID: 8720871116381425357, guid: b5be81a5fe71cfc41b00846a43e4a6aa,
+    type: 3}
+  lossWidget: {fileID: 6018412294568749402, guid: 0d441828659ab1f41b74c673c13df67b,
+    type: 3}
+  victoryWidget: {fileID: 5385007948243987653, guid: 069da1fb08e01954fa8b3ff7540413c6,
+    type: 3}

@@ -222,7 +222,8 @@ public class FPCharacter : MonoBehaviour, IDamageable
 
 	private void KillPlayer()
 	{
-		FindObjectOfType<FPSGameMode>().CharacterKilled(this);
+		GameModeBase gameMode = ServiceManager.GetGameMode();
+		gameMode.CharacterKilled(this);
 	}
 
 	public void IncreaseHealth(float healthToRestore)
