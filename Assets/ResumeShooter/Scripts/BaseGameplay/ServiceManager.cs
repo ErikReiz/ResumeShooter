@@ -8,7 +8,34 @@ public static class ServiceManager
 	private static GameModeBase gameMode;
 	private static FPCharacter player;
 	private static HUDBase hud;
+	private static GameObject gameModeObject;
 	#endregion
+
+	[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+	private static void Initialize()
+	{
+		if (!GetGameMode())
+			InitializeGameMode();
+
+		if (!GetHUD())
+			InitializeHUD();
+	}
+
+	private static void InitializeGameMode()
+	{
+		if (!gameModeObject)
+			gameModeObject = new GameObject("Game Mode");
+
+		gameModeObject.AddComponent<GameModeBase>();
+	}
+
+	private static void InitializeHUD()
+	{
+		if (!gameModeObject)
+			gameModeObject = new GameObject("Game Mode");
+
+		gameModeObject.AddComponent<HUDBase>();
+	}
 
 	public static GameModeBase GetGameMode()
 	{

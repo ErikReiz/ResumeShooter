@@ -34,7 +34,7 @@ public class EnemyMovementState : EnemyBaseState
 
 	public override void OnLostVision()
 	{
-		if (context.NavMesh.velocity.sqrMagnitude <= 0.5) // TODO заменить
+		if (context.NavMesh.velocity.sqrMagnitude <= 0.5)
 			SwitchState(stateFactory.Idle());
 	}
 

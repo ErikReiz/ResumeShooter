@@ -11,7 +11,8 @@ public class PlayerAnimationManager : MonoBehaviour
 	#endregion
 
 	#region FIELDS
-	public UnityAction OnEndedHolster;
+	public UnityAction OnWeaponSwitched;
+	public UnityAction OnHolsterStateSwitched;
 	public UnityAction OnEndedReload;
 	public UnityAction OnEjectCasing;
 	public UnityAction OnAmmunitionFill;
@@ -79,9 +80,14 @@ public class PlayerAnimationManager : MonoBehaviour
 	#endregion
 
 	#region CHARACTER EVENTS
-	private void OnAnimationEndedHolster()
+	private void OnAnimationSwitchWeapon()
 	{
-		OnEndedHolster?.Invoke();
+		OnWeaponSwitched?.Invoke();
+	}
+
+	private void OnAnimationSwitchHolsterState()
+	{
+		OnHolsterStateSwitched?.Invoke();
 	}
 	#endregion
 

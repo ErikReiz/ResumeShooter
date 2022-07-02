@@ -13,20 +13,20 @@ public class EnemyPoolPrefab : ScriptableObject
 	#endregion
 
 	#region FIELDS
-	private KeyValuePair<GameObject, uint> maxChanceEnemy; // This enemy will be spawned if chance smaller than minimal in enemyList
+	private KeyValuePair<GameObject, uint> defaultEnemy; // This enemy will be spawned if chance smaller than minimal in enemyList
 	#endregion
 
 	public GameObject GenerateEnemy()
 	{
-		if (!maxChanceEnemy.Key)
-			SetMaxChanceEnemy();
+		if (!defaultEnemy.Key)
+			SetDefaultEnemy();
 
 		uint chance = (uint)Random.Range(0, 100);
 
 		if (alwaysGenerateEnemy)
 		{
-			if (chance > maxChanceEnemy.Value)
-				return maxChanceEnemy.Key;
+			if (chance > defaultEnemy.Value)
+				return defaultEnemy.Key;
 		}
 
 		int keyIndex = Random.Range(0, enemyList.Count - 1);
@@ -37,12 +37,12 @@ public class EnemyPoolPrefab : ScriptableObject
 		return null;
 	}
 
-	private void SetMaxChanceEnemy()
+	private void SetDefaultEnemy()
 	{
 		foreach (var enemy in enemyList)
 		{
-			if (enemy.Value > maxChanceEnemy.Value)
-				maxChanceEnemy = enemy;
+			if (enemy.Value > defaultEnemy.Value)
+				defaultEnemy = enemy;
 		}
 	}
 

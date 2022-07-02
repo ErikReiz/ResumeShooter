@@ -70,7 +70,7 @@ public class WeaponCarrier : MonoBehaviour
 			SwitchWeapon(weaponObjects.Count - 1);
 		}
 
-		CurrentWeapon.CurrentAmmo = equipmentPickUp.MagazineAmmo;
+		CurrentWeapon.MagazineAmmo = equipmentPickUp.MagazineAmmo;
 		Destroy(equipmentPickUp.gameObject);
 	}
 
@@ -82,7 +82,7 @@ public class WeaponCarrier : MonoBehaviour
 		GameObject PickUpGameObject = Instantiate(currentWeapon.WeaponPickUp, equipmentTransform.position, equipmentTransform.rotation);
 		WeaponPickUp spawnedEquipmnetPickUp = PickUpGameObject.GetComponent<WeaponPickUp>();
 		if (spawnedEquipmnetPickUp)
-			spawnedEquipmnetPickUp.MagazineAmmo = currentWeapon.CurrentAmmo;
+			spawnedEquipmnetPickUp.MagazineAmmo = currentWeapon.MagazineAmmo;
 	}
 
 	public bool CanChangeWeapon()

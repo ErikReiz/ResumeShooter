@@ -5,7 +5,7 @@ using UnityEngine;
 public class AmmoManager : MonoBehaviour
 {
 	#region SERIALIZE FIELDS
-	[SerializeField] private SerializableDictionary<AmmunitionType, int> ammoCount;
+	[SerializeField] private SerializableDictionary<AmmunitionType, uint> ammoCount;
 	#endregion
 
 	public bool HasAmmunitionOfType(AmmunitionType ammunitionType)
@@ -18,7 +18,7 @@ public class AmmoManager : MonoBehaviour
 			return false;
 	}
 
-	public int GetAmmoCountOfType(AmmunitionType ammunitionType)
+	public uint GetAmmoCountOfType(AmmunitionType ammunitionType)
 	{
 		if(ammoCount.ContainsKey(ammunitionType))
 			return ammoCount[ammunitionType];
@@ -30,22 +30,22 @@ public class AmmoManager : MonoBehaviour
 	{
 		if (!ammoCount.ContainsKey(weapon.AmmoType)) { return; }
 
-		int ammoOfType = ammoCount[weapon.AmmoType];
-		int ammoCountToFullMagazine = weapon.MagazineSize - weapon.CurrentAmmo;
+		uint ammoOfType = ammoCount[weapon.AmmoType];
+		uint ammoCountToFullMagazine = weapon.MagazineSize - weapon.MagazineAmmo;
 
 		if (ammoCountToFullMagazine > ammoOfType)
 		{
 			ammoCount[weapon.AmmoType] = 0;
-			weapon.CurrentAmmo = ammoOfType;
+			weapon.MagazineAmmo = ammoOfType;
 		}
 		else
 		{
 			ammoCount[weapon.AmmoType] -= ammoCountToFullMagazine;
-			weapon.CurrentAmmo = weapon.MagazineSize;
+			weapon.MagazineAmmo = weapon.MagazineSize;
 		}
 	}
 
-	public void IncreaseAmmunition(SerializableDictionary<AmmunitionType, int> storedAmmo)
+	public void IncreaseAmmunition(SerializableDictionary<AmmunitionType, uint> storedAmmo)
 	{
 		foreach(var currentStoredAmmo in storedAmmo)
 		{

@@ -14,9 +14,9 @@ public class FPCharacter : MonoBehaviour, IDamageable
 
 	#region PROPERTIES
 	public AmmoManager AmmoManager { get { return ammoManager; } }
-	public Vector3 CameraForwardVector { get { return playerCamera.transform.forward; } }
-	public int WeaponCurrentAmmo { get { return currentWeapon.CurrentAmmo; } }
-	public int WeaponGeneralAmmo { get { return currentWeapon.GeneralAmmo; } }
+	public Camera PlayerCamera { get { return playerCamera; } }
+	public uint WeaponMagazineAmmo { get { return currentWeapon.MagazineAmmo; } }
+	public uint WeaponGeneralAmmo { get { return currentWeapon.GeneralAmmo; } }
 	public float HealthPercents { get { return currentHealth / maxHealth; } }
 	#endregion
 
@@ -47,8 +47,10 @@ public class FPCharacter : MonoBehaviour, IDamageable
 		playerCamera = GetComponentInChildren<Camera>();
 		ammoManager = GetComponent<AmmoManager>();
 		playerMovement = GetComponent<PlayerController>();
+
 		playerAnimation = GetComponentInChildren<PlayerAnimationManager>();
-		playerAnimation.OnEndedHolster += OnEndedHolster;
+		playerAnimation.OnWeaponSwitched += OnWeaponSwitched;
+		playerAnimation.OnHolsterStateSwitched += OnHolsterStateSwitched;
 	}
 
 	private void Start()
@@ -100,7 +102,9 @@ public class FPCharacter : MonoBehaviour, IDamageable
 
 	private void OnSprintInput(InputAction.CallbackContext context)
 	{
-		isSprinting = context.phase == InputActionPhase.Started ? true : false;
+		if(currentWeapon?.IsFiring ?? false) { return; }
+
+		isSprinting = (context.phase == InputActionPhase.Started) ? true : false;
 		playerMovement.ReceiveSprintingInput(isSprinting);
 		playerAnimation.ToogleSprint(isSprinting);
 	}
@@ -112,7 +116,7 @@ public class FPCharacter : MonoBehaviour, IDamageable
 
 	private void OnFireInput(InputAction.CallbackContext context)
 	{
-		if (IsWeaponActionBlocked()) { return; }
+		if (holstered || isSprinting) { return; }
 
 		switch (context.phase)
 		{
@@ -127,17 +131,14 @@ public class FPCharacter : MonoBehaviour, IDamageable
 
 	private void OnReloadInput(InputAction.CallbackContext context)
 	{
-		if (IsWeaponActionBlocked()) { return; }
+		if (holstered) { return; }
 
 		currentWeapon.StartReloading();
 	}
 
 	private void OnSwitchWeaponInput(InputAction.CallbackContext context)
 	{
-		if(holstered) { return; }
-		if (!weaponCarrier.CanChangeWeapon()) { return; }
-
-		if (currentWeapon?.CanChangeWeapon() ?? true)
+		if (CanSwitchWeapon())
 		{
 			isMouseScrollUp = Input.GetAxis("SwitchWeapon") > 0 ? true : false;
 			unholsterAction = new UnityAction(SwitchWeapon);
@@ -149,7 +150,7 @@ public class FPCharacter : MonoBehaviour, IDamageable
 	{
 		RaycastHit hitResult;
 		Vector3 cameraPosition = playerCamera.transform.position;
-		bool isHit = Physics.Raycast(cameraPosition, CameraForwardVector, out hitResult, interactionRange);
+		bool isHit = Physics.Raycast(cameraPosition, playerCamera.transform.forward, out hitResult, interactionRange);
 
 		if (isHit)
 		{
@@ -159,13 +160,28 @@ public class FPCharacter : MonoBehaviour, IDamageable
 	#endregion
 
 	#region ANIMATIONS
-	private void OnEndedHolster()
+	private void OnWeaponSwitched()
+	{
+		unholsterAction?.Invoke();
+	}
+
+	private void OnHolsterStateSwitched()
 	{
 		holstered = !holstered;
-		if (holstered)
-			unholsterAction.Invoke();
 	}
 	#endregion
+
+	private bool CanSwitchWeapon()
+	{
+		if (!currentWeapon)
+			return false;
+		if (currentWeapon.IsFiring || currentWeapon.IsReloading)
+			return false;
+		if (holstered)
+			return false;
+
+		return true;
+	}
 
 	private void SwitchWeapon()
 	{
@@ -183,18 +199,6 @@ public class FPCharacter : MonoBehaviour, IDamageable
 		}
 	}
 
-	private bool IsWeaponActionBlocked()
-	{
-		if (!currentWeapon)
-			return true;
-		if (holstered)
-			return true;
-		if (isSprinting)
-			return true;
-
-		return false;
-	}
-
 	void IDamageable.ReceiveDamage(float damage)
 	{
 		if (isDead) { return; }
@@ -209,6 +213,12 @@ public class FPCharacter : MonoBehaviour, IDamageable
 		}
 	}
 
+	private void KillPlayer()
+	{
+		GameModeBase gameMode = ServiceManager.GetGameMode();
+		gameMode.CharacterKilled(this);
+	}
+
 	private void Interact(ref RaycastHit hitResult)
 	{
 		GameObject hitObject = hitResult.transform.gameObject;
@@ -220,12 +230,7 @@ public class FPCharacter : MonoBehaviour, IDamageable
 		}
 	}
 
-	private void KillPlayer()
-	{
-		GameModeBase gameMode = ServiceManager.GetGameMode();
-		gameMode.CharacterKilled(this);
-	}
-
+	#region INTERACTION
 	public void IncreaseHealth(float healthToRestore)
 	{
 		currentHealth += Mathf.Clamp(healthToRestore, 0, maxHealth - currentHealth);
@@ -243,4 +248,5 @@ public class FPCharacter : MonoBehaviour, IDamageable
 		weaponCarrier.PickUpEquipment(pickedUpEquipment);
 		SetCurrentWeapon();
 	}
+	#endregion
 }

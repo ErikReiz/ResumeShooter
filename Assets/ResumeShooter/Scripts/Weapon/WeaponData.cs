@@ -26,8 +26,8 @@ public class WeaponData
 	public GameObject weaponPickUp;
 
 	[Header("Ammo")]
-	public int magazineSize = 30;
-	public int currentAmmo;
+	public uint magazineSize = 30;
+	public uint magazineAmmo;
 	public AmmunitionType ammoType;
 
 	[Header("Fire information")]

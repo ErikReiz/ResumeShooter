@@ -13,25 +13,18 @@ public class GameModeBase : MonoBehaviour
 	public UnityAction<bool> OnGameEnded;
 
 	private static GameModeBase instance;
-	private PlayerStart playerStart;
-	private HUDBase hudClass;
+	private SpawnPoint playerStart;
 	#endregion
 
 	private void Awake()
 	{
 		CheckIsSingleton();
-		InitializeGameMode();
+		SpawnPlayer();
 	}
 
 	private void Start()
 	{
 		BeginPlay();
-	}
-
-	private void InitializeGameMode()
-	{
-		SpawnPlayer();
-		SpawnHUD();
 	}
 
 	private void CheckIsSingleton()
@@ -42,29 +35,19 @@ public class GameModeBase : MonoBehaviour
 			Destroy(gameObject);
 	}
 
-	private void SpawnHUD()
-	{
-		HUDBase hud = FindObjectOfType<HUDBase>();
-
-		if (hud)
-			hudClass = hud;
-		else
-			hud = gameObject.AddComponent<HUDBase>();
-	}
-
 	private void SpawnPlayer()
 	{
-		FPCharacter character = FindObjectOfType<FPCharacter>();
+		FPCharacter character = ServiceManager.GetPlayer();
 
 		if (character)
 			player = character;
 		else
 		{
-			playerStart = FindObjectOfType<PlayerStart>();
+			playerStart = FindPlayerStart();
 
 			try
 			{
-				player = playerStart.SpawnPlayer();
+				player = playerStart.SpawnCharacter(player);
 			}
 			catch
 			{
@@ -72,6 +55,17 @@ public class GameModeBase : MonoBehaviour
 				throw;
 			}
 		}
+	}
+
+	private SpawnPoint FindPlayerStart()
+	{
+		foreach(var point in FindObjectsOfType<SpawnPoint>())
+		{
+			if (point.IsPlayerSpawn)
+				return point;
+		}
+
+		return null;
 	}
 
 	protected virtual void BeginPlay() { }

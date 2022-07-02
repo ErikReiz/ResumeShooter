@@ -3,7 +3,7 @@ using UnityEngine;
 public class AmmoPickup : MonoBehaviour, IInteractable
 {
 	#region SERIALIZE FIELDS
-	[SerializeField] private SerializableDictionary<AmmunitionType, int> storedAmmo;
+	[SerializeField] private SerializableDictionary<AmmunitionType, uint> storedAmmo;
 	#endregion
 
 	void IInteractable.Interact(FPCharacter interactedPlayer)

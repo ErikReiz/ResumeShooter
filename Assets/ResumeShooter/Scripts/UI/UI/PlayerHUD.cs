@@ -17,7 +17,7 @@ public class PlayerHUD : MonoBehaviour
 	private FPCharacter player;
 	#endregion
 
-	private void Awake()
+	private void Start()
 	{
 		player = ServiceManager.GetPlayer();
 	}
@@ -35,7 +35,7 @@ public class PlayerHUD : MonoBehaviour
 
 	private void UpdateAmmoUI()
 	{
-		currentAmmoText.text = player.WeaponCurrentAmmo.ToString();
+		currentAmmoText.text = player.WeaponMagazineAmmo.ToString();
 		ganeralAmmoText.text = player.WeaponGeneralAmmo.ToString();
 	}
 }

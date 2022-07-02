@@ -12,16 +12,20 @@ public class Weapon : MonoBehaviour
 	public RuntimeAnimatorController AnimatorController { get { return weaponData.animatorController; } }
 	public AmmunitionType AmmoType { get { return weaponData.ammoType; } }
 	public GameObject WeaponPickUp { get { return weaponData.weaponPickUp; } }
-	public int GeneralAmmo { get { return ammoManager.GetAmmoCountOfType(weaponData.ammoType); } }
-	public int MagazineSize { get { return weaponData.magazineSize; } }
 
-	public int CurrentAmmo 
+	public bool IsFiring { get { return isHoldingFire; } }
+	public bool IsReloading { get { return isReloading; } }
+
+	public uint GeneralAmmo { get { return ammoManager.GetAmmoCountOfType(weaponData.ammoType); } }
+	public uint MagazineSize { get { return weaponData.magazineSize; } }
+
+	public uint MagazineAmmo 
 	{
-		get { return weaponData.currentAmmo; }
+		get { return weaponData.magazineAmmo; }
 		set
 		{
 			if (value >= 0)
-				weaponData.currentAmmo = value;
+				weaponData.magazineAmmo = value;
 		}
 	}
 	#endregion
@@ -31,7 +35,6 @@ public class Weapon : MonoBehaviour
 	private bool isReloading = false;
 	private bool ableToFire = true;
 
-	//private int currentAmmo;
 	private float fireCooldown;
 
 	private AudioSource audioSource;
@@ -44,7 +47,6 @@ public class Weapon : MonoBehaviour
 
 	private void Awake()
 	{
-		playerCamera = transform.root.gameObject.GetComponentInChildren<Camera>();
 		audioSource = GetComponent<AudioSource>();
 		impactManager = GetComponent<ImpactManager>();
 		weaponAnimator = GetComponent<Animator>();
@@ -55,6 +57,7 @@ public class Weapon : MonoBehaviour
 	private void Start()
 	{
 		fireCooldown = 60f / weaponData.fireRate;
+		GetCameraForwardVector();
 	}
 
 	private void OnEnable()
@@ -69,6 +72,11 @@ public class Weapon : MonoBehaviour
 		playerAnimation.OnEndedReload -= OnReloadEnded;
 		playerAnimation.OnEjectCasing -= OnEjectCasing;
 		playerAnimation.OnAmmunitionFill -= OnAmmunitionFill;
+	}
+
+	private void GetCameraForwardVector()
+	{
+		playerCamera = ServiceManager.GetPlayer().PlayerCamera;
 	}
 
 	#region SHOOTING
@@ -88,7 +96,7 @@ public class Weapon : MonoBehaviour
 	private IEnumerator Shoot()
 	{
 		ableToFire = false;
-		if (weaponData.currentAmmo > 0)
+		if (weaponData.magazineAmmo > 0)
 		{
 			do
 			{
@@ -98,7 +106,7 @@ public class Weapon : MonoBehaviour
 			} while (CanShoot());
 		}
 
-		if (weaponData.currentAmmo <= 0)
+		if (weaponData.magazineAmmo <= 0)
 		{
 			playerAnimation.FireAnimation(true);
 			audioSource.PlayOneShot(weaponData.emptyFireSound);
@@ -109,7 +117,7 @@ public class Weapon : MonoBehaviour
 
 	private bool CanShoot()
 	{
-		if (weaponData.currentAmmo <= 0)
+		if (weaponData.magazineAmmo <= 0)
 			return false;
 		if (!weaponData.isFullAuto)
 			return false;
@@ -126,7 +134,7 @@ public class Weapon : MonoBehaviour
 
 		NoiseMaker.MakeNoise(transform.position, weaponData.shotSoundRange);
 
-		weaponData.currentAmmo--;
+		weaponData.magazineAmmo--;
 
 		ProcessRaycast();
 		SpawnFireParticles();
@@ -170,7 +178,7 @@ public class Weapon : MonoBehaviour
 	#region RELOADING
 	public void StartReloading()
 	{
-		if (weaponData.currentAmmo == weaponData.magazineSize || isReloading || isHoldingFire) { return; }
+		if (weaponData.magazineAmmo == weaponData.magazineSize || isReloading || isHoldingFire) { return; }
 
 		if (ammoManager.HasAmmunitionOfType(weaponData.ammoType))
 		{
@@ -182,7 +190,7 @@ public class Weapon : MonoBehaviour
 	{
 		isReloading = true;
 
-		if (weaponData.currentAmmo > 0)
+		if (weaponData.magazineAmmo > 0)
 		{
 			playerAnimation.ReloadAnimation(false);
 			weaponAnimator.Play("Reload", 0, 0.0f);
@@ -193,7 +201,9 @@ public class Weapon : MonoBehaviour
 			weaponAnimator.Play("Reload Empty", 0, 0.0f);
 		}
 	}
+	#endregion
 
+	#region OTHER
 	private void OnAmmunitionFill()
 	{
 		ammoManager.UpdateAmmoCountOfType(this);
@@ -207,11 +217,6 @@ public class Weapon : MonoBehaviour
 	private void OnEjectCasing()
 	{
 		Instantiate(weaponData.shellPrefab, weaponData.shellSocket.position, weaponData.shellSocket.rotation);
-	}
-
-	public bool CanChangeWeapon()
-	{
-		return !isReloading && !isHoldingFire;
 	}
 	#endregion
 }

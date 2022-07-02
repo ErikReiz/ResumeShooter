@@ -174,7 +174,7 @@ MonoBehaviour:
       type: 2}
     weaponPickUp: {fileID: 0}
     magazineSize: 12
-    currentAmmo: 12
+    magazineAmmo: 12
     ammoType: 1
     isFullAuto: 0
     fireRate: 500

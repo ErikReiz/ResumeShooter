@@ -661,7 +661,7 @@ MonoBehaviour:
     weaponPickUp: {fileID: 1798579882298740222, guid: ffee59550890c3d42913e6ef12da9e05,
       type: 3}
     magazineSize: 30
-    currentAmmo: 30
+    magazineAmmo: 30
     ammoType: 0
     isFullAuto: 1
     fireRate: 500

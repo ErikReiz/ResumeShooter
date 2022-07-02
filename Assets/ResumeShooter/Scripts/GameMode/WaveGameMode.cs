@@ -9,14 +9,13 @@ public class WaveGameMode : GameModeBase
 	#endregion
 
 	#region FIELDS
-	private GameObject[] spawnPoints;
 	private uint enemyCounter = 0;
 	private bool isWaveSpawnerActive = false;
 	#endregion
 
 	protected override void BeginPlay()
 	{
-		FindSpawnPoints();
+		waveSetup.FindSpawnPoints();
 		SetFirstWave();
 	}
 
@@ -25,18 +24,12 @@ public class WaveGameMode : GameModeBase
 		StopAllCoroutines();
 	}
 
-	private void FindSpawnPoints()
-	{// заменить на поиск по классу
-		spawnPoints = GameObject.FindGameObjectsWithTag("Spawn Point");
-	}
-
 	private void SetFirstWave()
 	{
-		if (spawnPoints.Length == 0)
-		{
-			waveSetup.waveSize = 0;
+		if (waveSetup.SpawnPoints.Count == 0)
 			return;
-		}
+
+		Debug.Log("ds");
 
 		if (waveSetup.waveSize < waveSetup.enemyCountToSpawn)
 			waveSetup.waveSize = waveSetup.enemyCountToSpawn + 1;
@@ -68,7 +61,9 @@ public class WaveGameMode : GameModeBase
 
 		for(int i = 0; i < waveSetup.waveSize; i++)
 		{
-			Transform spawnPointTransform = spawnPoints[Random.Range(0, spawnPoints.Length)].transform;
+			int spawnPointsCount = waveSetup.SpawnPoints.Count;
+
+			Transform spawnPointTransform = waveSetup.SpawnPoints[Random.Range(0, spawnPointsCount)].transform;
 			GameObject enemyToSpawn = waveSetup.enemyPool.GenerateEnemy();
 
 			if (enemyToSpawn)

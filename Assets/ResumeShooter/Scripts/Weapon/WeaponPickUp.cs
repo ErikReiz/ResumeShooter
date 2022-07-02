@@ -5,7 +5,7 @@ using UnityEngine;
 public class WeaponPickUp : MonoBehaviour, IInteractable
 {
 	#region SERIALIZE FIELDS
-	[SerializeField] private int magazineAmmo;
+	[SerializeField] private uint magazineAmmo;
 	[Tooltip("What weapon will be picked up")]
 	[SerializeField] private GameObject equipment;
 	#endregion
@@ -13,7 +13,7 @@ public class WeaponPickUp : MonoBehaviour, IInteractable
 	#region PROPERTIES
 	public GameObject Equipment { get { return equipment; } }
 
-	public int MagazineAmmo
+	public uint MagazineAmmo
 	{ 
 		get { return magazineAmmo; }
 		set
