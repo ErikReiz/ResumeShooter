@@ -6,44 +6,39 @@ public enum AmmunitionType : byte
 	PistolAmmo
 }
 
-public enum WeaponType : byte
-{
-	Primary,
-	Secondary
-}
-
 [System.Serializable]
 public class WeaponData
 {
 	#region FIELDS
 	[Header("General")]
-	public WeaponType weaponType;
-	public GameObject shellPrefab;
-	public Transform shellSocket;
+	public GameObject ShellPrefab;
+	public Transform ShellSocket;
 	[Tooltip("Character animator override controller")]
-	public RuntimeAnimatorController animatorController;
+	public RuntimeAnimatorController AnimatorController;
 	[Tooltip("Weapon pick up prefab")]
-	public GameObject weaponPickUp;
+	public GameObject WeaponPickUp;
 
 	[Header("Ammo")]
-	public uint magazineSize = 30;
-	public uint magazineAmmo;
-	public AmmunitionType ammoType;
+	public uint MagazineSize = 30;
+	public uint MagazineAmmo;
+	public AmmunitionType AmmoType;
 
 	[Header("Fire information")]
-	public bool isFullAuto = false;
+	public bool IsFullAuto = false;
 	[Tooltip("shots per second")]
-	[Range(1f, 1000f)] public float fireRate = 400f;
-	public float shotDistance = 2000f;
-	[Range(0.1f, 1000f)] public float damage = 20f;
+	[Range(1f, 1000f)] public float FireRate = 400f;
+	public float ShotDistance = 2000f;
+	[Range(0.1f, 1000f)] public float Damage = 20f;
 	[Tooltip("Distance at which npc will hear your shot")]
-	[Range(0f, 1000f)] public float shotSoundRange = 50f;
+	[Range(0f, 1000f)] public float ShotSoundRange = 50f;
 
 	[Header("Particles")]
-	public ParticleSystem muzzleFlash;
+	public ParticleSystem MuzzleFlash;
 
 	[Header("Audio")]
-	public AudioClip fireSound;
-	public AudioClip emptyFireSound;
+	public AudioManager.Audio FireSound;
+	public AudioManager.Audio EmptyFireSound;
+	public AudioManager.Audio ReloadSound;
+	public AudioManager.Audio EmptyReloadSound;
 	#endregion
 }

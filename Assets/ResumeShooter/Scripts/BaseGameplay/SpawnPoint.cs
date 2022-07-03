@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[ExecuteAlways]
+
 public class SpawnPoint : MonoBehaviour
 {
 	#region SERIALIZE FIELDS

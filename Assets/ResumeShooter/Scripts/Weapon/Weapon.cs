@@ -9,23 +9,23 @@ public class Weapon : MonoBehaviour
 	#endregion
 
 	#region PROPERTIES
-	public RuntimeAnimatorController AnimatorController { get { return weaponData.animatorController; } }
-	public AmmunitionType AmmoType { get { return weaponData.ammoType; } }
-	public GameObject WeaponPickUp { get { return weaponData.weaponPickUp; } }
+	public RuntimeAnimatorController AnimatorController { get { return weaponData.AnimatorController; } }
+	public AmmunitionType AmmoType { get { return weaponData.AmmoType; } }
+	public GameObject WeaponPickUp { get { return weaponData.WeaponPickUp; } }
 
 	public bool IsFiring { get { return isHoldingFire; } }
 	public bool IsReloading { get { return isReloading; } }
 
-	public uint GeneralAmmo { get { return ammoManager.GetAmmoCountOfType(weaponData.ammoType); } }
-	public uint MagazineSize { get { return weaponData.magazineSize; } }
+	public uint GeneralAmmo { get { return ammoManager.GetAmmoCountOfType(weaponData.AmmoType); } }
+	public uint MagazineSize { get { return weaponData.MagazineSize; } }
 
 	public uint MagazineAmmo 
 	{
-		get { return weaponData.magazineAmmo; }
+		get { return weaponData.MagazineAmmo; }
 		set
 		{
 			if (value >= 0)
-				weaponData.magazineAmmo = value;
+				weaponData.MagazineAmmo = value;
 		}
 	}
 	#endregion
@@ -43,6 +43,7 @@ public class Weapon : MonoBehaviour
 	private PlayerAnimationManager playerAnimation;
 	private Animator weaponAnimator;
 	private Camera playerCamera;
+	private AudioManager audioManager;
 	#endregion
 
 	private void Awake()
@@ -52,11 +53,12 @@ public class Weapon : MonoBehaviour
 		weaponAnimator = GetComponent<Animator>();
 		ammoManager = GetComponentInParent<AmmoManager>();
 		playerAnimation = GetComponentInParent<PlayerAnimationManager>();
+		audioManager = ServiceManager.AudioSpawner;
 	}
 
 	private void Start()
 	{
-		fireCooldown = 60f / weaponData.fireRate;
+		fireCooldown = 60f / weaponData.FireRate;
 		GetCameraForwardVector();
 	}
 
@@ -96,7 +98,7 @@ public class Weapon : MonoBehaviour
 	private IEnumerator Shoot()
 	{
 		ableToFire = false;
-		if (weaponData.magazineAmmo > 0)
+		if (weaponData.MagazineAmmo > 0)
 		{
 			do
 			{
@@ -106,20 +108,20 @@ public class Weapon : MonoBehaviour
 			} while (CanShoot());
 		}
 
-		if (weaponData.magazineAmmo <= 0)
+		if (weaponData.MagazineAmmo <= 0)
 		{
 			playerAnimation.FireAnimation(true);
-			audioSource.PlayOneShot(weaponData.emptyFireSound);
 			ableToFire = true;
+			audioManager.PlaySound(weaponData.EmptyFireSound);
 		}
 
 	}
 
 	private bool CanShoot()
 	{
-		if (weaponData.magazineAmmo <= 0)
+		if (weaponData.MagazineAmmo <= 0)
 			return false;
-		if (!weaponData.isFullAuto)
+		if (!weaponData.IsFullAuto)
 			return false;
 		if (!isHoldingFire)
 			return false;
@@ -132,19 +134,19 @@ public class Weapon : MonoBehaviour
 		playerAnimation.FireAnimation(false);
 		weaponAnimator.Play("Fire", 0, 0.0f);
 
-		NoiseMaker.MakeNoise(transform.position, weaponData.shotSoundRange);
+		NoiseMaker.MakeNoise(transform.position, weaponData.ShotSoundRange);
 
-		weaponData.magazineAmmo--;
+		weaponData.MagazineAmmo--;
 
 		ProcessRaycast();
 		SpawnFireParticles();
-		PlayFireSounds();
+		audioManager.PlaySound(weaponData.FireSound);
 	}
 
 	private void ProcessRaycast()
 	{
 		RaycastHit hitResult;
-		bool isHit = Physics.Raycast(transform.position, playerCamera.transform.forward, out hitResult, weaponData.shotDistance);
+		bool isHit = Physics.Raycast(transform.position, playerCamera.transform.forward, out hitResult, weaponData.ShotDistance);
 		if (isHit)
 		{
 			impactManager.SpawnImpactParticle(hitResult);
@@ -155,32 +157,22 @@ public class Weapon : MonoBehaviour
 	private void ApplyDamage(RaycastHit hitResult)
 	{
 		GameObject hitObject = hitResult.transform.gameObject;
-		Damager.ApplyDamage(hitObject, weaponData.damage);
+		Damager.ApplyDamage(hitObject, weaponData.Damage);
 	}
 
 	private void SpawnFireParticles()
 	{
-		if (!weaponData.muzzleFlash.isPlaying)
-			weaponData.muzzleFlash.Emit(5);
-	}
-
-	private void PlayFireSounds()
-	{
-		if (audioSource.isPlaying)
-		{
-			audioSource.Stop();
-		}
-
-		audioSource.PlayOneShot(weaponData.fireSound);
+		if (!weaponData.MuzzleFlash.isPlaying)
+			weaponData.MuzzleFlash.Emit(5);
 	}
 	#endregion
 
 	#region RELOADING
 	public void StartReloading()
 	{
-		if (weaponData.magazineAmmo == weaponData.magazineSize || isReloading || isHoldingFire) { return; }
+		if (weaponData.MagazineAmmo == weaponData.MagazineSize || isReloading || isHoldingFire) { return; }
 
-		if (ammoManager.HasAmmunitionOfType(weaponData.ammoType))
+		if (ammoManager.HasAmmunitionOfType(weaponData.AmmoType))
 		{
 			Reload();
 		}
@@ -190,15 +182,17 @@ public class Weapon : MonoBehaviour
 	{
 		isReloading = true;
 
-		if (weaponData.magazineAmmo > 0)
+		if (weaponData.MagazineAmmo > 0)
 		{
 			playerAnimation.ReloadAnimation(false);
 			weaponAnimator.Play("Reload", 0, 0.0f);
+			audioManager.PlaySound(weaponData.ReloadSound);
 		}
 		else
 		{
 			playerAnimation.ReloadAnimation(true);
 			weaponAnimator.Play("Reload Empty", 0, 0.0f);
+			audioManager.PlaySound(weaponData.EmptyReloadSound);
 		}
 	}
 	#endregion
@@ -216,7 +210,7 @@ public class Weapon : MonoBehaviour
 
 	private void OnEjectCasing()
 	{
-		Instantiate(weaponData.shellPrefab, weaponData.shellSocket.position, weaponData.shellSocket.rotation);
+		Instantiate(weaponData.ShellPrefab, weaponData.ShellSocket.position, weaponData.ShellSocket.rotation);
 	}
 	#endregion
 }

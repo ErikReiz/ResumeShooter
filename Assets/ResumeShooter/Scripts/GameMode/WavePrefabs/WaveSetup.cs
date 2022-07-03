@@ -4,25 +4,25 @@ using UnityEngine;
 
 [CreateAssetMenu(fileName = "Wave Setup")]
 public class WaveSetup : ScriptableObject
-{ //TODO заменить все на свойства
+{
 	#region SERIALIZE FIELDS
 	[Header("General")]
 	[Tooltip("Set number of enemies when spawn method will be called")]
-	[SerializeField] public uint enemyCountToSpawn = 5;
-	[SerializeField] public uint waveCount = 5;
+	[SerializeField] public uint EnemyCountToSpawn = 5;
+	[SerializeField] public uint WaveCount = 5;
 	[Tooltip("Sets wave size")]
-	[SerializeField] public uint waveSize = 10;
+	[SerializeField] public uint WaveSize = 10;
 	[Tooltip("Every wave will be increased by that percent")]
-	[SerializeField] public uint waveIncreasePercent = 10;
-	[SerializeField] public float timeDelayBetweenWaves = 10f;
+	[SerializeField] public uint WaveIncreasePercent = 10;
+	[SerializeField] public float TimeDelayBetweenWaves = 10f;
 	[Tooltip("If true, will be increased by waveIncreasePercent")]
-	[SerializeField] public bool increaseTimeDelayBetweenWaves = true;
+	[SerializeField] public bool IncreaseTimeDelayBetweenWaves = true;
 
 	[Header("Spawn Info")]
 	[Tooltip("Enemies and chances to be spawned")]
-	[SerializeField] public EnemyPoolPrefab enemyPool;
+	[SerializeField] public EnemyPoolPrefab EnemyPool;
 	[Tooltip("Delay between enemy spawns")]
-	[SerializeField] public float spawnDelay = 0.1f;
+	[SerializeField] public float SpawnDelay = 0.1f;
 	#endregion
 
 	#region PROPERTIES
@@ -31,12 +31,15 @@ public class WaveSetup : ScriptableObject
 
 	public void FindSpawnPoints()
 	{
+		SpawnPoints.Clear();
+
 		foreach(var spawnPoint in FindObjectsOfType<SpawnPoint>())
 		{
 
 			if (spawnPoint.IsPlayerSpawn)
 				continue;
 
+			Debug.Log(spawnPoint.gameObject);
 			SpawnPoints.Add(spawnPoint);
 		}
 	}

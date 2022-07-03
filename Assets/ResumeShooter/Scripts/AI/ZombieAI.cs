@@ -44,7 +44,9 @@ public class ZombieAI : MonoBehaviour, IDamageable
 	{
 		GameModeBase gameMode = ServiceManager.GetGameMode();
 		gameMode.CharacterKilled(this);
-		Destroy(gameObject);
+
+		GameObject rootObject = transform.root.gameObject;
+		Destroy(rootObject);
 	}
 
 	public void OnApplyDamage()

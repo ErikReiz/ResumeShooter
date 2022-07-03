@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Concrete
   - Spawn Point
+  - AudioPoint
   layers:
   - Default
   - TransparentFX

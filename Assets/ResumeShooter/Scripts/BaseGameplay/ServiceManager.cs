@@ -4,10 +4,16 @@ using UnityEngine;
 
 public static class ServiceManager
 {
+	#region PROPERTIES
+	public static AudioManager AudioSpawner { get { return audioSpawner; } }
+	#endregion
+
 	#region FIELDS
 	private static GameModeBase gameMode;
 	private static FPCharacter player;
 	private static HUDBase hud;
+	private static AudioManager audioSpawner;
+
 	private static GameObject gameModeObject;
 	#endregion
 
@@ -19,6 +25,8 @@ public static class ServiceManager
 
 		if (!GetHUD())
 			InitializeHUD();
+
+		InitializeAudioManager();
 	}
 
 	private static void InitializeGameMode()
@@ -35,6 +43,14 @@ public static class ServiceManager
 			gameModeObject = new GameObject("Game Mode");
 
 		gameModeObject.AddComponent<HUDBase>();
+	}
+
+	private static void InitializeAudioManager()
+	{
+		GameObject audioManagerObject = new GameObject("Audio Manager");
+		Object.DontDestroyOnLoad(audioManagerObject);
+
+		audioSpawner = audioManagerObject.AddComponent<AudioManager>();
 	}
 
 	public static GameModeBase GetGameMode()

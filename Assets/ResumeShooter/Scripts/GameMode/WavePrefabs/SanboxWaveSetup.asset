@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3dceaae60a0b38845abb7222d4becec9, type: 3}
   m_Name: SanboxWaveSetup
   m_EditorClassIdentifier: 
-  enemyCountToSpawn: 5
-  waveCount: 4
-  waveSize: 10
-  waveIncreasePercent: 10
-  timeDelayBetweenWaves: 10
-  increaseTimeDelayBetweenWaves: 1
-  enemyPool: {fileID: 11400000, guid: f9fd2f6cfcf791441981f7782966d036, type: 2}
-  spawnDelay: 0.2
+  EnemyCountToSpawn: 5
+  WaveCount: 2
+  WaveSize: 11
+  WaveIncreasePercent: 10
+  TimeDelayBetweenWaves: 12.1
+  IncreaseTimeDelayBetweenWaves: 1
+  EnemyPool: {fileID: 11400000, guid: f9fd2f6cfcf791441981f7782966d036, type: 2}
+  SpawnDelay: 0.1
