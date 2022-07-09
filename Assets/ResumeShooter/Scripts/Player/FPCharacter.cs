@@ -13,6 +13,7 @@ public class FPCharacter : MonoBehaviour
 	public AmmoManager AmmoManager { get { return ammoManager; } }
 	public Camera PlayerCamera { get { return playerCamera; } }
 	public HealthComponent HealthComponent { get { return healthComponent; } }
+	public Inventory PlayerInventory { get { return playerInventory; } }
 
 	public uint WeaponMagazineAmmo { get { return currentWeapon.MagazineAmmo; } }
 	public uint WeaponGeneralAmmo { get { return currentWeapon.GeneralAmmo; } }
@@ -27,6 +28,7 @@ public class FPCharacter : MonoBehaviour
 	private WeaponCarrier weaponCarrier;
 	private PlayerAnimationManager playerAnimation;
 	private HealthComponent healthComponent;
+	private Inventory playerInventory;
 	private PlayerInput input;
 	private Weapon currentWeapon;
 
@@ -43,6 +45,7 @@ public class FPCharacter : MonoBehaviour
 		playerController = GetComponent<PlayerController>();
 		weaponCarrier = GetComponent<WeaponCarrier>();
 		healthComponent = GetComponent<HealthComponent>();
+		playerInventory = GetComponent<Inventory>();
 
 		SetupAnimations();
 		SetupInput();
@@ -79,12 +82,15 @@ public class FPCharacter : MonoBehaviour
 		input.Player.Movement.performed += OnMovementInput;
 		input.Player.Movement.canceled += OnMovementInput;
 
-		input.Player.Run.started += OnSprintInput;
-		input.Player.Run.canceled += OnSprintInput;
-
 		input.Player.Look.started += OnMouseInput;
 		input.Player.Look.performed += OnMouseInput;
 		input.Player.Look.canceled += OnMouseInput;
+
+		input.Player.Run.started += OnSprintInput;
+		input.Player.Run.canceled += OnSprintInput;
+
+		input.Player.UseConsumable.started += OnUseConsumableInput;
+		input.Player.UseConsumable.canceled += OnUseConsumableInput;
 
 		input.Player.Fire.started += OnFireInput;
 		input.Player.Fire.canceled += OnFireInput;
@@ -112,6 +118,11 @@ public class FPCharacter : MonoBehaviour
 		playerAnimation.ReceiveMovementInput(movementInput);
 	}
 
+	private void OnMouseInput(InputAction.CallbackContext context)
+	{
+		playerController.ReceiveMouseInput(context.ReadValue<Vector2>());
+	}
+
 	private void OnSprintInput(InputAction.CallbackContext context)
 	{
 		if (currentWeapon.IsFiring) { return; }
@@ -120,20 +131,10 @@ public class FPCharacter : MonoBehaviour
 		ToggleSprint();
 	}
 
-	private bool IsKeyDown(InputAction.CallbackContext context)
-	{
-		return context.phase == InputActionPhase.Started ? true : false;
-	}
-
 	private void ToggleSprint()
 	{
 		playerController.ReceiveSprintingInput(isSprinting);
 		playerAnimation.ToogleSprint(isSprinting);
-	}
-
-	private void OnMouseInput(InputAction.CallbackContext context)
-	{
-		playerController.ReceiveMouseInput(context.ReadValue<Vector2>());
 	}
 
 	private void OnFireInput(InputAction.CallbackContext context)
@@ -149,6 +150,11 @@ public class FPCharacter : MonoBehaviour
 			currentWeapon.StartFire();
 		else
 			currentWeapon.StopFire();
+	}
+
+	private void OnUseConsumableInput(InputAction.CallbackContext context)
+	{
+		playerInventory.OnUseEquipmentInput(Inventory.EquipmentType.Consumable, IsKeyDown(context));
 	}
 
 	private void OnReloadInput(InputAction.CallbackContext context)
@@ -167,6 +173,11 @@ public class FPCharacter : MonoBehaviour
 			unholsterAction = new UnityAction(SwitchWeapon);
 			playerAnimation.PlayerHolsterAnimation(holstered);
 		}
+	}
+
+	private bool IsKeyDown(InputAction.CallbackContext context)
+	{
+		return context.phase == InputActionPhase.Started ? true : false;
 	}
 
 	private bool CanSwitchWeapon()

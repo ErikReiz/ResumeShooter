@@ -125,6 +125,15 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""UseConsumable"",
+                    ""type"": ""Button"",
+                    ""id"": ""041cc731-ffc8-4734-aef6-b848315ed98a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -391,6 +400,17 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""action"": ""SwitchWeapon"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2656b821-b2ad-42c5-8ab5-5fad3c0b042f"",
+                    ""path"": ""<Keyboard>/h"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""UseConsumable"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -410,6 +430,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
         m_Player_SwitchWeapon = m_Player.FindAction("SwitchWeapon", throwIfNotFound: true);
         m_Player_SwitchWeaponWheel = m_Player.FindAction("SwitchWeaponWheel", throwIfNotFound: true);
+        m_Player_UseConsumable = m_Player.FindAction("UseConsumable", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -480,6 +501,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Interact;
     private readonly InputAction m_Player_SwitchWeapon;
     private readonly InputAction m_Player_SwitchWeaponWheel;
+    private readonly InputAction m_Player_UseConsumable;
     public struct PlayerActions
     {
         private @PlayerInput m_Wrapper;
@@ -495,6 +517,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         public InputAction @Interact => m_Wrapper.m_Player_Interact;
         public InputAction @SwitchWeapon => m_Wrapper.m_Player_SwitchWeapon;
         public InputAction @SwitchWeaponWheel => m_Wrapper.m_Player_SwitchWeaponWheel;
+        public InputAction @UseConsumable => m_Wrapper.m_Player_UseConsumable;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -537,6 +560,9 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @SwitchWeaponWheel.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwitchWeaponWheel;
                 @SwitchWeaponWheel.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwitchWeaponWheel;
                 @SwitchWeaponWheel.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwitchWeaponWheel;
+                @UseConsumable.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUseConsumable;
+                @UseConsumable.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUseConsumable;
+                @UseConsumable.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUseConsumable;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -574,6 +600,9 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @SwitchWeaponWheel.started += instance.OnSwitchWeaponWheel;
                 @SwitchWeaponWheel.performed += instance.OnSwitchWeaponWheel;
                 @SwitchWeaponWheel.canceled += instance.OnSwitchWeaponWheel;
+                @UseConsumable.started += instance.OnUseConsumable;
+                @UseConsumable.performed += instance.OnUseConsumable;
+                @UseConsumable.canceled += instance.OnUseConsumable;
             }
         }
     }
@@ -591,5 +620,6 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         void OnInteract(InputAction.CallbackContext context);
         void OnSwitchWeapon(InputAction.CallbackContext context);
         void OnSwitchWeaponWheel(InputAction.CallbackContext context);
+        void OnUseConsumable(InputAction.CallbackContext context);
     }
 }

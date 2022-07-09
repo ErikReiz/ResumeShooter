@@ -2850,6 +2850,7 @@ GameObject:
   - component: {fileID: 6792610066623090436}
   - component: {fileID: 3291691106446340170}
   - component: {fileID: 1047247482197745218}
+  - component: {fileID: 8682519406182153152}
   m_Layer: 10
   m_Name: FirstPerson player
   m_TagString: Untagged
@@ -3070,6 +3071,18 @@ MonoBehaviour:
   maxHealth: 100
   objectToDestroy: {fileID: 0}
   destroyDelay: 2
+--- !u!114 &8682519406182153152
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8973969374003791642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a5b9130dc31cd6429258fc5181aa89a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &9007468605716184871
 GameObject:
   m_ObjectHideFlags: 0
