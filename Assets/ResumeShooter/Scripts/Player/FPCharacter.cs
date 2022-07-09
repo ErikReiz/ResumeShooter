@@ -2,55 +2,50 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
-public class FPCharacter : MonoBehaviour, IDamageable
+public class FPCharacter : MonoBehaviour
 {
 	#region SERIALIZE FIELDS
 	[Tooltip("Range at which character will be able to interact with objects")]
-	[SerializeField] private float interactionRange = 30f;
-	[SerializeField] private float maxHealth = 100f;
-	[Tooltip("Player object for weapon")]
-	[SerializeField] private WeaponCarrier weaponCarrier;
+	[SerializeField] private float interactionRange = 3f;
 	#endregion
 
 	#region PROPERTIES
 	public AmmoManager AmmoManager { get { return ammoManager; } }
 	public Camera PlayerCamera { get { return playerCamera; } }
+	public HealthComponent HealthComponent { get { return healthComponent; } }
+
 	public uint WeaponMagazineAmmo { get { return currentWeapon.MagazineAmmo; } }
 	public uint WeaponGeneralAmmo { get { return currentWeapon.GeneralAmmo; } }
-	public float HealthPercents { get { return currentHealth / maxHealth; } }
 	#endregion
 
 	#region FIELDS
 	private UnityAction unholsterAction;
 
-	private PlayerAnimationManager playerAnimation;
 	private Camera playerCamera;
-	private Weapon currentWeapon;
-	private WeaponPickUp pickedUpEquipment;
 	private AmmoManager ammoManager;
-	private PlayerController playerMovement;
+	private PlayerController playerController;
+	private WeaponCarrier weaponCarrier;
+	private PlayerAnimationManager playerAnimation;
+	private HealthComponent healthComponent;
 	private PlayerInput input;
-	private float currentHealth;
-	private bool isDead = false;
+	private Weapon currentWeapon;
+
 	private bool holstered = true;
-	private bool isMouseScrollUp = false;
 	private bool isSprinting = false;
 
+	private int inputIndex;
 	#endregion
 
 	private void Awake()
 	{
-		SetupInput();
-
-		currentHealth = maxHealth;
-
 		playerCamera = GetComponentInChildren<Camera>();
 		ammoManager = GetComponent<AmmoManager>();
-		playerMovement = GetComponent<PlayerController>();
+		playerController = GetComponent<PlayerController>();
+		weaponCarrier = GetComponent<WeaponCarrier>();
+		healthComponent = GetComponent<HealthComponent>();
 
-		playerAnimation = GetComponentInChildren<PlayerAnimationManager>();
-		playerAnimation.OnWeaponSwitched += OnWeaponSwitched;
-		playerAnimation.OnHolsterStateSwitched += OnHolsterStateSwitched;
+		SetupAnimations();
+		SetupInput();
 	}
 
 	private void Start()
@@ -69,9 +64,16 @@ public class FPCharacter : MonoBehaviour, IDamageable
 		input.Player.Disable();
 	}
 
+	private void SetupAnimations()
+	{
+		playerAnimation = GetComponentInChildren<PlayerAnimationManager>();
+		playerAnimation.OnWeaponSwitched += OnWeaponSwitched;
+		playerAnimation.OnHolsterStateSwitched += OnHolsterStateSwitched;
+	}
+
 	private void SetupInput()
 	{
-		input = new PlayerInput();
+		input = new();
 
 		input.Player.Movement.started += OnMovementInput;
 		input.Player.Movement.performed += OnMovementInput;
@@ -92,41 +94,61 @@ public class FPCharacter : MonoBehaviour, IDamageable
 		input.Player.Interact.started += OnInteractInput;
 	}
 
+	private void SetCurrentWeapon()
+	{
+		currentWeapon = weaponCarrier.CurrentWeapon;
+		if (currentWeapon)
+		{
+			playerAnimation.ChangeAnimatorController(currentWeapon.AnimatorController);
+			playerAnimation.PlayerHolsterAnimation(holstered);
+		}
+	}
+
 	#region INPUT
 	private void OnMovementInput(InputAction.CallbackContext context)
 	{
 		Vector2 movementInput = context.ReadValue<Vector2>();
-		playerMovement.ReceiveMovementInput(movementInput);
+		playerController.ReceiveMovementInput(movementInput);
 		playerAnimation.ReceiveMovementInput(movementInput);
 	}
 
 	private void OnSprintInput(InputAction.CallbackContext context)
 	{
-		if(currentWeapon?.IsFiring ?? false) { return; }
+		if (currentWeapon.IsFiring) { return; }
 
-		isSprinting = (context.phase == InputActionPhase.Started) ? true : false;
-		playerMovement.ReceiveSprintingInput(isSprinting);
+		isSprinting = IsKeyDown(context);
+		ToggleSprint();
+	}
+
+	private bool IsKeyDown(InputAction.CallbackContext context)
+	{
+		return context.phase == InputActionPhase.Started ? true : false;
+	}
+
+	private void ToggleSprint()
+	{
+		playerController.ReceiveSprintingInput(isSprinting);
 		playerAnimation.ToogleSprint(isSprinting);
 	}
 
 	private void OnMouseInput(InputAction.CallbackContext context)
 	{
-		playerMovement.ReceiveMouseInput(context.ReadValue<Vector2>());
+		playerController.ReceiveMouseInput(context.ReadValue<Vector2>());
 	}
 
 	private void OnFireInput(InputAction.CallbackContext context)
 	{
-		if (holstered || isSprinting) { return; }
-
-		switch (context.phase)
+		if (holstered) { return; }
+		if (isSprinting)
 		{
-			case InputActionPhase.Started:
-				currentWeapon.StartFire();
-				break;
-			case InputActionPhase.Canceled:
-				currentWeapon.StopFire();
-				break;
+			isSprinting = false;
+			ToggleSprint();
 		}
+
+		if (IsKeyDown(context))
+			currentWeapon.StartFire();
+		else
+			currentWeapon.StopFire();
 	}
 
 	private void OnReloadInput(InputAction.CallbackContext context)
@@ -138,28 +160,51 @@ public class FPCharacter : MonoBehaviour, IDamageable
 
 	private void OnSwitchWeaponInput(InputAction.CallbackContext context)
 	{
+		inputIndex = Mathf.RoundToInt(context.ReadValue<float>());
+
 		if (CanSwitchWeapon())
 		{
-			isMouseScrollUp = Input.GetAxis("SwitchWeapon") > 0 ? true : false;
 			unholsterAction = new UnityAction(SwitchWeapon);
 			playerAnimation.PlayerHolsterAnimation(holstered);
 		}
+	}
+
+	private bool CanSwitchWeapon()
+	{
+		if (!currentWeapon)
+			return false;
+		if (currentWeapon.IsFiring || currentWeapon.IsReloading)
+			return false;
+		if (holstered)
+			return false;
+
+		return weaponCarrier.CanChangeWeapon(inputIndex);
 	}
 
 	private void OnInteractInput(InputAction.CallbackContext context)
 	{
 		RaycastHit hitResult;
 		Vector3 cameraPosition = playerCamera.transform.position;
+
 		bool isHit = Physics.Raycast(cameraPosition, playerCamera.transform.forward, out hitResult, interactionRange);
 
 		if (isHit)
+			Interact();
+
+		void Interact()
 		{
-			Interact(ref hitResult);
+			GameObject hitObject = hitResult.transform.gameObject;
+			IInteractable[] interactedObjects = hitObject.GetComponents<IInteractable>();
+
+			foreach (IInteractable interactedObject in interactedObjects)
+			{
+				interactedObject.Interact(this);
+			}
 		}
 	}
 	#endregion
 
-	#region ANIMATIONS
+	#region ANIMATION EVENTS
 	private void OnWeaponSwitched()
 	{
 		unholsterAction?.Invoke();
@@ -171,82 +216,18 @@ public class FPCharacter : MonoBehaviour, IDamageable
 	}
 	#endregion
 
-	private bool CanSwitchWeapon()
-	{
-		if (!currentWeapon)
-			return false;
-		if (currentWeapon.IsFiring || currentWeapon.IsReloading)
-			return false;
-		if (holstered)
-			return false;
-
-		return true;
-	}
-
 	private void SwitchWeapon()
 	{
-		weaponCarrier.SwitchWeapon(isMouseScrollUp);
+		weaponCarrier.SwitchWeapon(inputIndex);
 		SetCurrentWeapon();
 	}
 
-	private void SetCurrentWeapon()
+	public void PickUpWeapon(WeaponPickUp equipmentPickUp)
 	{
-		currentWeapon = weaponCarrier.CurrentWeapon;
-		if(currentWeapon)
-		{
-			playerAnimation.ChangeAnimatorController(currentWeapon.AnimatorController);
-			playerAnimation.PlayerHolsterAnimation(holstered);
-		}
-	}
-
-	void IDamageable.ReceiveDamage(float damage)
-	{
-		if (isDead) { return; }
-
-		damage = Mathf.Clamp(damage, 0, maxHealth);
-		currentHealth -= damage;
-
-		if (currentHealth == 0)
-		{
-			isDead = true;
-			KillPlayer();
-		}
-	}
-
-	private void KillPlayer()
-	{
-		GameModeBase gameMode = ServiceManager.GetGameMode();
-		gameMode.CharacterKilled(this);
-	}
-
-	private void Interact(ref RaycastHit hitResult)
-	{
-		GameObject hitObject = hitResult.transform.gameObject;
-		IInteractable[] interactedObjects = hitObject.GetComponents<IInteractable>();
-
-		foreach(IInteractable interactedObject in interactedObjects)
-		{
-			interactedObject.Interact(this);
-		}
-	}
-
-	#region INTERACTION
-	public void IncreaseHealth(float healthToRestore)
-	{
-		currentHealth += Mathf.Clamp(healthToRestore, 0, maxHealth - currentHealth);
-	}
-
-	public void InteractedWithEquipment(WeaponPickUp equipmentPickUp)
-	{
-		pickedUpEquipment = equipmentPickUp;
-		unholsterAction = new UnityAction(PickUpEquipment);
+		holstered = true;
 		playerAnimation.PlayerHolsterAnimation(holstered);
-	}
 
-	private void PickUpEquipment()
-	{
-		weaponCarrier.PickUpEquipment(pickedUpEquipment);
+		weaponCarrier.PickUpWeapon(equipmentPickUp);
 		SetCurrentWeapon();
 	}
-	#endregion
 }

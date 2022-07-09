@@ -1,10 +1,12 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class WeaponCarrier : MonoBehaviour
 {
 	#region SERIALIZE FILEDS
+	[Tooltip("Weapon attach parent")]
+	[SerializeField] private Transform weaponsParentTransform;
+
 	[SerializeField] private List<GameObject> weaponObjects;
 	#endregion
 
@@ -13,8 +15,9 @@ public class WeaponCarrier : MonoBehaviour
 	#endregion
 
 	#region FIELDS
-	private int currentIndex = 0;
 	private readonly int maxWeaponCount = 2;
+
+	private int currentIndex = 0;
 	#endregion
 
 	private void Awake()
@@ -29,9 +32,10 @@ public class WeaponCarrier : MonoBehaviour
 
 		for (int i = 0; i < weaponObjects.Count; i++)
 		{
-			weaponObjects[i] = Instantiate(weaponObjects[i], transform);
+			weaponObjects[i] = Instantiate(weaponObjects[i], weaponsParentTransform);
 			weaponObjects[i].SetActive(false);
 		}
+
 		weaponObjects[currentIndex].SetActive(true);
 	}
 
@@ -53,41 +57,45 @@ public class WeaponCarrier : MonoBehaviour
 		currentIndex = index;
 	}
 
-	public void PickUpEquipment(WeaponPickUp equipmentPickUp)
+	public void PickUpWeapon(WeaponPickUp weaponPickUp)
 	{
 		if (weaponObjects.Count == maxWeaponCount)
 		{
-			SpawnEquipmentPickUp(equipmentPickUp);
+			SpawnWeaponPickUp(weaponPickUp.transform);
 
 			Destroy(weaponObjects[currentIndex]);
-			weaponObjects[currentIndex] = Instantiate(equipmentPickUp.Equipment, transform);
+			weaponObjects[currentIndex] = Instantiate(weaponPickUp.Weapon, weaponsParentTransform).gameObject;
 		}
 		else
 		{
-			GameObject weaponObject = Instantiate(equipmentPickUp.Equipment, transform);
+			GameObject weaponObject = Instantiate(weaponPickUp.Weapon, weaponsParentTransform).gameObject;
 			weaponObject.SetActive(false);
 			weaponObjects.Add(weaponObject);
+
 			SwitchWeapon(weaponObjects.Count - 1);
 		}
 
-		CurrentWeapon.MagazineAmmo = equipmentPickUp.MagazineAmmo;
-		Destroy(equipmentPickUp.gameObject);
+		CurrentWeapon.MagazineAmmo = weaponPickUp.MagazineAmmo;
+		Destroy(weaponPickUp.gameObject);
 	}
 
-	private void SpawnEquipmentPickUp(WeaponPickUp equipmentPickUp)
+	private void SpawnWeaponPickUp(Transform pickUpTransform)
 	{
-		Transform equipmentTransform = equipmentPickUp.transform;
 		Weapon currentWeapon = CurrentWeapon;
-		 
-		GameObject PickUpGameObject = Instantiate(currentWeapon.WeaponPickUp, equipmentTransform.position, equipmentTransform.rotation);
+
+		GameObject PickUpGameObject = Instantiate(currentWeapon.WeaponPickUp, pickUpTransform.position, pickUpTransform.rotation);
 		WeaponPickUp spawnedEquipmnetPickUp = PickUpGameObject.GetComponent<WeaponPickUp>();
 		if (spawnedEquipmnetPickUp)
 			spawnedEquipmnetPickUp.MagazineAmmo = currentWeapon.MagazineAmmo;
 	}
 
-	public bool CanChangeWeapon()
+	public bool CanChangeWeapon(int inputIndex)
 	{
-		if (weaponObjects.Count <= 1) { return false; }
+		if (weaponObjects.Count <= 1)
+			return false;
+		if (inputIndex == currentIndex)
+			return false;
+
 		return true;
 	}
 }

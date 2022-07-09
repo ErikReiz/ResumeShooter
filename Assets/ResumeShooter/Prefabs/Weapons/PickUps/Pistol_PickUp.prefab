@@ -48,9 +48,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8adf5c001975b94e883a795dd856a5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weapon: {fileID: 0}
   magazineAmmo: 15
-  equipment: {fileID: 189091626145577203, guid: 23e5fad613af76c439edf6c728c31484,
-    type: 3}
 --- !u!65 &104893596768849319
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -679,25 +678,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 2426452682215194221}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &3273294538151019324 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 446803998811ff04ea871c8f2a4be03c,
-    type: 3}
-  m_PrefabInstance: {fileID: 2426452682215194221}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &2126790380939481546
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3273294538151019324}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 262a90da45c94c348be144e6130ec77b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sprite: {fileID: 21300000, guid: 8dfba53139ea13f40b1977728ed0bea4, type: 3}
 --- !u!1001 &5246074767120705404
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -772,26 +752,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8931d8712849cae45b5d761cd9ec7838, type: 3}
---- !u!1 &4903475399017863725 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 8931d8712849cae45b5d761cd9ec7838,
-    type: 3}
-  m_PrefabInstance: {fileID: 5246074767120705404}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &4409392795792046602
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4903475399017863725}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 965555d451af4a2299927c4e3dd7ee09, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ammunitionTotal: 10
-  sprite: {fileID: 21300000, guid: d96558cda50c04347b69780fd84c6fc9, type: 3}
 --- !u!4 &5712662512745562263 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 8931d8712849cae45b5d761cd9ec7838,

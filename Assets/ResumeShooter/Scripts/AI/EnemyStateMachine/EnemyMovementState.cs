@@ -1,12 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class EnemyMovementState : EnemyBaseState
 {
 	#region FIELDS
 	private Vector3 targetPosition;
+
 	private float distanceToTarget;
 	#endregion
 
@@ -24,6 +22,7 @@ public class EnemyMovementState : EnemyBaseState
 	public override void ExitState()
 	{
 		context.EnemyAnimator.SetBool(context.IsMovingHash, false);
+		context.NavMesh.SetDestination(context.transform.position);
 	}
 
 	public override void OnPlayerSpotted(Vector3 targetPosition)

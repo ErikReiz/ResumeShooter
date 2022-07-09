@@ -1,24 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class KillAllEnemiesGameMode : GameModeBase
 {
-	public override void CharacterKilled(Object characterKilled)
+	public override void CharacterKilled(bool isPlayer)
 	{
-		base.CharacterKilled(characterKilled);
+		base.CharacterKilled(isPlayer);
 
-		if(characterKilled is ZombieAI)
+		if (!isPlayer)
 		{
-			foreach (var enemy in FindObjectsOfType<ZombieAI>())
+			foreach (var enemy in FindObjectsOfType<HealthComponent>())
 			{
-				if(!enemy.IsDead)
-				{
-					return;
-				}
-			}
+				if (enemy.IsPlayer)
+					continue;
 
-		EndGame(true);
+				if (!enemy.IsDead)
+					return;
+			}
+			EndGame(true);
 		}
 	}
 }

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -59,7 +57,7 @@ public class GameModeBase : MonoBehaviour
 
 	private SpawnPoint FindPlayerStart()
 	{
-		foreach(var point in FindObjectsOfType<SpawnPoint>())
+		foreach (var point in FindObjectsOfType<SpawnPoint>())
 		{
 			if (point.IsPlayerSpawn)
 				return point;
@@ -70,9 +68,9 @@ public class GameModeBase : MonoBehaviour
 
 	protected virtual void BeginPlay() { }
 
-	public virtual void CharacterKilled(Object characterKilled)
+	public virtual void CharacterKilled(bool isPlayer)
 	{
-		if (characterKilled is FPCharacter)
+		if (isPlayer)
 		{
 			EndGame(false);
 		}

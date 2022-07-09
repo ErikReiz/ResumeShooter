@@ -1,12 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class HUDBase : MonoBehaviour
 {
 	#region SERIALIZE FIELDS
-    [SerializeField] protected bool showHUD = true;
+	[SerializeField] protected bool showHUD = true;
 	#endregion
 
 	#region FIELDS

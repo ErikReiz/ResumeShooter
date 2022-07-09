@@ -1,13 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class FPSHUD : HUDBase
 {
 	#region SERIALIZE FIELDS
-	[SerializeField] PlayerHUD playerHUD;
-	[SerializeField] EndGameMenu lossWidget;
-	[SerializeField] EndGameMenu victoryWidget;
+	[SerializeField] private PlayerHUD playerHUD;
+	[SerializeField] private EndGameMenu lossWidget;
+	[SerializeField] private EndGameMenu victoryWidget;
 	#endregion
 
 	#region FIELDS
@@ -41,13 +39,13 @@ public class FPSHUD : HUDBase
 		victoryWidget.gameObject.SetActive(false);
 	}
 
-	private void OnGameEnded(bool isPlayerWon)
+	private void OnGameEnded(bool isPlayerWinner)
 	{
-		Destroy(playerHUD);
+		playerHUD.gameObject.SetActive(false);
 
-		if (isPlayerWon)
-			victoryWidget.enabled = true;
+		if (isPlayerWinner)
+			victoryWidget.gameObject.SetActive(true);
 		else
-			lossWidget.enabled = true;
+			lossWidget.gameObject.SetActive(true);
 	}
 }

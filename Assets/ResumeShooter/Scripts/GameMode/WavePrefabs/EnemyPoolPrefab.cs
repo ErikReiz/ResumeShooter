@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,6 +7,7 @@ public class EnemyPoolPrefab : ScriptableObject
 	#region SERIALIZE FIELDS
 	[Tooltip("Sets chance and enemy to spawn")]
 	[SerializeField] private SerializableDictionary<GameObject, uint> enemyList;
+
 	[Tooltip("If true generate enemy method will always return enemy")]
 	[SerializeField] private bool alwaysGenerateEnemy = true;
 	#endregion

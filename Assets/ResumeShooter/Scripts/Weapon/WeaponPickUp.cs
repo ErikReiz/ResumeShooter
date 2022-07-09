@@ -1,31 +1,30 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class WeaponPickUp : MonoBehaviour, IInteractable
 {
 	#region SERIALIZE FIELDS
-	[SerializeField] private uint magazineAmmo;
 	[Tooltip("What weapon will be picked up")]
-	[SerializeField] private GameObject equipment;
+	[SerializeField] private Weapon weapon;
+
+	[SerializeField] private uint magazineAmmo;
 	#endregion
 
 	#region PROPERTIES
-	public GameObject Equipment { get { return equipment; } }
+	public Weapon Weapon { get { return weapon; } }
 
 	public uint MagazineAmmo
-	{ 
+	{
 		get { return magazineAmmo; }
 		set
 		{
-			if(value >= 0)
+			if (value >= 0)
 				magazineAmmo = value;
-		} 
+		}
 	}
 	#endregion
 
 	void IInteractable.Interact(FPCharacter interactedPlayer)
 	{
-		interactedPlayer.InteractedWithEquipment(this);
+		interactedPlayer.PickUpWeapon(this);
 	}
 }

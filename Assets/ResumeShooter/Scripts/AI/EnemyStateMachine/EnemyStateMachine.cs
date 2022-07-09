@@ -1,28 +1,27 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class EnemyStateMachine : MonoBehaviour
-{ 
+{
 	#region PROPERTIES
-	public int IsMovingHash { get { return isMovingHash; } }
-	public int IsAttackingHash { get { return isAttackingHash; } }
-	public Vector3 Position { get { return transform.parent.position; } }
 	public Animator EnemyAnimator { get { return enemyAnimator; } }
 	public EnemyBaseState CurrentState { set { currentState = value; } }
 	public NavMeshAgent NavMesh { get { return navMesh; } }
+	public Vector3 Position { get { return transform.parent.position; } }
+
+	public int IsMovingHash { get { return isMovingHash; } }
+	public int IsAttackingHash { get { return isAttackingHash; } }
 	#endregion
 
 	#region FIELDS
 
 	#region STATES
 	private EnemyBaseState currentState;
-    private EnemyStateFactory stateFactory;
+	private EnemyStateFactory stateFactory;
 	#endregion
 	#region PERCEPTIONS
-    private AIPerception aiPerception;
-    private NavMeshAgent navMesh;
+	private AIPerception aiPerception;
+	private NavMeshAgent navMesh;
 	#endregion
 	#region ANIMATOR
 	private Animator enemyAnimator;
@@ -38,14 +37,14 @@ public class EnemyStateMachine : MonoBehaviour
 
 		aiPerception = GetComponentInParent<AIPerception>();
 		navMesh = GetComponentInParent<NavMeshAgent>();
-
-        stateFactory = new EnemyStateFactory(this);
-        currentState = stateFactory.Idle();
-        currentState.EnterState();
+		stateFactory = new EnemyStateFactory(this);
 	}
 
 	private void OnEnable()
 	{
+		currentState = stateFactory.Idle();
+		currentState.EnterState();
+
 		aiPerception.OnPlayerSeen += OnPlayerSeen;
 		aiPerception.OnLostVision += OnLostVision;
 		aiPerception.OnHearedSomething += OnHearedSomething;
@@ -53,6 +52,8 @@ public class EnemyStateMachine : MonoBehaviour
 
 	private void OnDisable()
 	{
+		currentState.ExitState();
+
 		aiPerception.OnPlayerSeen -= OnPlayerSeen;
 		aiPerception.OnLostVision -= OnLostVision;
 		aiPerception.OnHearedSomething -= OnHearedSomething;

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -11,20 +9,21 @@ public class PlayerAnimationManager : MonoBehaviour
 	#endregion
 
 	#region FIELDS
+	private readonly string sprintingBoolName = "isSprinting";
+
 	public UnityAction OnWeaponSwitched;
 	public UnityAction OnHolsterStateSwitched;
 	public UnityAction OnEndedReload;
 	public UnityAction OnEjectCasing;
 	public UnityAction OnAmmunitionFill;
 
+	private Animator characterAnimator;
 	private Vector2 movementInput;
 
-	private Animator characterAnimator;
 	private int reloadingLayer;
 	private int firingLayer;
 	private int holsterLayer;
 	private int hashMovement;
-	private readonly string sprintingBoolName = "isSprinting";
 	#endregion
 
 	private void Awake()

@@ -4,10 +4,11 @@ using UnityEngine;
 public class SpawnPoint : MonoBehaviour
 {
 	#region SERIALIZE FIELDS
+	[SerializeField] private bool isPlayerSpawn = false;
+
 	[SerializeField] private float playerHeight = 2f;
 	[Tooltip("Capsule radius to check collision contacts")]
 	[SerializeField] private float checkRadius = 0.5f;
-	[SerializeField] private bool isPlayerSpawn = false;
 	#endregion
 
 	#region PROPERTIES
@@ -47,7 +48,7 @@ public class SpawnPoint : MonoBehaviour
 
 	public FPCharacter SpawnCharacter(FPCharacter player)
 	{
-		if(isSpawnBlocked)
+		if (isSpawnBlocked)
 		{
 			Debug.Log("blocked");
 			throw new System.Exception($"Spawn blocked on {gameObject}");

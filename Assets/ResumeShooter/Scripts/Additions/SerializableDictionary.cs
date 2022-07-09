@@ -39,7 +39,7 @@ public sealed class SerializableDictionary<TKey, TValue> : SerializableDictionar
 	Dictionary<TKey, TValue> dictionary = new Dictionary<TKey, TValue>();
 	#endregion
 
-	public void OnBeforeSerialize() {}
+	public void OnBeforeSerialize() { }
 
 	public void OnAfterDeserialize()
 	{

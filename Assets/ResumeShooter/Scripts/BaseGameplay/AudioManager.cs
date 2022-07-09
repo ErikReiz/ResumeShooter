@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class AudioManager : MonoBehaviour
@@ -12,7 +11,7 @@ public class AudioManager : MonoBehaviour
 	}
 
 	#region FIELDS
-	GameObject audioObject;
+	private GameObject audioObject;
 	#endregion
 
 	private void Start()
@@ -25,7 +24,7 @@ public class AudioManager : MonoBehaviour
 		if (!sound.Clip) { return; }
 
 		GameObject audio = new GameObject(sound.ToString());
-		if(audioObject)
+		if (audioObject)
 			audio.transform.parent = audioObject.transform;
 
 		AudioSource audioSource = audio.AddComponent<AudioSource>();

@@ -1,17 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyAttackingState : EnemyBaseState
 {
 	#region FIELDS
 	private Vector3 targetPosition;
+
 	private float turnSpeed = 5f;
 	#endregion
 
 	public EnemyAttackingState(BaseStateData stateData, Vector3 targetPosition) : base(stateData)
-	{ 
-		 this.targetPosition = targetPosition;
+	{
+		this.targetPosition = targetPosition;
 	}
 
 	public override void EnterState()

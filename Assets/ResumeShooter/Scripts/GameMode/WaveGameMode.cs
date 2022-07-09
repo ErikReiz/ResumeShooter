@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class WaveGameMode : GameModeBase
@@ -9,13 +8,17 @@ public class WaveGameMode : GameModeBase
 	#endregion
 
 	#region FIELDS
-	private uint enemyCounter = 0;
 	private bool isWaveSpawnerActive = false;
+
+	private float tempWaveSize;
+	private uint enemyCounter = 0;
 	#endregion
 
 	protected override void BeginPlay()
 	{
 		waveSetup.FindSpawnPoints();
+		tempWaveSize = waveSetup.WaveSize;
+
 		SetFirstWave();
 	}
 
@@ -32,32 +35,41 @@ public class WaveGameMode : GameModeBase
 		if (waveSetup.WaveSize < waveSetup.EnemyCountToSpawn)
 			waveSetup.WaveSize = waveSetup.EnemyCountToSpawn + 1;
 
-		enemyCounter = (uint)FindObjectsOfType<ZombieAI>().Length;
-		if (enemyCounter <= waveSetup.EnemyCountToSpawn)
-			StartCoroutine(EnemySpawner());
+		StartCoroutine(EnemySpawner());
 	}
 
-	public override void CharacterKilled(Object characterKilled)
+	public override void CharacterKilled(bool isPlayer)
 	{
-		base.CharacterKilled(characterKilled);
+		base.CharacterKilled(isPlayer);
 
-		if(characterKilled is ZombieAI)
+		if (!isPlayer)
 		{
 			enemyCounter--;
-			if(waveSetup.WaveCount == 0) { return; }
+			WinAndContinueGameCondition();
+		}
 
-			if (enemyCounter <= waveSetup.EnemyCountToSpawn && !isWaveSpawnerActive)
+		void WinAndContinueGameCondition()
+		{
+			if (enemyCounter == 0 && waveSetup.WaveCount == 0)
+			{
+				EndGame(true);
+			}
+			else if (enemyCounter <= waveSetup.EnemyCountToSpawn && !isWaveSpawnerActive)
+			{
 				StartCoroutine(EnemySpawner());
+			}
 		}
 	}
 
 	private IEnumerator EnemySpawner()
 	{
 		isWaveSpawnerActive = true;
+
 		yield return new WaitForSeconds(waveSetup.TimeDelayBetweenWaves);
+
 		waveSetup.WaveCount--;
 
-		for(int i = 0; i < waveSetup.WaveSize; i++)
+		for (int i = 0; i < waveSetup.WaveSize; i++)
 		{
 			int spawnPointsCount = waveSetup.SpawnPoints.Count;
 
@@ -72,7 +84,7 @@ public class WaveGameMode : GameModeBase
 
 			yield return new WaitForSeconds(waveSetup.SpawnDelay);
 		}
-		
+
 		SetNewWave();
 	}
 
@@ -81,7 +93,15 @@ public class WaveGameMode : GameModeBase
 		isWaveSpawnerActive = false;
 		float increasePercent = 1 + (float)waveSetup.WaveIncreasePercent / 100;
 
-		waveSetup.WaveSize = (uint)Mathf.FloorToInt(waveSetup.WaveSize * increasePercent);
+		tempWaveSize = tempWaveSize * increasePercent;
+		int intTempWaveSize = Mathf.RoundToInt(tempWaveSize);
+
+		if (intTempWaveSize > waveSetup.WaveSize)
+		{
+			waveSetup.WaveSize = (uint)intTempWaveSize;
+			tempWaveSize = intTempWaveSize;
+		}
+
 		if (waveSetup.IncreaseTimeDelayBetweenWaves)
 			waveSetup.TimeDelayBetweenWaves *= increasePercent;
 

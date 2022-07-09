@@ -1,5 +1,5 @@
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class PlayerHUD : MonoBehaviour
@@ -14,12 +14,14 @@ public class PlayerHUD : MonoBehaviour
 	#endregion
 
 	#region FIELDS
+	private HealthComponent playerHealthComponent;
 	private FPCharacter player;
 	#endregion
 
 	private void Start()
 	{
 		player = ServiceManager.GetPlayer();
+		playerHealthComponent = player.HealthComponent;
 	}
 
 	private void Update()
@@ -30,7 +32,7 @@ public class PlayerHUD : MonoBehaviour
 
 	private void UpdateHealthBar()
 	{
-		healthBar.value = player.HealthPercents;
+		healthBar.value = playerHealthComponent.HealthPercents;
 	}
 
 	private void UpdateAmmoUI()

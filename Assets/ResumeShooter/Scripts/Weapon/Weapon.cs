@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-[RequireComponent(typeof(AudioSource), typeof(ImpactManager))]
+[RequireComponent(typeof(ImpactManager))]
 public class Weapon : MonoBehaviour
 {
 	#region SERIALIZE FIELDS 
@@ -10,16 +10,16 @@ public class Weapon : MonoBehaviour
 
 	#region PROPERTIES
 	public RuntimeAnimatorController AnimatorController { get { return weaponData.AnimatorController; } }
-	public AmmunitionType AmmoType { get { return weaponData.AmmoType; } }
 	public GameObject WeaponPickUp { get { return weaponData.WeaponPickUp; } }
+
+	public AmmunitionType AmmoType { get { return weaponData.AmmoType; } }
 
 	public bool IsFiring { get { return isHoldingFire; } }
 	public bool IsReloading { get { return isReloading; } }
 
 	public uint GeneralAmmo { get { return ammoManager.GetAmmoCountOfType(weaponData.AmmoType); } }
 	public uint MagazineSize { get { return weaponData.MagazineSize; } }
-
-	public uint MagazineAmmo 
+	public uint MagazineAmmo
 	{
 		get { return weaponData.MagazineAmmo; }
 		set
@@ -31,24 +31,22 @@ public class Weapon : MonoBehaviour
 	#endregion
 
 	#region FIELDS
+	private ImpactManager impactManager;
+	private Animator weaponAnimator;
+	private AmmoManager ammoManager;
+	private PlayerAnimationManager playerAnimation;
+	private Camera playerCamera;
+	private AudioManager audioManager;
+
 	private bool isHoldingFire = false;
 	private bool isReloading = false;
 	private bool ableToFire = true;
 
 	private float fireCooldown;
-
-	private AudioSource audioSource;
-	private ImpactManager impactManager;
-	private AmmoManager ammoManager;
-	private PlayerAnimationManager playerAnimation;
-	private Animator weaponAnimator;
-	private Camera playerCamera;
-	private AudioManager audioManager;
 	#endregion
 
 	private void Awake()
 	{
-		audioSource = GetComponent<AudioSource>();
 		impactManager = GetComponent<ImpactManager>();
 		weaponAnimator = GetComponent<Animator>();
 		ammoManager = GetComponentInParent<AmmoManager>();
@@ -59,7 +57,7 @@ public class Weapon : MonoBehaviour
 	private void Start()
 	{
 		fireCooldown = 60f / weaponData.FireRate;
-		GetCameraForwardVector();
+		playerCamera = ServiceManager.GetPlayer().PlayerCamera;
 	}
 
 	private void OnEnable()
@@ -74,11 +72,6 @@ public class Weapon : MonoBehaviour
 		playerAnimation.OnEndedReload -= OnReloadEnded;
 		playerAnimation.OnEjectCasing -= OnEjectCasing;
 		playerAnimation.OnAmmunitionFill -= OnAmmunitionFill;
-	}
-
-	private void GetCameraForwardVector()
-	{
-		playerCamera = ServiceManager.GetPlayer().PlayerCamera;
 	}
 
 	#region SHOOTING

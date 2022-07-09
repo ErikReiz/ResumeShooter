@@ -533,9 +533,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8adf5c001975b94e883a795dd856a5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weapon: {fileID: 6038990673729284583, guid: ce289fa2853e90d4db733e09a7729324, type: 3}
   magazineAmmo: 30
-  equipment: {fileID: 1798579882298740222, guid: ce289fa2853e90d4db733e09a7729324,
-    type: 3}
 --- !u!65 &8868291857793212142
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -691,7 +690,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 9500000, guid: 9f4d52975d229e74fa27561b00052caa, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 9f4d52975d229e74fa27561b00052caa, type: 3}
 --- !u!4 &2065779571410643954 stripped
 Transform:

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class HealthPickup : MonoBehaviour, IInteractable
@@ -10,7 +8,7 @@ public class HealthPickup : MonoBehaviour, IInteractable
 
 	void IInteractable.Interact(FPCharacter interactedPlayer)
 	{
-		interactedPlayer.IncreaseHealth(healhToRestore);
+		//interactedPlayer.IncreaseHealth(healhToRestore);
 		Destroy(gameObject);
 	}
 }

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyStateFactory
@@ -7,7 +5,6 @@ public class EnemyStateFactory
 	#region FIELDS
 	BaseStateData stateData;
 	#endregion
-
 
 	public EnemyStateFactory(EnemyStateMachine context)
 	{
@@ -29,5 +26,4 @@ public class EnemyStateFactory
 	{
 		return new EnemyAttackingState(stateData, targetPosition);
 	}
-
 }

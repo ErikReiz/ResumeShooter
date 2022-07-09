@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class AmmoManager : MonoBehaviour
@@ -20,7 +18,7 @@ public class AmmoManager : MonoBehaviour
 
 	public uint GetAmmoCountOfType(AmmunitionType ammunitionType)
 	{
-		if(ammoCount.ContainsKey(ammunitionType))
+		if (ammoCount.ContainsKey(ammunitionType))
 			return ammoCount[ammunitionType];
 		else
 			return 0;
@@ -47,9 +45,9 @@ public class AmmoManager : MonoBehaviour
 
 	public void IncreaseAmmunition(SerializableDictionary<AmmunitionType, uint> storedAmmo)
 	{
-		foreach(var currentStoredAmmo in storedAmmo)
+		foreach (var currentStoredAmmo in storedAmmo)
 		{
-			if(ammoCount.ContainsKey(currentStoredAmmo.Key))
+			if (ammoCount.ContainsKey(currentStoredAmmo.Key))
 			{
 				ammoCount[currentStoredAmmo.Key] += currentStoredAmmo.Value;
 			}

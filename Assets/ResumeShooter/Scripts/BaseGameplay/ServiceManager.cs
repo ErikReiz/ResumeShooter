@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public static class ServiceManager
@@ -13,7 +11,6 @@ public static class ServiceManager
 	private static FPCharacter player;
 	private static HUDBase hud;
 	private static AudioManager audioSpawner;
-
 	private static GameObject gameModeObject;
 	#endregion
 
@@ -55,7 +52,7 @@ public static class ServiceManager
 
 	public static GameModeBase GetGameMode()
 	{
-		if(!gameMode)
+		if (!gameMode)
 			gameMode = Object.FindObjectOfType<GameModeBase>();
 
 		return gameMode;

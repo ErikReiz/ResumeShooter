@@ -237,7 +237,7 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 4336030456917059022}
   m_PrefabAsset: {fileID: 0}
---- !u!136 &8823899597662472473
+--- !u!136 &1048927627
 CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -247,7 +247,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.35
+  m_Radius: 0.4
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
@@ -264,6 +264,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   surfaceType: {fileID: 11400000, guid: 548eeff7e93b8744db1a579c33651e28, type: 2}
+--- !u!114 &1048927626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3525691150073452703}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b84e8289f7d9df4cb5def9d476bccf8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  componentsToDisable:
+  - {fileID: 6870036863092495328}
+  isPlayer: 0
+  maxHealth: 100
+  objectToDestroy: {fileID: 485516240927748455}
+  destroyDelay: 2
 --- !u!114 &3303128086440842301
 MonoBehaviour:
   m_ObjectHideFlags: 0

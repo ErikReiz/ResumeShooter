@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -13,45 +11,39 @@ public class PlayerController : MonoBehaviour
 
 	[Header("Mouse")]
 	[SerializeField] private Transform playerArms;
-	[SerializeField] private float mouseSensitivity = 5f;
 	[SerializeField] private Vector2 cameraRotationLimits = new Vector2(-90, 90);
+	[SerializeField] private float mouseSensitivity = 5f;
+
+	[Header("Audio")]
+	[SerializeField] private AudioClip walkFootstepSound;
+	[SerializeField] private AudioClip sprintFootstepSound;
 	#endregion
 
 	#region FIELDS
 	private CharacterController characterController;
-
+	private AudioSource audioSource;
 	private Vector2 movementInput;
 	private Vector3 currentMovement;
-	private float currentSpeed;
 
+	private bool isSprinting = false;
+
+	private float currentSpeed;
 	private float verticalRotation = 0;
 	private float horizontalRotation = 0;
-	private bool isSprinting = false;
 	#endregion
 
 	private void Awake()
 	{
 		characterController = GetComponent<CharacterController>();
+		audioSource = GetComponent<AudioSource>();
 		currentSpeed = walkSpeed;
 	}
 
 	private void Update()
 	{
 		MoveCharacter();
-
-		if(isSprinting)
-		{
-			if (currentSpeed != sprintSpeed)
-			{
-				currentSpeed = Mathf.Lerp(currentSpeed, sprintSpeed, 0.04f);
-			}
-
-		}
-		else
-		{
-			if (currentSpeed != walkSpeed)
-				currentSpeed = Mathf.Lerp(currentSpeed, walkSpeed, 0.08f);
-		}
+		SetSprintSpeed();
+		PlayFootstepSound();
 	}
 
 	private void MoveCharacter()
@@ -67,6 +59,40 @@ public class PlayerController : MonoBehaviour
 			currentMovement.y = groundedGravity;
 		else
 			currentMovement.y = airGravity;
+	}
+
+	private void SetSprintSpeed()
+	{
+		if (isSprinting)
+		{
+			if (currentSpeed != sprintSpeed)
+			{
+				currentSpeed = Mathf.Lerp(currentSpeed, sprintSpeed, 0.04f);
+			}
+
+		}
+		else
+		{
+			if (currentSpeed != walkSpeed)
+				currentSpeed = Mathf.Lerp(currentSpeed, walkSpeed, 0.08f);
+		}
+	}
+
+	private void PlayFootstepSound()
+	{
+		if(movementInput.sqrMagnitude < 0.1)
+		{
+			audioSource.Stop();
+		}
+		else
+		{
+			if (audioSource.isPlaying) { return; }
+
+			if (isSprinting)
+				audioSource.PlayOneShot(sprintFootstepSound);
+			else
+				audioSource.PlayOneShot(walkFootstepSound);
+		}
 	}
 
 	public void ReceiveMovementInput(Vector2 movementInput)

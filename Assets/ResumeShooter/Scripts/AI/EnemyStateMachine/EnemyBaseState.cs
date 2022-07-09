@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public struct BaseStateData
@@ -10,8 +8,10 @@ public struct BaseStateData
 
 public abstract class EnemyBaseState
 {
+	#region FIELDS
 	protected EnemyStateMachine context;
 	protected EnemyStateFactory stateFactory;
+	#endregion
 
 	public EnemyBaseState(BaseStateData stateData)
 	{
@@ -41,7 +41,7 @@ public abstract class EnemyBaseState
 
 	}
 
-	protected void SwitchState(EnemyBaseState newState) 
+	protected void SwitchState(EnemyBaseState newState)
 	{
 		ExitState();
 
