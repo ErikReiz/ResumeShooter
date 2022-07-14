@@ -38,8 +38,8 @@ namespace ResumeShooter.Services
 		#endregion
 
 		#region FIELDS
-		public event UnityAction onDamaged;
-		public event UnityAction onDeath;
+		public UnityEvent OnDamaged;
+		public UnityEvent OnDeath;
 
 		private bool isDead = false;
 
@@ -57,7 +57,7 @@ namespace ResumeShooter.Services
 
 			damage = Mathf.Clamp(damage, 0, maxHealth);
 			currentHealth -= damage;
-			onDamaged?.Invoke();
+			OnDamaged?.Invoke();
 
 			if (currentHealth <= 0)
 				CharacterDied();
@@ -66,7 +66,7 @@ namespace ResumeShooter.Services
 		private void CharacterDied()
 		{
 			isDead = true;
-			onDeath?.Invoke();
+			OnDeath?.Invoke();
 			GameModeBase gameMode = ServiceManager.GetGameMode();
 
 			gameMode.CharacterKilled(isPlayer);

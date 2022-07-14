@@ -103,16 +103,16 @@ namespace ResumeShooter.Weaponary
 
 		private void OnEnable()
 		{
-			playerAnimation.OnEndedReload += OnReloadEnded;
-			playerAnimation.OnEjectCasing += OnEjectCasing;
-			playerAnimation.OnAmmunitionFill += OnAmmunitionFill;
+			playerAnimation.OnEndedReload.AddListener(OnReloadEnded);
+			playerAnimation.OnEjectCasing.AddListener(OnEjectCasing);
+			playerAnimation.OnAmmunitionFill.AddListener(OnAmmunitionFill);
 		}
 
 		private void OnDisable()
 		{
-			playerAnimation.OnEndedReload -= OnReloadEnded;
-			playerAnimation.OnEjectCasing -= OnEjectCasing;
-			playerAnimation.OnAmmunitionFill -= OnAmmunitionFill;
+			playerAnimation.OnEndedReload.RemoveListener(OnReloadEnded);
+			playerAnimation.OnEjectCasing.RemoveListener(OnEjectCasing);
+			playerAnimation.OnAmmunitionFill.RemoveListener(OnAmmunitionFill);
 		}
 
 		#region SHOOTING

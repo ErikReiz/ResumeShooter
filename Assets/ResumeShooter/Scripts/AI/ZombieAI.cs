@@ -25,7 +25,16 @@ namespace ResumeShooter.AI
 		private void Awake()
 		{
 			zombieAnimationEventsReceiver = GetComponentInChildren<ZombieAnimationEventsReceiver>();
-			zombieAnimationEventsReceiver.OnAttackTriggered += OnApplyDamage;
+		}
+
+		private void OnEnable()
+		{
+			zombieAnimationEventsReceiver.OnAttackTriggered.AddListener(OnApplyDamage);
+		}
+
+		private void OnDisable()
+		{
+			zombieAnimationEventsReceiver.OnAttackTriggered.RemoveListener(OnApplyDamage);
 		}
 
 		private void OnApplyDamage()

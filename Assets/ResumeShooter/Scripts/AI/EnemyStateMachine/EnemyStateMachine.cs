@@ -48,18 +48,18 @@ namespace ResumeShooter.AI
 			currentState = stateFactory.Idle();
 			currentState.EnterState();
 
-			aiPerception.OnPlayerSeen += OnPlayerSeen;
-			aiPerception.OnLostVision += OnLostVision;
-			aiPerception.OnHearedSomething += OnHearedSomething;
+			aiPerception.OnPlayerSeen.AddListener(OnPlayerSeen);
+			aiPerception.OnLostVision.AddListener(OnLostVision);
+			aiPerception.OnHearedSomething.AddListener(OnHearedSomething);
 		}
 
 		private void OnDisable()
 		{
 			currentState.ExitState();
 
-			aiPerception.OnPlayerSeen -= OnPlayerSeen;
-			aiPerception.OnLostVision -= OnLostVision;
-			aiPerception.OnHearedSomething -= OnHearedSomething;
+			aiPerception.OnPlayerSeen.RemoveListener(OnPlayerSeen);
+			aiPerception.OnLostVision.RemoveListener(OnLostVision);
+			aiPerception.OnHearedSomething.RemoveListener(OnHearedSomething);
 		}
 
 		private void SetupAnimator()

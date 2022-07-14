@@ -33,9 +33,9 @@ namespace ResumeShooter.AI
 		#endregion
 
 		#region FIELDS
-		public UnityAction<Vector3> OnPlayerSeen;
-		public UnityAction OnLostVision;
-		public UnityAction<Vector3> OnHearedSomething;
+		public UnityEvent<Vector3> OnPlayerSeen;
+		public UnityEvent OnLostVision;
+		public UnityEvent<Vector3> OnHearedSomething;
 
 		private SphereCollider hearingCollider;
 		private FPCharacter player;

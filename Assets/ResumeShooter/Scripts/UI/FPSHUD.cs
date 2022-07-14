@@ -24,12 +24,12 @@ namespace ResumeShooter.UI
 
 		private void OnEnable()
 		{
-			gameMode.OnGameEnded += OnGameEnded;
+			gameMode.OnGameEnded.AddListener(OnGameEnded);
 		}
 
 		private void OnDisable()
 		{
-			gameMode.OnGameEnded -= OnGameEnded;
+			gameMode.OnGameEnded.RemoveListener(OnGameEnded);
 		}
 
 		private void InitializeHUD()

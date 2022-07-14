@@ -8,7 +8,7 @@ namespace ResumeShooter.Services
 	public class GameModeBase : MonoBehaviour
 	{
 		#region FIELDS
-		public UnityAction<bool> OnGameEnded;
+		public UnityEvent<bool> OnGameEnded;
 
 		private static GameModeBase instance;
 		protected IDamageable playerDamagableComponent;

@@ -9,7 +9,7 @@ namespace ResumeShooter.Animations
     public class ZombieAnimationEventsReceiver : MonoBehaviour
     {
 		#region FIELDS
-		public UnityAction OnAttackTriggered;
+		public UnityEvent OnAttackTriggered;
 		#endregion
 
 		private void OnAttackTrigger()

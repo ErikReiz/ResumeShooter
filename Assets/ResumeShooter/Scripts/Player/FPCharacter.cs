@@ -53,8 +53,8 @@ namespace ResumeShooter.Player
 			weaponCarrier = GetComponent<WeaponCarrier>();
 			healthComponent = GetComponent<HealthComponent>();
 			playerInventory = GetComponent<Inventory>();
+			playerAnimation = GetComponentInChildren<PlayerAnimationManager>();
 
-			SetupAnimations();
 			SetupInput();
 		}
 
@@ -66,19 +66,18 @@ namespace ResumeShooter.Player
 
 		private void OnEnable()
 		{
+			playerAnimation.OnWeaponSwitched.AddListener(OnWeaponSwitched);
+			playerAnimation.OnHolsterStateSwitched.AddListener(OnHolsterStateSwitched);
+
 			input.Player.Enable();
 		}
 
 		private void OnDisable()
 		{
-			input.Player.Disable();
-		}
+			playerAnimation.OnWeaponSwitched.RemoveListener(OnWeaponSwitched);
+			playerAnimation.OnHolsterStateSwitched.RemoveListener(OnHolsterStateSwitched);
 
-		private void SetupAnimations()
-		{
-			playerAnimation = GetComponentInChildren<PlayerAnimationManager>();
-			playerAnimation.OnWeaponSwitched += OnWeaponSwitched;
-			playerAnimation.OnHolsterStateSwitched += OnHolsterStateSwitched;
+			input.Player.Disable();
 		}
 
 		private void SetupInput()
