@@ -1,20 +1,24 @@
-public class KillAllEnemiesGameMode : GameModeBase
+namespace ResumeShooter.Services
 {
-	public override void CharacterKilled(bool isPlayer)
+
+	public class KillAllEnemiesGameMode : GameModeBase
 	{
-		base.CharacterKilled(isPlayer);
-
-		if (!isPlayer)
+		public override void CharacterKilled(bool isPlayer)
 		{
-			foreach (var enemy in FindObjectsOfType<HealthComponent>())
-			{
-				if (enemy.IsPlayer)
-					continue;
+			base.CharacterKilled(isPlayer);
 
-				if (!enemy.IsDead)
-					return;
+			if (!isPlayer)
+			{
+				foreach (var enemy in FindObjectsOfType<HealthComponent>())
+				{
+					if (enemy.IsPlayer)
+						continue;
+
+					if (!enemy.IsDead)
+						return;
+				}
+				EndGame(true);
 			}
-			EndGame(true);
 		}
 	}
 }

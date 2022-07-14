@@ -1,59 +1,63 @@
 using UnityEngine;
 
-public class EnemyMovementState : EnemyBaseState
+namespace ResumeShooter.AI
 {
-	#region FIELDS
-	private Vector3 targetPosition;
 
-	private float distanceToTarget;
-	#endregion
-
-	public EnemyMovementState(BaseStateData stateData, Vector3 targetPosition) : base(stateData)
+	public class EnemyMovementState : EnemyBaseState
 	{
-		this.targetPosition = targetPosition;
-	}
+		#region FIELDS
+		private Vector3 targetPosition;
 
-	public override void EnterState()
-	{
-		context.EnemyAnimator.SetBool(context.IsMovingHash, true);
-		EngageTarget();
-	}
+		private float distanceToTarget;
+		#endregion
 
-	public override void ExitState()
-	{
-		context.EnemyAnimator.SetBool(context.IsMovingHash, false);
-		context.NavMesh.SetDestination(context.transform.position);
-	}
-
-	public override void OnPlayerSpotted(Vector3 targetPosition)
-	{
-		this.targetPosition = targetPosition;
-		EngageTarget();
-	}
-
-	public override void OnLostVision()
-	{
-		if (context.NavMesh.velocity.sqrMagnitude <= 0.5)
-			SwitchState(stateFactory.Idle());
-	}
-
-	private void EngageTarget()
-	{
-		distanceToTarget = Vector3.Distance(context.Position, targetPosition);
-
-		if (distanceToTarget >= context.NavMesh.stoppingDistance)
+		public EnemyMovementState(BaseStateData stateData, Vector3 targetPosition) : base(stateData)
 		{
-			ChaseTarget();
+			this.targetPosition = targetPosition;
 		}
 
-		if (distanceToTarget <= context.NavMesh.stoppingDistance)
+		public override void EnterState()
 		{
-			SwitchState(stateFactory.Attacking(targetPosition));
+			context.EnemyAnimator.SetBool(context.IsMovingHash, true);
+			EngageTarget();
 		}
-	}
 
-	private void ChaseTarget()
-	{
-		context.NavMesh.SetDestination(targetPosition);
+		public override void ExitState()
+		{
+			context.EnemyAnimator.SetBool(context.IsMovingHash, false);
+			context.NavMesh.SetDestination(context.transform.position);
+		}
+
+		public override void OnPlayerSpotted(Vector3 targetPosition)
+		{
+			this.targetPosition = targetPosition;
+			EngageTarget();
+		}
+
+		public override void OnLostVision()
+		{
+			if (context.NavMesh.velocity.sqrMagnitude <= 0.5)
+				SwitchState(stateFactory.Idle());
+		}
+
+		private void EngageTarget()
+		{
+			distanceToTarget = Vector3.Distance(context.Position, targetPosition);
+
+			if (distanceToTarget >= context.NavMesh.stoppingDistance)
+			{
+				ChaseTarget();
+			}
+
+			if (distanceToTarget <= context.NavMesh.stoppingDistance)
+			{
+				SwitchState(stateFactory.Attacking(targetPosition));
+			}
+		}
+
+		private void ChaseTarget()
+		{
+			context.NavMesh.SetDestination(targetPosition);
+		}
 	}
 }

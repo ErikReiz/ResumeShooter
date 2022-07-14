@@ -1,18 +1,23 @@
 using UnityEngine;
 using UnityEditor;
+using ResumeShooter.Player;
 
-public class EquipmentPickUp : MonoBehaviour, IInteractable
+namespace ResumeShooter.PickUp
 {
-	#region SERIALIZE FIELDS
-	[SerializeField] MonoScript storedEquipment;
-	#endregion
 
-	void IInteractable.Interact(FPCharacter player)
+	public class EquipmentPickUp : MonoBehaviour, IInteractable
 	{
-		Inventory inventory = player.PlayerInventory;
-		Equipment equipment = System.Activator.CreateInstance(storedEquipment.GetClass()) as Equipment;
+		#region SERIALIZE FIELDS
+		[SerializeField] MonoScript storedEquipment;
+		#endregion
 
-		if (inventory.TryPickUpEquipment(equipment))
-			Destroy(gameObject);
+		void IInteractable.Interact(FPCharacter player)
+		{
+			Inventory inventory = player.PlayerInventory;
+			Equipment equipment = System.Activator.CreateInstance(storedEquipment.GetClass()) as Equipment;
+
+			if (inventory.TryPickUpEquipment(equipment))
+				Destroy(gameObject);
+		}
 	}
 }

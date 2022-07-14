@@ -1,51 +1,56 @@
 using UnityEngine;
+using ResumeShooter.Services;
 
-public class FPSHUD : HUDBase
+namespace ResumeShooter.UI
 {
-	#region SERIALIZE FIELDS
-	[SerializeField] private PlayerHUD playerHUD;
-	[SerializeField] private EndGameMenu lossWidget;
-	[SerializeField] private EndGameMenu victoryWidget;
-	#endregion
 
-	#region FIELDS
-	private GameModeBase gameMode;
-	#endregion
-
-	protected override void AfterAwake()
+	public class FPSHUD : HUDBase
 	{
-		InitializeHUD();
-		gameMode = ServiceManager.GetGameMode();
-	}
+		#region SERIALIZE FIELDS
+		[SerializeField] private PlayerHUD playerHUD;
+		[SerializeField] private EndGameMenu lossWidget;
+		[SerializeField] private EndGameMenu victoryWidget;
+		#endregion
 
-	private void OnEnable()
-	{
-		gameMode.OnGameEnded += OnGameEnded;
-	}
+		#region FIELDS
+		private GameModeBase gameMode;
+		#endregion
 
-	private void OnDisable()
-	{
-		gameMode.OnGameEnded -= OnGameEnded;
-	}
+		protected override void AfterAwake()
+		{
+			InitializeHUD();
+			gameMode = ServiceManager.GetGameMode();
+		}
 
-	private void InitializeHUD()
-	{
-		playerHUD = CreateWidget<PlayerHUD>(playerHUD);
-		lossWidget = CreateWidget<EndGameMenu>(lossWidget);
-		victoryWidget = CreateWidget<EndGameMenu>(victoryWidget);
+		private void OnEnable()
+		{
+			gameMode.OnGameEnded += OnGameEnded;
+		}
 
-		playerHUD.gameObject.SetActive(true);
-		lossWidget.gameObject.SetActive(false);
-		victoryWidget.gameObject.SetActive(false);
-	}
+		private void OnDisable()
+		{
+			gameMode.OnGameEnded -= OnGameEnded;
+		}
 
-	private void OnGameEnded(bool isPlayerWinner)
-	{
-		playerHUD.gameObject.SetActive(false);
+		private void InitializeHUD()
+		{
+			playerHUD = CreateWidget<PlayerHUD>(playerHUD);
+			lossWidget = CreateWidget<EndGameMenu>(lossWidget);
+			victoryWidget = CreateWidget<EndGameMenu>(victoryWidget);
 
-		if (isPlayerWinner)
-			victoryWidget.gameObject.SetActive(true);
-		else
-			lossWidget.gameObject.SetActive(true);
+			playerHUD.gameObject.SetActive(true);
+			lossWidget.gameObject.SetActive(false);
+			victoryWidget.gameObject.SetActive(false);
+		}
+
+		private void OnGameEnded(bool isPlayerWinner)
+		{
+			playerHUD.gameObject.SetActive(false);
+
+			if (isPlayerWinner)
+				victoryWidget.gameObject.SetActive(true);
+			else
+				lossWidget.gameObject.SetActive(true);
+		}
 	}
 }

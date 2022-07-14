@@ -1,15 +1,19 @@
 using UnityEngine;
 
-public static class NoiseMaker
+namespace ResumeShooter.Services
 {
-	public static void MakeNoise(Vector3 noisePosition, float maxRange)
+
+	public static class NoiseMaker
 	{
-		Collider[] overlappingCollieders = Physics.OverlapSphere(noisePosition, maxRange);
-		foreach (Collider collider in overlappingCollieders)
+		public static void MakeNoise(Vector3 noisePosition, float maxRange)
 		{
-			IHearing hearingObject = collider.GetComponent<IHearing>();
-			if (hearingObject != null)
-				hearingObject.OnHeardSomething(noisePosition);
+			Collider[] overlappingCollieders = Physics.OverlapSphere(noisePosition, maxRange);
+			foreach (Collider collider in overlappingCollieders)
+			{
+				IHearing hearingObject = collider.GetComponent<IHearing>();
+				if (hearingObject != null)
+					hearingObject.OnHeardSomething(noisePosition);
+			}
 		}
 	}
 }

@@ -103192,7 +103192,7 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_Events:
   - time: 1.5
-    functionName: OnApplyDamage
+    functionName: OnAttackTrigger
     data: 
     objectReferenceParameter: {fileID: 485516240927748455, guid: 2894f9e3aa5bd8d439da34d49782e3da,
       type: 3}

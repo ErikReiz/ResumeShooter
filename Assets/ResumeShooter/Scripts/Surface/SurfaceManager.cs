@@ -1,10 +1,14 @@
 using UnityEngine;
 
-public class SurfaceManager : MonoBehaviour
+namespace ResumeShooter.Surface
 {
-	#region SERIALIZE FIELDS
-	[SerializeField] private Surface surfaceType;
-	#endregion
 
-	public Surface SurfaceType { get { return surfaceType; } }
+	public class SurfaceManager : MonoBehaviour
+	{
+		#region SERIALIZE FIELDS
+		[SerializeField] private SurfaceMaterial surfaceType;
+		#endregion
+
+		public SurfaceMaterial SurfaceType { get { return surfaceType; } }
+	}
 }

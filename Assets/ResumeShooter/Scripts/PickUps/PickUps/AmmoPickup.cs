@@ -1,14 +1,21 @@
 using UnityEngine;
+using ResumeShooter.Player;
+using ResumeShooter.Weaponary;
+using ResumeShooter.Services;
 
-public class AmmoPickup : MonoBehaviour, IInteractable
+namespace ResumeShooter.PickUp
 {
-	#region SERIALIZE FIELDS
-	[SerializeField] private SerializableDictionary<AmmunitionType, uint> storedAmmo;
-	#endregion
 
-	void IInteractable.Interact(FPCharacter interactedPlayer)
+	public class AmmoPickup : MonoBehaviour, IInteractable
 	{
-		interactedPlayer.AmmoManager.IncreaseAmmunition(storedAmmo);
-		Destroy(gameObject);
+		#region SERIALIZE FIELDS
+		[SerializeField] private SerializableDictionary<AmmunitionType, uint> storedAmmo;
+		#endregion
+
+		void IInteractable.Interact(FPCharacter interactedPlayer)
+		{
+			interactedPlayer.AmmoManager.IncreaseAmmunition(storedAmmo);
+			Destroy(gameObject);
+		}
 	}
 }

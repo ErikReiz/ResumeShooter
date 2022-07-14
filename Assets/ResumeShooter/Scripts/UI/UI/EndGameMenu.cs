@@ -1,26 +1,42 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
-public class EndGameMenu : MonoBehaviour
+namespace ResumeShooter.UI
 {
-	private void OnEnable()
-	{
-		Cursor.lockState = CursorLockMode.Confined;
-	}
 
-	private void OnDisable()
+	public class EndGameMenu : MonoBehaviour
 	{
-		Cursor.lockState = CursorLockMode.Locked;
-	}
+		#region SERIALIZE FIELDS
+		[SerializeField] private Button restartGameButton;
+		[SerializeField] private Button quitGameButton;
+		#endregion
 
-	public void ReloadGame()
-	{
-		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-		Time.timeScale = 1f;
-	}
+		private void OnEnable()
+		{
+			restartGameButton.onClick.AddListener(RestartGame);
+			quitGameButton.onClick.AddListener(QuitGame);
 
-	public void QuitGame()
-	{
-		Application.Quit();
+			Cursor.lockState = CursorLockMode.Confined;
+		}
+
+		private void OnDisable()
+		{
+			restartGameButton.onClick.RemoveListener(RestartGame);
+			quitGameButton.onClick.RemoveListener(QuitGame);
+
+			Cursor.lockState = CursorLockMode.Locked;
+		}
+
+		private void RestartGame()
+		{
+			SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+			Time.timeScale = 1f;
+		}
+
+		private void QuitGame()
+		{
+			Application.Quit();
+		}
 	}
 }

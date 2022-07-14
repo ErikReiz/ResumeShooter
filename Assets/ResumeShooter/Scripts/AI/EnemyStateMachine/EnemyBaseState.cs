@@ -1,51 +1,55 @@
 using UnityEngine;
 
-public struct BaseStateData
+namespace ResumeShooter.AI
 {
-	public EnemyStateMachine context;
-	public EnemyStateFactory stateFactory;
-}
 
-public abstract class EnemyBaseState
-{
-	#region FIELDS
-	protected EnemyStateMachine context;
-	protected EnemyStateFactory stateFactory;
-	#endregion
-
-	public EnemyBaseState(BaseStateData stateData)
+	public struct BaseStateData
 	{
-		context = stateData.context;
-		stateFactory = stateData.stateFactory;
+		public EnemyStateMachine context;
+		public EnemyStateFactory stateFactory;
 	}
 
-	public abstract void EnterState();
-
-	public virtual void Tick()
+	public abstract class EnemyBaseState
 	{
+		#region FIELDS
+		protected EnemyStateMachine context;
+		protected EnemyStateFactory stateFactory;
+		#endregion
 
-	}
+		public EnemyBaseState(BaseStateData stateData)
+		{
+			context = stateData.context;
+			stateFactory = stateData.stateFactory;
+		}
 
-	public virtual void ExitState()
-	{
+		public abstract void EnterState();
 
-	}
+		public virtual void Tick()
+		{
 
-	public virtual void OnPlayerSpotted(Vector3 targetPosition)
-	{
+		}
 
-	}
+		public virtual void ExitState()
+		{
 
-	public virtual void OnLostVision()
-	{
+		}
 
-	}
+		public virtual void OnPlayerSpotted(Vector3 targetPosition)
+		{
 
-	protected void SwitchState(EnemyBaseState newState)
-	{
-		ExitState();
+		}
 
-		newState.EnterState();
-		context.CurrentState = newState;
+		public virtual void OnLostVision()
+		{
+
+		}
+
+		protected void SwitchState(EnemyBaseState newState)
+		{
+			ExitState();
+
+			newState.EnterState();
+			context.CurrentState = newState;
+		}
 	}
 }

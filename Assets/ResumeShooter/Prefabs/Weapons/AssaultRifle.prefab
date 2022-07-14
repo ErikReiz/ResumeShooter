@@ -554,35 +554,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af0486acd45c3a3429131d7800716295, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponData:
-    ShellPrefab: {fileID: 1492315059354262, guid: c638dfae3f3edf843b2614dae230a771,
-      type: 3}
-    ShellSocket: {fileID: 4497407355675760193}
-    AnimatorController: {fileID: 22100000, guid: 1e4a41722f505c9448eec17ddb146ab1,
-      type: 2}
-    WeaponPickUp: {fileID: 1798579882298740222, guid: ffee59550890c3d42913e6ef12da9e05,
-      type: 3}
-    MagazineSize: 30
-    MagazineAmmo: 30
-    AmmoType: 0
-    IsFullAuto: 1
-    FireRate: 600
-    ShotDistance: 2000
-    Damage: 20
-    ShotSoundRange: 50
-    MuzzleFlash: {fileID: 6194434486190654661}
-    FireSound:
-      Clip: {fileID: 8300000, guid: 0addcc409a57b4a43b86a3d2310ac5b4, type: 3}
-      Volume: 0.2
-    EmptyFireSound:
-      Clip: {fileID: 8300000, guid: 0c187ee2790c74c4e9985aa1ee1a12d5, type: 3}
-      Volume: 0.2
-    ReloadSound:
-      Clip: {fileID: 8300000, guid: 778c7be53403f9e45804f5a61a13a3e6, type: 3}
-      Volume: 0.2
-    EmptyReloadSound:
-      Clip: {fileID: 8300000, guid: 1fe5c2e1733f354428fe88c1a7cbafe4, type: 3}
-      Volume: 0.2
+  shellPrefab: {fileID: 1492315059354262, guid: c638dfae3f3edf843b2614dae230a771,
+    type: 3}
+  shellSocket: {fileID: 4497407355675760193}
+  animatorController: {fileID: 22100000, guid: 1e4a41722f505c9448eec17ddb146ab1, type: 2}
+  weaponPickUp: {fileID: 1798579882298740222, guid: ffee59550890c3d42913e6ef12da9e05,
+    type: 3}
+  magazineSize: 30
+  magazineAmmo: 30
+  ammoType: 0
+  isFullAuto: 1
+  fireRate: 550
+  shotDistance: 2000
+  damage: 20
+  shotSoundRange: 50
+  muzzleFlash: {fileID: 6194434486190654661}
+  fireSound:
+    Clip: {fileID: 8300000, guid: 0addcc409a57b4a43b86a3d2310ac5b4, type: 3}
+    Volume: 0.2
+  emptyFireSound:
+    Clip: {fileID: 8300000, guid: 0c187ee2790c74c4e9985aa1ee1a12d5, type: 3}
+    Volume: 0.2
+  reloadSound:
+    Clip: {fileID: 8300000, guid: 778c7be53403f9e45804f5a61a13a3e6, type: 3}
+    Volume: 0.2
+  emptyReloadSound:
+    Clip: {fileID: 8300000, guid: 1fe5c2e1733f354428fe88c1a7cbafe4, type: 3}
+    Volume: 0.2
 --- !u!114 &7242004560553101261
 MonoBehaviour:
   m_ObjectHideFlags: 0

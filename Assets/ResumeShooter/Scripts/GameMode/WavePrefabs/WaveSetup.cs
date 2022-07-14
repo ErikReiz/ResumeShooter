@@ -1,54 +1,52 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public struct WaveSetup
-{ 
-	#region SERIALIZE FIELDS
-	[Header("General")]
-	[Tooltip("If true, will be increased by waveIncreasePercent")]
-	[SerializeField] public bool IncreaseTimeDelayBetweenWaves;
+namespace ResumeShooter.Services
+{
 
-	[Tooltip("Set number of enemies when spawn method will be called")]
-	[SerializeField] public uint EnemyCountToSpawn;
-
-	[SerializeField] public uint WaveCount;
-
-	[Tooltip("Sets wave size")]
-	[SerializeField] public uint WaveSize;
-
-	[Tooltip("Every wave will be increased by that percent")]
-	[SerializeField] public uint WaveIncreasePercent;
-
-	[SerializeField] public float TimeDelayBetweenWaves;
-
-	[Header("Spawn Info")]
-	[Tooltip("Enemies and chances to be spawned")]
-	[SerializeField] public EnemyPoolPrefab EnemyPool;
-
-	[Tooltip("Delay between enemy spawns")]
-	[SerializeField] public float SpawnDelay;
-	#endregion
-
-	#region PROPERTIES
-	public List<SpawnPoint> SpawnPoints { get; private set; }
-	#endregion
-
-	public void FindSpawnPoints()
+	[System.Serializable]
+	public struct WaveSetup
 	{
-		if (SpawnPoints == null)
-			SpawnPoints = new();
+		#region SERIALIZE FIELDS
+		[Header("General")]
+		[Tooltip("If true, will be increased by waveIncreasePercent")]
+		[SerializeField] public bool IncreaseTimeDelayBetweenWaves;
 
-		SpawnPoints.Clear();
+		[Tooltip("Set number of enemies when spawn method will be called")]
+		[SerializeField] public uint EnemyCountToSpawn;
 
-		foreach (var spawnPoint in Object.FindObjectsOfType<SpawnPoint>())
+		[SerializeField] public uint WaveCount;
+
+		[Tooltip("Sets wave size")]
+		[SerializeField] public uint WaveSize;
+
+		[Tooltip("Every wave will be increased by that percent")]
+		[SerializeField] public uint WaveIncreasePercent;
+
+		[SerializeField] public float TimeDelayBetweenWaves;
+
+		[Header("Spawn Info")]
+		[Tooltip("Enemies and chances to be spawned")]
+		[SerializeField] public EnemyPoolPrefab EnemyPool;
+
+		[Tooltip("Delay between enemy spawns")]
+		[SerializeField] public float SpawnDelay;
+		#endregion
+
+		#region PROPERTIES
+		public List<SpawnPoint> SpawnPoints { get; private set; }
+		#endregion
+
+		public void FindSpawnPoints()
 		{
+			if (SpawnPoints == null)
+				SpawnPoints = new();
 
-			if (spawnPoint.IsPlayerSpawn)
-				continue;
+			SpawnPoints.Clear();
 
-			SpawnPoints.Add(spawnPoint);
+			foreach (var spawnPoint in Object.FindObjectsOfType<SpawnPoint>())
+				SpawnPoints.Add(spawnPoint);
 		}
-	}
 
+	}
 }

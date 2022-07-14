@@ -1,22 +1,24 @@
 using System.Collections.Generic;
 using UnityEngine;
+using ResumeShooter.Services;
+using ResumeShooter.AI;
 
 [CreateAssetMenu(fileName = "Enemy Pool Prefab")]
 public class EnemyPoolPrefab : ScriptableObject
 {
 	#region SERIALIZE FIELDS
 	[Tooltip("Sets chance and enemy to spawn")]
-	[SerializeField] private SerializableDictionary<GameObject, uint> enemyList;
+	[SerializeField] private SerializableDictionary<ZombieAI, uint> enemyList;
 
 	[Tooltip("If true generate enemy method will always return enemy")]
 	[SerializeField] private bool alwaysGenerateEnemy = true;
 	#endregion
 
 	#region FIELDS
-	private KeyValuePair<GameObject, uint> defaultEnemy; // This enemy will be spawned if chance smaller than minimal in enemyList
+	private KeyValuePair<ZombieAI, uint> defaultEnemy; // This enemy will be spawned if chance smaller than minimal in enemyList
 	#endregion
 
-	public GameObject GenerateEnemy()
+	public ZombieAI GenerateEnemy()
 	{
 		if (!defaultEnemy.Key)
 			SetDefaultEnemy();

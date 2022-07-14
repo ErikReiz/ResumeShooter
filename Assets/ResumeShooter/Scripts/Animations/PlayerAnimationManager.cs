@@ -1,109 +1,113 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-public class PlayerAnimationManager : MonoBehaviour
+namespace ResumeShooter.Animations
 {
-	#region SERIALIZE FIELDS
-	[Tooltip("Sets locomotion smoothness")]
-	[SerializeField] private float dampTimeLocomotion = 0.15f;
-	#endregion
 
-	#region FIELDS
-	private readonly string sprintingBoolName = "isSprinting";
-
-	public UnityAction OnWeaponSwitched;
-	public UnityAction OnHolsterStateSwitched;
-	public UnityAction OnEndedReload;
-	public UnityAction OnEjectCasing;
-	public UnityAction OnAmmunitionFill;
-
-	private Animator characterAnimator;
-	private Vector2 movementInput;
-
-	private int reloadingLayer;
-	private int firingLayer;
-	private int holsterLayer;
-	private int hashMovement;
-	#endregion
-
-	private void Awake()
+	public class PlayerAnimationManager : MonoBehaviour
 	{
-		characterAnimator = GetComponent<Animator>();
+		#region SERIALIZE FIELDS
+		[Tooltip("Sets locomotion smoothness")]
+		[SerializeField] private float dampTimeLocomotion = 0.15f;
+		#endregion
 
-		firingLayer = characterAnimator.GetLayerIndex("Firing Layer");
-		reloadingLayer = characterAnimator.GetLayerIndex("Reloading Layer");
-		holsterLayer = characterAnimator.GetLayerIndex("Layer Holster");
-		hashMovement = Animator.StringToHash("Movement");
-	}
+		#region FIELDS
+		public UnityAction OnWeaponSwitched;
+		public UnityAction OnHolsterStateSwitched;
+		public UnityAction OnEndedReload;
+		public UnityAction OnEjectCasing;
+		public UnityAction OnAmmunitionFill;
 
-	private void Update()
-	{
-		UpdateAnimator();
-	}
+		private readonly string sprintingBoolName = "isSprinting";
 
-	#region ANIMATIONS
-	private void UpdateAnimator()
-	{
-		characterAnimator.SetFloat(hashMovement, Mathf.Clamp01(Mathf.Abs(movementInput.x) + Mathf.Abs(movementInput.y)), dampTimeLocomotion, Time.deltaTime);
-	}
+		private Animator characterAnimator;
+		private Vector2 movementInput;
 
-	public void ReceiveMovementInput(Vector2 movementInput)
-	{
-		this.movementInput = movementInput;
-	}
+		private int reloadingLayer;
+		private int firingLayer;
+		private int holsterLayer;
+		private int hashMovement;
+		#endregion
 
-	public void FireAnimation(bool isEmpty)
-	{
-		characterAnimator.Play(isEmpty ? "Fire Empty" : "Fire", firingLayer, 0f);
-	}
+		private void Awake()
+		{
+			characterAnimator = GetComponent<Animator>();
 
-	public void ReloadAnimation(bool isEmpty)
-	{
-		characterAnimator.Play(isEmpty ? "Reload Empty" : "Reload", reloadingLayer, 0f);
-	}
+			firingLayer = characterAnimator.GetLayerIndex("Firing Layer");
+			reloadingLayer = characterAnimator.GetLayerIndex("Reloading Layer");
+			holsterLayer = characterAnimator.GetLayerIndex("Layer Holster");
+			hashMovement = Animator.StringToHash("Movement");
+		}
 
-	public void PlayerHolsterAnimation(bool isHolstered)
-	{
-		characterAnimator.CrossFade(isHolstered ? "Unholster" : "Holster", 0f, holsterLayer, 0);
-	}
+		private void Update()
+		{
+			UpdateAnimator();
+		}
 
-	public void ChangeAnimatorController(RuntimeAnimatorController newController)
-	{
-		characterAnimator.runtimeAnimatorController = newController;
-	}
+		#region ANIMATIONS
+		private void UpdateAnimator()
+		{
+			characterAnimator.SetFloat(hashMovement, Mathf.Clamp01(Mathf.Abs(movementInput.x) + Mathf.Abs(movementInput.y)), dampTimeLocomotion, Time.deltaTime);
+		}
 
-	public void ToogleSprint(bool toogle)
-	{
-		characterAnimator.SetBool(sprintingBoolName, toogle);
-	}
-	#endregion
+		public void ReceiveMovementInput(Vector2 movementInput)
+		{
+			this.movementInput = movementInput;
+		}
 
-	#region CHARACTER EVENTS
-	private void OnAnimationSwitchWeapon()
-	{
-		OnWeaponSwitched?.Invoke();
-	}
+		public void FireAnimation(bool isEmpty)
+		{
+			characterAnimator.Play(isEmpty ? "Fire Empty" : "Fire", firingLayer, 0f);
+		}
 
-	private void OnAnimationSwitchHolsterState()
-	{
-		OnHolsterStateSwitched?.Invoke();
-	}
-	#endregion
+		public void ReloadAnimation(bool isEmpty)
+		{
+			characterAnimator.Play(isEmpty ? "Reload Empty" : "Reload", reloadingLayer, 0f);
+		}
 
-	#region WEAPON EVENTS
-	private void OnAnimationEndedReload()
-	{
-		OnEndedReload?.Invoke();
-	}
+		public void PlayerHolsterAnimation(bool isHolstered)
+		{
+			characterAnimator.CrossFade(isHolstered ? "Unholster" : "Holster", 0f, holsterLayer, 0);
+		}
 
-	private void OnAnimationEjectCasing()
-	{
-		OnEjectCasing?.Invoke();
-	}
+		public void ChangeAnimatorController(RuntimeAnimatorController newController)
+		{
+			characterAnimator.runtimeAnimatorController = newController;
+		}
 
-	private void OnAnimationAmmunitionFill()
-	{
-		OnAmmunitionFill?.Invoke();
+		public void ToogleSprint(bool toogle)
+		{
+			characterAnimator.SetBool(sprintingBoolName, toogle);
+		}
+		#endregion
+
+		#region CHARACTER EVENTS
+		private void OnAnimationSwitchWeapon()
+		{
+			OnWeaponSwitched?.Invoke();
+		}
+
+		private void OnAnimationSwitchHolsterState()
+		{
+			OnHolsterStateSwitched?.Invoke();
+		}
+		#endregion
+
+		#region WEAPON EVENTS
+		private void OnAnimationEndedReload()
+		{
+			OnEndedReload?.Invoke();
+		}
+
+		private void OnAnimationEjectCasing()
+		{
+			OnEjectCasing?.Invoke();
+		}
+
+		private void OnAnimationAmmunitionFill()
+		{
+			OnAmmunitionFill?.Invoke();
+		}
+		#endregion
 	}
-	#endregion
 }

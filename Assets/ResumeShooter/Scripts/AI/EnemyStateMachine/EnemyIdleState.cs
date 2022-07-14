@@ -1,17 +1,21 @@
 using UnityEngine;
 
-public class EnemyIdleState : EnemyBaseState
+namespace ResumeShooter.AI
 {
-	public EnemyIdleState(BaseStateData stateData) : base(stateData) { }
 
-	public override void EnterState()
+	public class EnemyIdleState : EnemyBaseState
 	{
-		context.EnemyAnimator.SetBool(context.IsAttackingHash, false);
-		context.EnemyAnimator.SetBool(context.IsMovingHash, false);
-	}
+		public EnemyIdleState(BaseStateData stateData) : base(stateData) { }
 
-	public override void OnPlayerSpotted(Vector3 targetPosition)
-	{
-		SwitchState(stateFactory.Moving(targetPosition));
+		public override void EnterState()
+		{
+			context.EnemyAnimator.SetBool(context.IsAttackingHash, false);
+			context.EnemyAnimator.SetBool(context.IsMovingHash, false);
+		}
+
+		public override void OnPlayerSpotted(Vector3 targetPosition)
+		{
+			SwitchState(stateFactory.Moving(targetPosition));
+		}
 	}
 }

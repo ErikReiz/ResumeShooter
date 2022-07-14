@@ -1,109 +1,120 @@
 using System.Collections;
 using UnityEngine;
+using ResumeShooter.AI;
 
-public class WaveGameMode : GameModeBase
+namespace ResumeShooter.Services
 {
-	#region SERIALIZE FIELDS
-	[SerializeField] private WaveSetup waveSetup;
-	#endregion
 
-	#region FIELDS
-	private bool isWaveSpawnerActive = false;
-
-	private float tempWaveSize;
-	private uint enemyCounter = 0;
-	#endregion
-
-	protected override void BeginPlay()
+	public class WaveGameMode : GameModeBase
 	{
-		waveSetup.FindSpawnPoints();
-		tempWaveSize = waveSetup.WaveSize;
+		#region SERIALIZE FIELDS
+		[SerializeField] private WaveSetup waveSetup;
+		#endregion
 
-		SetFirstWave();
-	}
+		#region FIELDS
+		private bool isWaveSpawnerActive = false;
 
-	private void OnDisable()
-	{
-		StopAllCoroutines();
-	}
+		private float tempWaveSize;
+		private uint enemyCounter = 0;
+		#endregion
 
-	private void SetFirstWave()
-	{
-		if (waveSetup.SpawnPoints.Count == 0)
-			return;
-
-		if (waveSetup.WaveSize < waveSetup.EnemyCountToSpawn)
-			waveSetup.WaveSize = waveSetup.EnemyCountToSpawn + 1;
-
-		StartCoroutine(EnemySpawner());
-	}
-
-	public override void CharacterKilled(bool isPlayer)
-	{
-		base.CharacterKilled(isPlayer);
-
-		if (!isPlayer)
+		protected override void BeginPlay()
 		{
-			enemyCounter--;
-			WinAndContinueGameCondition();
+			waveSetup.FindSpawnPoints();
+			tempWaveSize = waveSetup.WaveSize;
+
+			SetFirstWave();
 		}
 
-		void WinAndContinueGameCondition()
+		private void OnDisable()
 		{
-			if (enemyCounter == 0 && waveSetup.WaveCount == 0)
+			StopAllCoroutines();
+		}
+
+		private void SetFirstWave()
+		{
+			if (waveSetup.SpawnPoints.Count == 0)
+				return;
+
+			if (waveSetup.WaveSize < waveSetup.EnemyCountToSpawn)
+				waveSetup.WaveSize = waveSetup.EnemyCountToSpawn + 1;
+
+			StartCoroutine(EnemySpawner());
+		}
+
+		public override void CharacterKilled(bool isPlayer)
+		{
+			base.CharacterKilled(isPlayer);
+
+			if (!isPlayer)
 			{
-				EndGame(true);
+				enemyCounter--;
+				WinAndContinueGameCondition();
 			}
-			else if (enemyCounter <= waveSetup.EnemyCountToSpawn && !isWaveSpawnerActive)
+
+			void WinAndContinueGameCondition()
 			{
-				StartCoroutine(EnemySpawner());
+				if (enemyCounter == 0 && waveSetup.WaveCount == 0)
+				{
+					EndGame(true);
+				}
+				else if (enemyCounter <= waveSetup.EnemyCountToSpawn && !isWaveSpawnerActive)
+				{
+					StartCoroutine(EnemySpawner());
+				}
 			}
 		}
-	}
 
-	private IEnumerator EnemySpawner()
-	{
-		isWaveSpawnerActive = true;
-
-		yield return new WaitForSeconds(waveSetup.TimeDelayBetweenWaves);
-
-		waveSetup.WaveCount--;
-
-		for (int i = 0; i < waveSetup.WaveSize; i++)
+		private IEnumerator EnemySpawner()
 		{
-			int spawnPointsCount = waveSetup.SpawnPoints.Count;
+			isWaveSpawnerActive = true;
 
-			Transform spawnPointTransform = waveSetup.SpawnPoints[Random.Range(0, spawnPointsCount)].transform;
-			GameObject enemyToSpawn = waveSetup.EnemyPool.GenerateEnemy();
+			yield return new WaitForSeconds(waveSetup.TimeDelayBetweenWaves);
 
+			waveSetup.WaveCount--;
+
+			for (int i = 0; i < waveSetup.WaveSize; i++)
+			{
+				int spawnPointsCount = waveSetup.SpawnPoints.Count;
+
+				SpawnPoint spawnPoint = waveSetup.SpawnPoints[Random.Range(0, spawnPointsCount)];
+				ZombieAI enemyToSpawn = waveSetup.EnemyPool.GenerateEnemy();
+
+				InitalizeEnemy(spawnPoint, enemyToSpawn);
+
+				yield return new WaitForSeconds(waveSetup.SpawnDelay);
+			}
+
+			InitalizeNewWave();
+		}
+
+		private void InitalizeEnemy(SpawnPoint spawnPoint, ZombieAI enemyToSpawn)
+		{
 			if (enemyToSpawn)
 			{
-				Instantiate(enemyToSpawn, spawnPointTransform);
+				ZombieAI spawnedAI = spawnPoint.SpawnCharacter(enemyToSpawn);
+				spawnedAI.Initialize(playerDamagableComponent);
 				enemyCounter++;
 			}
-
-			yield return new WaitForSeconds(waveSetup.SpawnDelay);
 		}
 
-		SetNewWave();
-	}
-
-	private void SetNewWave()
-	{
-		isWaveSpawnerActive = false;
-		float increasePercent = 1 + (float)waveSetup.WaveIncreasePercent / 100;
-
-		tempWaveSize = tempWaveSize * increasePercent;
-		int intTempWaveSize = Mathf.RoundToInt(tempWaveSize);
-
-		if (intTempWaveSize > waveSetup.WaveSize)
+		private void InitalizeNewWave()
 		{
-			waveSetup.WaveSize = (uint)intTempWaveSize;
-			tempWaveSize = intTempWaveSize;
+			isWaveSpawnerActive = false;
+			float increasePercent = 1 + (float)waveSetup.WaveIncreasePercent / 100;
+
+			tempWaveSize = tempWaveSize * increasePercent;
+			int intTempWaveSize = Mathf.RoundToInt(tempWaveSize);
+
+			if (intTempWaveSize > waveSetup.WaveSize)
+			{
+				waveSetup.WaveSize = (uint)intTempWaveSize;
+				tempWaveSize = intTempWaveSize;
+			}
+
+			if (waveSetup.IncreaseTimeDelayBetweenWaves)
+				waveSetup.TimeDelayBetweenWaves *= increasePercent;
+
 		}
-
-		if (waveSetup.IncreaseTimeDelayBetweenWaves)
-			waveSetup.TimeDelayBetweenWaves *= increasePercent;
-
 	}
 }

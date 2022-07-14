@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 485516240927748441}
   - component: {fileID: 485516240927748442}
   - component: {fileID: 1126999368}
+  - component: {fileID: 1933482428436972211}
   m_Layer: 6
   m_Name: Zombie
   m_TagString: Untagged
@@ -70,17 +71,35 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hasVisionTrigger: 1
   hasHearingTrigger: 1
-  visionRadius: 15
-  visionAngle: 70
-  visionCheckDelay: 0.2
   playerLayerMask:
     serializedVersion: 2
     m_Bits: 1024
   worldLayerMask:
     serializedVersion: 2
     m_Bits: 1
+  visionRadius: 15
+  visionAngle: 70
+  visionCheckDelay: 0.2
   hearingRadius: 200
   useAlternativeLogic: 1
+--- !u!114 &1933482428436972211
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 485516240927748455}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74e82af6b3cb55f43b8cc61534f15487, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  armSocket: {fileID: 824871496841466825}
+  playerLayerMask:
+    serializedVersion: 2
+    m_Bits: 1024
+  attackDamage: 20
+  attackRadius: 2
 --- !u!1 &8848233768908722603
 GameObject:
   m_ObjectHideFlags: 0
@@ -282,25 +301,6 @@ MonoBehaviour:
   maxHealth: 100
   objectToDestroy: {fileID: 485516240927748455}
   destroyDelay: 2
---- !u!114 &3303128086440842301
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3525691150073452703}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 74e82af6b3cb55f43b8cc61534f15487, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 100
-  attackDamage: 20
-  attackRadius: 2
-  armSocket: {fileID: 824871496841466825}
-  playerLayerMask:
-    serializedVersion: 2
-    m_Bits: 1024
 --- !u!114 &6870036863092495328
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -311,6 +311,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 61aed13a4e5894940a1ca7188c63231b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &4659852874030902947
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3525691150073452703}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcaacb2b76effb54495c2ac3519c9565, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!4 &4026814433405801614 stripped

@@ -1,29 +1,33 @@
 using UnityEngine;
 
-public class EnemyStateFactory
+namespace ResumeShooter.AI
 {
-	#region FIELDS
-	BaseStateData stateData;
-	#endregion
 
-	public EnemyStateFactory(EnemyStateMachine context)
+	public class EnemyStateFactory
 	{
-		stateData.context = context;
-		stateData.stateFactory = this;
-	}
+		#region FIELDS
+		BaseStateData stateData;
+		#endregion
 
-	public EnemyBaseState Idle()
-	{
-		return new EnemyIdleState(stateData);
-	}
+		public EnemyStateFactory(EnemyStateMachine context)
+		{
+			stateData.context = context;
+			stateData.stateFactory = this;
+		}
 
-	public EnemyBaseState Moving(Vector3 targetPosition)
-	{
-		return new EnemyMovementState(stateData, targetPosition);
-	}
+		public EnemyBaseState Idle()
+		{
+			return new EnemyIdleState(stateData);
+		}
 
-	public EnemyBaseState Attacking(Vector3 targetPosition)
-	{
-		return new EnemyAttackingState(stateData, targetPosition);
+		public EnemyBaseState Moving(Vector3 targetPosition)
+		{
+			return new EnemyMovementState(stateData, targetPosition);
+		}
+
+		public EnemyBaseState Attacking(Vector3 targetPosition)
+		{
+			return new EnemyAttackingState(stateData, targetPosition);
+		}
 	}
 }

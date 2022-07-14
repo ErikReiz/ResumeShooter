@@ -1,11 +1,15 @@
 using UnityEngine;
 
-public static class Damager
+namespace ResumeShooter.Services
 {
-	public static void ApplyDamage(GameObject damageableObject, float damage)
+
+	public static class Damager
 	{
-		IDamageable damagedObject = damageableObject.GetComponent<IDamageable>();
-		if (damagedObject != null)
-			damagedObject.ReceiveDamage(damage);
+		public static void ApplyDamage(GameObject damageableObject, float damage)
+		{
+			IDamageable damagedObject = damageableObject.GetComponent<IDamageable>();
+			if (damagedObject != null)
+				damagedObject.ReceiveDamage(damage);
+		}
 	}
 }

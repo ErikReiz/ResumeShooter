@@ -1,13 +1,18 @@
 using UnityEngine;
+using ResumeShooter.Services;
 
-public class AnimationSoundPlayer : StateMachineBehaviour
+namespace ResumeShooter.Animations
 {
-	#region SERIALIZE FIELDS
-	[SerializeField] private AudioManager.Audio sound;
-	#endregion
 
-	public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+	public class AnimationSoundPlayer : StateMachineBehaviour
 	{
-		ServiceManager.AudioSpawner.PlaySound(sound);
+		#region SERIALIZE FIELDS
+		[SerializeField] private AudioManager.Audio sound;
+		#endregion
+
+		public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+		{
+			ServiceManager.AudioSpawner.PlaySound(sound);
+		}
 	}
 }

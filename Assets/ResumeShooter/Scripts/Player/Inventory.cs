@@ -1,46 +1,50 @@
 using System.Collections.Generic;
 using UnityEngine;
+using ResumeShooter.PickUp;
 
-
-public class Inventory : MonoBehaviour
+namespace ResumeShooter.Player
 {
-	public enum EquipmentType : byte
-	{
-		Consumable,
-		Grenade
-	}
 
-	#region FIELDS
-	private Dictionary<EquipmentType, Equipment> equipment = new();
-	#endregion
-
-	public void OnUseEquipmentInput(EquipmentType equipmentType, bool isKeyDown)
+	public class Inventory : MonoBehaviour
 	{
-		if (isKeyDown)
-			equipment[equipmentType].Use();
-		else
-			equipment[equipmentType].StopUsing();
-	}
-
-	public bool TryPickUpEquipment(Equipment pickedUpEquipment)
-	{
-		EquipmentType type = pickedUpEquipment.Type;
-		if (equipment.ContainsKey(type))
+		public enum EquipmentType : byte
 		{
-			if (equipment[type].GetType() == pickedUpEquipment.GetType())
+			Consumable,
+			Grenade
+		}
+
+		#region FIELDS
+		private Dictionary<EquipmentType, Equipment> equipment = new();
+		#endregion
+
+		public void OnUseEquipmentInput(EquipmentType equipmentType, bool isKeyDown)
+		{
+			if (isKeyDown)
+				equipment[equipmentType].Use();
+			else
+				equipment[equipmentType].StopUsing();
+		}
+
+		public bool TryPickUpEquipment(Equipment pickedUpEquipment)
+		{
+			EquipmentType type = pickedUpEquipment.Type;
+			if (equipment.ContainsKey(type))
 			{
-				if (!equipment[type].CanIncrease())
-					return false;
+				if (equipment[type].GetType() == pickedUpEquipment.GetType())
+				{
+					if (!equipment[type].CanIncrease())
+						return false;
 
-				equipment[type].Count++;
+					equipment[type].Count++;
+				}
 			}
-		}
-		else
-		{
-			pickedUpEquipment.Count = 1;
-			equipment.Add(type, pickedUpEquipment);
-		}
+			else
+			{
+				pickedUpEquipment.Count = 1;
+				equipment.Add(type, pickedUpEquipment);
+			}
 
-		return true;
+			return true;
+		}
 	}
 }

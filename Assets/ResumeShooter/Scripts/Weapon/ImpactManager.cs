@@ -1,30 +1,36 @@
 using UnityEngine;
+using ResumeShooter.Surface;
+using ResumeShooter.Services;
 
-public class ImpactManager : MonoBehaviour
+namespace ResumeShooter.Weaponary
 {
-	#region SERIALIZE FIELDS 
-	[SerializeField] private SerializableDictionary<Surface, GameObject> impactEffects;
-	[SerializeField] private GameObject defaultImpactParticle;
-	#endregion
 
-	public void SpawnImpactParticle(RaycastHit hitResult)
+	public class ImpactManager : MonoBehaviour
 	{
-		GameObject hitObject = hitResult.transform.gameObject;
-		SurfaceManager hitObjectSurfaceManager = hitObject.GetComponent<SurfaceManager>();
-		GameObject impactParticle = defaultImpactParticle;
+		#region SERIALIZE FIELDS 
+		[SerializeField] private SerializableDictionary<SurfaceMaterial, GameObject> impactEffects;
+		[SerializeField] private GameObject defaultImpactParticle;
+		#endregion
 
-		if (hitObjectSurfaceManager)
+		public void SpawnImpactParticle(RaycastHit hitResult)
 		{
-			if (impactEffects.ContainsKey(hitObjectSurfaceManager.SurfaceType))
+			GameObject hitObject = hitResult.transform.gameObject;
+			SurfaceManager hitObjectSurfaceManager = hitObject.GetComponent<SurfaceManager>();
+			GameObject impactParticle = defaultImpactParticle;
+
+			if (hitObjectSurfaceManager)
 			{
-				impactParticle = impactEffects[hitObjectSurfaceManager.SurfaceType];
+				if (impactEffects.ContainsKey(hitObjectSurfaceManager.SurfaceType))
+				{
+					impactParticle = impactEffects[hitObjectSurfaceManager.SurfaceType];
+				}
+
 			}
 
+			Vector3 impactPosition = hitResult.point;
+			Quaternion impactRotation = Quaternion.LookRotation(hitResult.normal);
+
+			Instantiate(impactParticle, impactPosition, impactRotation, hitObject.transform);
 		}
-
-		Vector3 impactPosition = hitResult.point;
-		Quaternion impactRotation = Quaternion.LookRotation(hitResult.normal);
-
-		Instantiate(impactParticle, impactPosition, impactRotation, hitObject.transform);
 	}
 }

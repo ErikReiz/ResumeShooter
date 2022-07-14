@@ -3069,7 +3069,7 @@ MonoBehaviour:
   - {fileID: 1686303084}
   isPlayer: 1
   maxHealth: 100
-  objectToDestroy: {fileID: 0}
+  objectToDestroy: {fileID: 8973969374003791642}
   destroyDelay: 2
 --- !u!114 &8682519406182153152
 MonoBehaviour:

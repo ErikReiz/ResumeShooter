@@ -1,88 +1,92 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public class EnemyStateMachine : MonoBehaviour
+namespace ResumeShooter.AI
 {
-	#region PROPERTIES
-	public Animator EnemyAnimator { get { return enemyAnimator; } }
-	public EnemyBaseState CurrentState { set { currentState = value; } }
-	public NavMeshAgent NavMesh { get { return navMesh; } }
-	public Vector3 Position { get { return transform.parent.position; } }
 
-	public int IsMovingHash { get { return isMovingHash; } }
-	public int IsAttackingHash { get { return isAttackingHash; } }
-	#endregion
-
-	#region FIELDS
-
-	#region STATES
-	private EnemyBaseState currentState;
-	private EnemyStateFactory stateFactory;
-	#endregion
-	#region PERCEPTIONS
-	private AIPerception aiPerception;
-	private NavMeshAgent navMesh;
-	#endregion
-	#region ANIMATOR
-	private Animator enemyAnimator;
-	private int isMovingHash;
-	private int isAttackingHash;
-	#endregion
-
-	#endregion
-
-	private void Awake()
+	public class EnemyStateMachine : MonoBehaviour
 	{
-		SetupAnimator();
+		#region PROPERTIES
+		public Animator EnemyAnimator { get { return enemyAnimator; } }
+		public EnemyBaseState CurrentState { set { currentState = value; } }
+		public NavMeshAgent NavMesh { get { return navMesh; } }
+		public Vector3 Position { get { return transform.parent.position; } }
 
-		aiPerception = GetComponentInParent<AIPerception>();
-		navMesh = GetComponentInParent<NavMeshAgent>();
-		stateFactory = new EnemyStateFactory(this);
-	}
+		public int IsMovingHash { get { return isMovingHash; } }
+		public int IsAttackingHash { get { return isAttackingHash; } }
+		#endregion
 
-	private void OnEnable()
-	{
-		currentState = stateFactory.Idle();
-		currentState.EnterState();
+		#region FIELDS
 
-		aiPerception.OnPlayerSeen += OnPlayerSeen;
-		aiPerception.OnLostVision += OnLostVision;
-		aiPerception.OnHearedSomething += OnHearedSomething;
-	}
+		#region STATES
+		private EnemyBaseState currentState;
+		private EnemyStateFactory stateFactory;
+		#endregion
+		#region PERCEPTIONS
+		private AIPerception aiPerception;
+		private NavMeshAgent navMesh;
+		#endregion
+		#region ANIMATOR
+		private Animator enemyAnimator;
+		private int isMovingHash;
+		private int isAttackingHash;
+		#endregion
 
-	private void OnDisable()
-	{
-		currentState.ExitState();
+		#endregion
 
-		aiPerception.OnPlayerSeen -= OnPlayerSeen;
-		aiPerception.OnLostVision -= OnLostVision;
-		aiPerception.OnHearedSomething -= OnHearedSomething;
-	}
+		private void Awake()
+		{
+			SetupAnimator();
 
-	private void SetupAnimator()
-	{
-		enemyAnimator = GetComponent<Animator>();
-		isMovingHash = Animator.StringToHash("isMoving");
-		isAttackingHash = Animator.StringToHash("isAttacking");
-	}
+			aiPerception = GetComponentInParent<AIPerception>();
+			navMesh = GetComponentInParent<NavMeshAgent>();
+			stateFactory = new EnemyStateFactory(this);
+		}
 
-	private void OnPlayerSeen(Vector3 targetPosition)
-	{
-		currentState.OnPlayerSpotted(targetPosition);
-	}
+		private void OnEnable()
+		{
+			currentState = stateFactory.Idle();
+			currentState.EnterState();
 
-	private void OnLostVision()
-	{
-		currentState.OnLostVision();
-	}
+			aiPerception.OnPlayerSeen += OnPlayerSeen;
+			aiPerception.OnLostVision += OnLostVision;
+			aiPerception.OnHearedSomething += OnHearedSomething;
+		}
 
-	private void OnHearedSomething(Vector3 targetPosition)
-	{
-		currentState.OnPlayerSpotted(targetPosition);
-	}
+		private void OnDisable()
+		{
+			currentState.ExitState();
 
-	private void FixedUpdate()
-	{
-		currentState.Tick();
+			aiPerception.OnPlayerSeen -= OnPlayerSeen;
+			aiPerception.OnLostVision -= OnLostVision;
+			aiPerception.OnHearedSomething -= OnHearedSomething;
+		}
+
+		private void SetupAnimator()
+		{
+			enemyAnimator = GetComponent<Animator>();
+			isMovingHash = Animator.StringToHash("isMoving");
+			isAttackingHash = Animator.StringToHash("isAttacking");
+		}
+
+		private void OnPlayerSeen(Vector3 targetPosition)
+		{
+			currentState.OnPlayerSpotted(targetPosition);
+		}
+
+		private void OnLostVision()
+		{
+			currentState.OnLostVision();
+		}
+
+		private void OnHearedSomething(Vector3 targetPosition)
+		{
+			currentState.OnPlayerSpotted(targetPosition);
+		}
+
+		private void FixedUpdate()
+		{
+			currentState.Tick();
+		}
 	}
 }

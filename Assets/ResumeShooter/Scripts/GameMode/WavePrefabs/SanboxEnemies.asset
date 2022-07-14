@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyList:
     keys:
-    - {fileID: 485516240927748455, guid: 2894f9e3aa5bd8d439da34d49782e3da, type: 3}
+    - {fileID: 1933482428436972211, guid: 2894f9e3aa5bd8d439da34d49782e3da, type: 3}
     values: 0a000000
   alwaysGenerateEnemy: 1
