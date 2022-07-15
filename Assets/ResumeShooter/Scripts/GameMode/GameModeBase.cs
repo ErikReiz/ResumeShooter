@@ -8,6 +8,7 @@ namespace ResumeShooter.Services
 	public class GameModeBase : MonoBehaviour
 	{
 		#region FIELDS
+		[HideInInspector]
 		public UnityEvent<bool> OnGameEnded;
 
 		private static GameModeBase instance;

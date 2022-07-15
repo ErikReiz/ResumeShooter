@@ -12,10 +12,15 @@ namespace ResumeShooter.Animations
 		#endregion
 
 		#region FIELDS
+		[HideInInspector]
 		public UnityEvent OnWeaponSwitched;
+		[HideInInspector]
 		public UnityEvent OnHolsterStateSwitched;
+		[HideInInspector]
 		public UnityEvent OnEndedReload;
+		[HideInInspector]
 		public UnityEvent OnEjectCasing;
+		[HideInInspector]
 		public UnityEvent OnAmmunitionFill;
 
 		private readonly string sprintingBoolName = "isSprinting";

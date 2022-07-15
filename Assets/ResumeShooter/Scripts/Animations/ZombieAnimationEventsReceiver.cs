@@ -9,6 +9,7 @@ namespace ResumeShooter.Animations
     public class ZombieAnimationEventsReceiver : MonoBehaviour
     {
 		#region FIELDS
+		[HideInInspector]
 		public UnityEvent OnAttackTriggered;
 		#endregion
 

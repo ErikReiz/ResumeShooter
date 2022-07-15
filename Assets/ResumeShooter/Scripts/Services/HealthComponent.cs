@@ -38,7 +38,9 @@ namespace ResumeShooter.Services
 		#endregion
 
 		#region FIELDS
+		[HideInInspector]
 		public UnityEvent OnDamaged;
+		[HideInInspector]
 		public UnityEvent OnDeath;
 
 		private bool isDead = false;

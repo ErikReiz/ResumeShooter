@@ -33,8 +33,11 @@ namespace ResumeShooter.AI
 		#endregion
 
 		#region FIELDS
+		[HideInInspector]
 		public UnityEvent<Vector3> OnPlayerSeen;
+		[HideInInspector]
 		public UnityEvent OnLostVision;
+		[HideInInspector]
 		public UnityEvent<Vector3> OnHearedSomething;
 
 		private SphereCollider hearingCollider;
