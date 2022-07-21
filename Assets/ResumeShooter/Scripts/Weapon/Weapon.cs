@@ -24,6 +24,7 @@ namespace ResumeShooter.Weaponary
 		[SerializeField] private RuntimeAnimatorController animatorController;
 		[Tooltip("Weapon pick up prefab")]
 		[SerializeField] private GameObject weaponPickUp;
+		[SerializeField] private LayerMask enemyLayerMask;
 
 		[Header("Ammo")]
 		[SerializeField] private uint magazineSize = 30;
@@ -154,7 +155,7 @@ namespace ResumeShooter.Weaponary
 		{
 			PlayAnimation();
 
-			NoiseMaker.MakeNoise(transform.position, shotSoundRange);
+			NoiseMaker.MakeNoise(transform.position, shotSoundRange, enemyLayerMask);
 
 			magazineAmmo--;
 

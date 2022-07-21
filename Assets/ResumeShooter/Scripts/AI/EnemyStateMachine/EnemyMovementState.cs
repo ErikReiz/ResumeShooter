@@ -19,13 +19,14 @@ namespace ResumeShooter.AI
 		public override void EnterState()
 		{
 			context.EnemyAnimator.SetBool(context.IsMovingHash, true);
+			context.NavMesh.isStopped = false;
 			EngageTarget();
 		}
 
 		public override void ExitState()
 		{
 			context.EnemyAnimator.SetBool(context.IsMovingHash, false);
-			context.NavMesh.SetDestination(context.transform.position);
+			context.NavMesh.isStopped = true;
 		}
 
 		public override void OnPlayerSpotted(Vector3 targetPosition)

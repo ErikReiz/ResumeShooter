@@ -20,7 +20,6 @@ namespace ResumeShooter.PickUp
 		#endregion
 
 		public abstract void Use();
-		public abstract void StopUsing();
 
 		public bool CanIncrease()
 		{

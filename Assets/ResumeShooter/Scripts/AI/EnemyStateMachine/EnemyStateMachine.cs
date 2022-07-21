@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
+using ResumeShooter.Services;
 
 namespace ResumeShooter.AI
 {
@@ -17,6 +18,7 @@ namespace ResumeShooter.AI
 		#endregion
 
 		#region FIELDS
+		private HealthComponent healthComponent;
 
 		#region STATES
 		private EnemyBaseState currentState;
@@ -30,6 +32,7 @@ namespace ResumeShooter.AI
 		private Animator enemyAnimator;
 		private int isMovingHash;
 		private int isAttackingHash;
+		private int isDeadHash;
 		#endregion
 
 		#endregion
@@ -40,6 +43,9 @@ namespace ResumeShooter.AI
 
 			aiPerception = GetComponentInParent<AIPerception>();
 			navMesh = GetComponentInParent<NavMeshAgent>();
+			enemyAnimator = GetComponent<Animator>();
+			healthComponent = GetComponent<HealthComponent>();
+
 			stateFactory = new EnemyStateFactory(this);
 		}
 
@@ -51,22 +57,24 @@ namespace ResumeShooter.AI
 			aiPerception.OnPlayerSeen.AddListener(OnPlayerSeen);
 			aiPerception.OnLostVision.AddListener(OnLostVision);
 			aiPerception.OnHearedSomething.AddListener(OnHearedSomething);
+
+			healthComponent.OnDeath.AddListener(OnDeath);
 		}
 
 		private void OnDisable()
 		{
-			currentState.ExitState();
-
 			aiPerception.OnPlayerSeen.RemoveListener(OnPlayerSeen);
 			aiPerception.OnLostVision.RemoveListener(OnLostVision);
 			aiPerception.OnHearedSomething.RemoveListener(OnHearedSomething);
+
+			healthComponent.OnDeath.RemoveListener(OnDeath);
 		}
 
 		private void SetupAnimator()
 		{
-			enemyAnimator = GetComponent<Animator>();
 			isMovingHash = Animator.StringToHash("isMoving");
 			isAttackingHash = Animator.StringToHash("isAttacking");
+			isDeadHash = Animator.StringToHash("isDead");
 		}
 
 		private void OnPlayerSeen(Vector3 targetPosition)
@@ -82,6 +90,12 @@ namespace ResumeShooter.AI
 		private void OnHearedSomething(Vector3 targetPosition)
 		{
 			currentState.OnPlayerSpotted(targetPosition);
+		}
+
+		private void OnDeath()
+		{
+			EnemyAnimator.SetBool(isDeadHash, true);
+			currentState.ExitState();
 		}
 
 		private void FixedUpdate()

@@ -17,7 +17,6 @@ namespace ResumeShooter.Services
 		private static HUDBase hud;
 		private static AudioManager audioSpawner;
 		private static GameObject gameModeObject;
-		private static NonMonoBehaviourCorotine nonMonoBehaviourCorotine;
 		#endregion
 
 		#region INITIALIZE
@@ -29,9 +28,6 @@ namespace ResumeShooter.Services
 
 			if (!GetHUD())
 				InitializeHUD();
-
-			if (!GetNonMonoBehaviourCorotine())
-				InitializeNonMonoBehaviourCorotine();
 
 			InitializeAudioManager();
 		}
@@ -59,14 +55,6 @@ namespace ResumeShooter.Services
 
 			audioSpawner = audioManagerObject.AddComponent<AudioManager>();
 		}
-
-		private static void InitializeNonMonoBehaviourCorotine()
-		{
-			if (!gameModeObject)
-				gameModeObject = new GameObject("Game Mode");
-
-			nonMonoBehaviourCorotine = gameModeObject.AddComponent<NonMonoBehaviourCorotine>();
-		}
 		#endregion
 
 		#region GET
@@ -92,14 +80,6 @@ namespace ResumeShooter.Services
 				hud = Object.FindObjectOfType<HUDBase>();
 
 			return hud;
-		}
-
-		public static NonMonoBehaviourCorotine GetNonMonoBehaviourCorotine()
-		{
-			if (!nonMonoBehaviourCorotine)
-				nonMonoBehaviourCorotine = Object.FindObjectOfType<NonMonoBehaviourCorotine>();
-
-			return nonMonoBehaviourCorotine;
 		}
 		#endregion
 	}

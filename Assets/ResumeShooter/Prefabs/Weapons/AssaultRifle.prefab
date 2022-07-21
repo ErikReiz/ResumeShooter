@@ -560,6 +560,9 @@ MonoBehaviour:
   animatorController: {fileID: 22100000, guid: 1e4a41722f505c9448eec17ddb146ab1, type: 2}
   weaponPickUp: {fileID: 1798579882298740222, guid: ffee59550890c3d42913e6ef12da9e05,
     type: 3}
+  enemyLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
   magazineSize: 30
   magazineAmmo: 30
   ammoType: 0
@@ -597,10 +600,16 @@ MonoBehaviour:
     keys:
     - {fileID: 11400000, guid: b8ca2b9a8de1ad64481afb15ffe38f14, type: 2}
     - {fileID: 11400000, guid: 548eeff7e93b8744db1a579c33651e28, type: 2}
+    - {fileID: 11400000, guid: 30d9c9221084d6c4ba42d28b9e678a7a, type: 2}
+    - {fileID: 11400000, guid: 4d411728c94aab5479a763c38b641821, type: 2}
+    - {fileID: 11400000, guid: 36f5092ad7d55924dbe87301a8cf5a0a, type: 2}
     values:
-    - {fileID: 1067471869909948, guid: 5e02303289b3c494e8e185be0fbbd405, type: 3}
+    - {fileID: 100002, guid: 99c73c92ac40473459640b165473206f, type: 3}
     - {fileID: 1000013355911406, guid: d32aa916f50cac94db11e6f19821a58f, type: 3}
-  defaultImpactParticle: {fileID: 1067471869909948, guid: 5e02303289b3c494e8e185be0fbbd405,
+    - {fileID: 100002, guid: 00fedc70b62a31e448e8ccc298257b56, type: 3}
+    - {fileID: 100002, guid: 56bfc2f4b4a0c534c8ef3d0fd1124c44, type: 3}
+    - {fileID: 100002, guid: ac1aa04288fad804ba1cd769f4377aaf, type: 3}
+  defaultImpactParticle: {fileID: 100002, guid: 99c73c92ac40473459640b165473206f,
     type: 3}
 --- !u!1001 &1012969241241484077
 PrefabInstance:

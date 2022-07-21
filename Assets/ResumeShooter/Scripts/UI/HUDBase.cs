@@ -64,6 +64,8 @@ namespace ResumeShooter.UI
 
 		protected T CreateWidget<T>(T widget) where T : Object
 		{
+			if (!widget) { return null; }
+
 			return Instantiate<T>(widget, mainCanvas.transform);
 		}
 		

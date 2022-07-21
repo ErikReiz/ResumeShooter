@@ -82,6 +82,15 @@ MonoBehaviour:
   visionCheckDelay: 0.2
   hearingRadius: 200
   useAlternativeLogic: 1
+  OnPlayerSeen:
+    m_PersistentCalls:
+      m_Calls: []
+  OnLostVision:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHearedSomething:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &1933482428436972211
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -264,7 +273,7 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3525691150073452703}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   m_Radius: 0.4
   m_Height: 2
@@ -296,23 +305,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   componentsToDisable:
-  - {fileID: 6870036863092495328}
+  - {fileID: 1126999368}
+  - {fileID: 485516240927748442}
   isPlayer: 0
   maxHealth: 100
   objectToDestroy: {fileID: 485516240927748455}
-  destroyDelay: 2
---- !u!114 &6870036863092495328
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3525691150073452703}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61aed13a4e5894940a1ca7188c63231b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  destroyDelay: 10
+  OnDamaged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDeath:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &4659852874030902947
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -323,6 +327,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fcaacb2b76effb54495c2ac3519c9565, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnAttackTriggered:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &6870036863092495328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3525691150073452703}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61aed13a4e5894940a1ca7188c63231b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!4 &4026814433405801614 stripped

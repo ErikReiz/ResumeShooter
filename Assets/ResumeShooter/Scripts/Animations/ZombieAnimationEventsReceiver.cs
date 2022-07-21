@@ -15,7 +15,7 @@ namespace ResumeShooter.Animations
 
 		private void OnAttackTrigger()
 		{
-			OnAttackTriggered.Invoke();
+			OnAttackTriggered?.Invoke();
 		}
 	}
 }

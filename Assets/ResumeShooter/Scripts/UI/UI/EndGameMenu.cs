@@ -8,35 +8,51 @@ namespace ResumeShooter.UI
 	public class EndGameMenu : MonoBehaviour
 	{
 		#region SERIALIZE FIELDS
+		[SerializeField] private Button nextLevelButton;
 		[SerializeField] private Button restartGameButton;
-		[SerializeField] private Button quitGameButton;
+		[SerializeField] private Button quitToMenuButton;
 		#endregion
 
 		private void OnEnable()
 		{
-			restartGameButton.onClick.AddListener(RestartGame);
-			quitGameButton.onClick.AddListener(QuitGame);
+			nextLevelButton?.onClick.AddListener(LoadNextLevel);
+			restartGameButton?.onClick.AddListener(RestartGame);
+			quitToMenuButton?.onClick.AddListener(QuitToMainMenu);
 
 			Cursor.lockState = CursorLockMode.Confined;
 		}
 
 		private void OnDisable()
 		{
-			restartGameButton.onClick.RemoveListener(RestartGame);
-			quitGameButton.onClick.RemoveListener(QuitGame);
+			nextLevelButton?.onClick.RemoveListener(LoadNextLevel);
+			restartGameButton.onClick?.RemoveListener(RestartGame);
+			quitToMenuButton.onClick?.RemoveListener(QuitToMainMenu);
 
-			Cursor.lockState = CursorLockMode.Locked;
+			Cursor.lockState = CursorLockMode.None;
+		}
+
+		private void LoadNextLevel()
+		{
+			Time.timeScale = 1f;
+			int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+			if (currentSceneIndex >= SceneManager.sceneCount)
+				currentSceneIndex = 0;
+			else
+				currentSceneIndex++;
+
+			SceneManager.LoadScene(currentSceneIndex);
 		}
 
 		private void RestartGame()
 		{
-			SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 			Time.timeScale = 1f;
+			SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 		}
 
-		private void QuitGame()
+		private void QuitToMainMenu()
 		{
-			Application.Quit();
+			Time.timeScale = 1f;
+			SceneManager.LoadScene(0);
 		}
 	}
 }

@@ -69,6 +69,8 @@ namespace ResumeShooter.Player
 			playerAnimation.OnWeaponSwitched.AddListener(OnWeaponSwitched);
 			playerAnimation.OnHolsterStateSwitched.AddListener(OnHolsterStateSwitched);
 
+			healthComponent.OnDeath.AddListener(() => input.Player.Disable());
+
 			input.Player.Enable();
 		}
 
@@ -165,7 +167,7 @@ namespace ResumeShooter.Player
 
 		private void OnUseConsumableInput(InputAction.CallbackContext context)
 		{
-			playerInventory.OnUseEquipmentInput(Inventory.EquipmentType.Consumable, IsKeyDown(context));
+			playerInventory.OnUseEquipmentInput(Inventory.EquipmentType.Consumable);
 		}
 
 		private void OnReloadInput(InputAction.CallbackContext context)

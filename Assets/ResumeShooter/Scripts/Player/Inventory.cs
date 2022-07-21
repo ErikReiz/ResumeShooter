@@ -17,12 +17,9 @@ namespace ResumeShooter.Player
 		private Dictionary<EquipmentType, Equipment> equipment = new();
 		#endregion
 
-		public void OnUseEquipmentInput(EquipmentType equipmentType, bool isKeyDown)
+		public void OnUseEquipmentInput(EquipmentType equipmentType)
 		{
-			if (isKeyDown)
-				equipment[equipmentType].Use();
-			else
-				equipment[equipmentType].StopUsing();
+			equipment[equipmentType].Use();
 		}
 
 		public bool TryPickUpEquipment(Equipment pickedUpEquipment)

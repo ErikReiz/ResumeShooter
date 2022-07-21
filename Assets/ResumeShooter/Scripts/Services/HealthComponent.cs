@@ -11,7 +11,7 @@ namespace ResumeShooter.Services
 		#region SERIALIZE FIELDS
 		[Header("General")]
 		[Tooltip("This components will be turned off after character death. For example you can pass movement component")]
-		[SerializeField] private List<MonoBehaviour> componentsToDisable;
+		[SerializeField] private List<Behaviour> componentsToDisable;
 		[SerializeField] private bool isPlayer = false;
 		[SerializeField] private float maxHealth = 100f;
 
@@ -56,7 +56,6 @@ namespace ResumeShooter.Services
 		void IDamageable.ReceiveDamage(float damage)
 		{
 			if (isDead) { return; }
-
 			damage = Mathf.Clamp(damage, 0, maxHealth);
 			currentHealth -= damage;
 			OnDamaged?.Invoke();

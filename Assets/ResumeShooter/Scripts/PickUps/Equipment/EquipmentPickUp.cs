@@ -8,7 +8,7 @@ namespace ResumeShooter.PickUp
 	public class EquipmentPickUp : MonoBehaviour, IInteractable
 	{
 		#region SERIALIZE FIELDS
-		[SerializeField] MonoScript storedEquipment;
+		[SerializeField] private MonoScript storedEquipment;
 		#endregion
 
 		void IInteractable.Interact(FPCharacter player)

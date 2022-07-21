@@ -37,7 +37,9 @@ namespace ResumeShooter.Services
 		private void InitializePlayer()
 		{
 			FPCharacter player = ServiceManager.GetPlayer();
-			playerDamagableComponent = player.GetComponent<IDamageable>();
+
+			if(player)
+				playerDamagableComponent = player.GetComponent<IDamageable>();
 		}
 
 		protected virtual void BeginPlay() { }

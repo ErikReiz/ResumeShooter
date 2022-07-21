@@ -35,12 +35,8 @@ namespace ResumeShooter.UI
 		private void InitializeHUD()
 		{
 			playerHUD = CreateWidget<PlayerHUD>(playerHUD);
-			lossWidget = CreateWidget<EndGameMenu>(lossWidget);
-			victoryWidget = CreateWidget<EndGameMenu>(victoryWidget);
 
 			playerHUD.gameObject.SetActive(true);
-			lossWidget.gameObject.SetActive(false);
-			victoryWidget.gameObject.SetActive(false);
 		}
 
 		private void OnGameEnded(bool isPlayerWinner)
@@ -48,9 +44,9 @@ namespace ResumeShooter.UI
 			playerHUD.gameObject.SetActive(false);
 
 			if (isPlayerWinner)
-				victoryWidget.gameObject.SetActive(true);
+				CreateWidget<EndGameMenu>(victoryWidget);
 			else
-				lossWidget.gameObject.SetActive(true);
+				CreateWidget<EndGameMenu>(lossWidget);
 		}
 	}
 }
